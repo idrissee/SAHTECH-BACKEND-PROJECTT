@@ -2,33 +2,27 @@ package com.example.Sahtech.entities;
 
 
 import com.example.Sahtech.Enum.Maladie;
-import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Data
+import java.util.List;
+
+@Document(collection = "additifs")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
-@Table
+@Data
 public class Additifs {
 
     @Id
-    @Getter
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "Additif-id-seq")
     private Long idAdditif;
 
     private String nomAdditif;
 
     private Float seuil;
 
-    private String maladieCause;
+    private Maladie maladieCause;
 
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Produit produit;
-
-
-
-
+    private List<Long> produitsIds;
 }

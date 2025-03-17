@@ -2,33 +2,31 @@ package com.example.Sahtech.entities;
 
 
 import com.example.Sahtech.Enum.TypeProduit;
-import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Collection;
+import java.util.List;
 
-@Entity
+@Document(collection = "produits")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-@Table
 public class Produit {
 
+
     @Id
-    @Getter
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "Produit-id-seq")
-    private Long idProduit;
+    private Long idProduit;  // MongoDB génère un ObjectId automatiquement (ou tu peux mettre ObjectId)
 
     private Long codeBarre;
 
     private String nomProduit;
 
-    private String typeProduit;
+    private TypeProduit typeProduit;// Ou `private TypeProduit typeProduit;` si tu veux garder l'énumération
 
-
-
-
+    private List<Long> additifsIds; // Liste des IDs des additifs associés
 
 
 }

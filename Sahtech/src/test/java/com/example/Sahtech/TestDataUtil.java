@@ -17,7 +17,7 @@ public class TestDataUtil {
         return Produit.builder()
                 .idProduit(1L)
                 .nomProduit("rouiba")
-                .typeProduit("produitLate")
+                .typeProduit(TypeProduit.produitLate)
                 .codeBarre(12365877L)
                 .build();
     }
@@ -26,7 +26,7 @@ public class TestDataUtil {
         return Produit.builder()
                 .idProduit(2L)
                 .nomProduit("Gateau")
-                .typeProduit("produitLate")
+                .typeProduit(TypeProduit.produitLate)
                 .codeBarre(12348796L)
                 .build();
     }
@@ -35,7 +35,7 @@ public class TestDataUtil {
         return Produit.builder()
                 .idProduit(3L)
                 .nomProduit("milka")
-                .typeProduit("produitLate")
+                .typeProduit(TypeProduit.produitLate)
                 .codeBarre(1236987L)
                 .build();
     }
@@ -69,7 +69,7 @@ public class TestDataUtil {
     public static Additifs createTestAdditifsA() {
        return Additifs.builder()
                .idAdditif(1L)
-               .maladieCause("DIABATE")
+               .maladieCause(Maladie.DIABATE)
                .seuil(2F)
                .nomAdditif("sin1")
                .build();
@@ -77,7 +77,7 @@ public class TestDataUtil {
     public static Additifs createTestAdditifsB() {
         return Additifs.builder()
                 .idAdditif(2L)
-                .maladieCause("DIABATE")
+                .maladieCause(Maladie.DIABATE)
                 .seuil(3F)
                 .nomAdditif("sin2")
                 .build();
@@ -85,7 +85,7 @@ public class TestDataUtil {
     public static Additifs createTestAdditifsC() {
         return Additifs.builder()
                 .idAdditif(2L)
-                .maladieCause("DIABATE")
+                .maladieCause(Maladie.DIABATE)
                 .seuil(4F)
                 .nomAdditif("sin3")
                 .build();
