@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AdditifsRepository extends MongoRepository<Additifs,Long> {
-
 }
