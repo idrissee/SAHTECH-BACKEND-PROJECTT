@@ -1,30 +1,26 @@
 package com.example.Sahtech.entities;
 
 
-import jakarta.persistence.*;
+
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.lang.annotation.Documented;
 
 
+@Document(collection = "ingredients")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
-@Table
-@Entity
 public class Ingrediants {
 
-    @Id
-    @Getter
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "Ingrediant-id-seq")
     private Long idIngrediant;
 
     private String nomIngrediant;
 
     private Float Quantite;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Produit produit;
-
+    private String produitId;// Référence à l'ID du produit
 }

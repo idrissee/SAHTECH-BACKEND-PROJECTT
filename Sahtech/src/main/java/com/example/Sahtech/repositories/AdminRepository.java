@@ -1,9 +1,9 @@
 package com.example.Sahtech.repositories;
 
-import com.example.Sahtech.entities.Additifs;
+import com.example.Sahtech.entities.Admin;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AdditifsRepository extends MongoRepository<Additifs, Long> {
+public interface AdminRepository extends MongoRepository<Admin, Long> {
 }
