@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ProduitRepositoryIntegrationTests {
 
-  private ProduitRepository undertest;
+  private final ProduitRepository undertest;
 
   @Autowired
   public ProduitRepositoryIntegrationTests(ProduitRepository undertest) {

@@ -5,7 +5,9 @@ import com.example.Sahtech.Dto.IngrediantsDto;
 import com.example.Sahtech.entities.Additifs;
 import com.example.Sahtech.mappers.Mapper;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AdditifaMapperImpl implements Mapper<Additifs, AdditifsDto> {
     private final ModelMapper modelMapper ;
 

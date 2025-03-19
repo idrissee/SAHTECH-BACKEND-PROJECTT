@@ -1,7 +1,6 @@
 package com.example.Sahtech.mappers.Impl;
 
 import com.example.Sahtech.Dto.ProduitDto;
-import com.example.Sahtech.entities.Additifs;
 import com.example.Sahtech.entities.Produit;
 import com.example.Sahtech.mappers.Mapper;
 import org.modelmapper.ModelMapper;

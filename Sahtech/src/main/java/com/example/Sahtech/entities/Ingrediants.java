@@ -23,5 +23,5 @@ public class Ingrediants {
 
     private Float Quantite;
 
-    private String produitId;// Référence à l'ID du produit
+    private Long produitId;// Référence à l'ID du produit
 }
