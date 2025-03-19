@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ProduitRepositoryIntegrationTests {
 
-  private ProduitRepository undertest;
+  private final ProduitRepository undertest;
 
   @Autowired
   public ProduitRepositoryIntegrationTests(ProduitRepository undertest) {
@@ -37,6 +37,42 @@ public class ProduitRepositoryIntegrationTests {
       assertThat(result).isPresent();
       assertThat(result.get()).isEqualTo(produit);
     }
+
+  @Test
+  public void testThatMultipleProduitsCanBeCreatedAndRecalled() {
+    Produit produitA = TestDataUtil.creatTestProduitA();
+    undertest.save(produitA);
+    Produit produitB = TestDataUtil.creatTestProduitB();
+    undertest.save(produitB);
+    Produit produitC = TestDataUtil.creatTestProduitC();
+    undertest.save(produitC);
+
+    Iterable<Produit> result = undertest.findAll();
+    assertThat(result)
+            .hasSize(3).
+            containsExactly(produitB, produitC, produitA);
+  }
+
+  @Test
+  public void testThatProduitCanBeUpdated(){
+    Produit produitA = TestDataUtil.creatTestProduitA();
+    undertest.save(produitA);
+    produitA.setNomProduit("bimoo");
+    undertest.save(produitA);
+    Optional<Produit> result = undertest.findById(produitA.getIdProduit());
+    assertThat(result).isPresent();
+    assertThat(result.get()).isEqualTo(produitA);
+  }
+
+
+  @Test
+  public void TestThatProduitCanBeDeleted(){
+    Produit produitA = TestDataUtil.creatTestProduitA();
+    undertest.save(produitA);
+    undertest.deleteById(produitA.getIdProduit());
+    Optional<Produit> result = undertest.findById(produitA.getIdProduit());
+    assertThat(result).isEmpty();
+  }
 
 
 }

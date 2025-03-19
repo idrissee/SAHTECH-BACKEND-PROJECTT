@@ -1,22 +1,20 @@
-package com.example.Sahtech.entities;
+package com.example.Sahtech.Dto;
 
-
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
-
-
-@Document(collection = "ingredients")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
-public class Ingrediants {
+public class IngrediantsDto {
 
-    @Id
+
     private Long idIngrediant;
 
     private String nomIngrediant;

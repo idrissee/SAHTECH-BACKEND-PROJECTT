@@ -69,7 +69,7 @@ public class TestDataUtil {
     public static Additifs createTestAdditifsA() {
        return Additifs.builder()
                .idAdditif(1L)
-               .maladieCause(Maladie.DIABATE)
+               .maladieCause(Maladie.QLERGIAUE)
                .seuil(2F)
                .nomAdditif("sin1")
                .build();
@@ -84,7 +84,7 @@ public class TestDataUtil {
     }
     public static Additifs createTestAdditifsC() {
         return Additifs.builder()
-                .idAdditif(2L)
+                .idAdditif(3L)
                 .maladieCause(Maladie.DIABATE)
                 .seuil(4F)
                 .nomAdditif("sin3")
