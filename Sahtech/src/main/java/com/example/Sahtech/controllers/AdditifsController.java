@@ -1,9 +1,11 @@
-package com.example.Sahtech.controllers;
+package com.example.Sahtech.Controllers;
 
 import com.example.Sahtech.Dto.AdditifsDto;
 import com.example.Sahtech.entities.Additifs;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.AdditifsService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,9 +23,11 @@ public class AdditifsController {
     }
 
     @PostMapping(path = "additifs")
-    public AdditifsDto createAdditifs(@RequestBody AdditifsDto additifsDto){
+    public ResponseEntity<AdditifsDto> createAdditifs(@RequestBody AdditifsDto additifsDto){
         Additifs additifs = additifsMapper.mapFrom(additifsDto);
         Additifs additifsaved = additifsService.createAdditifs(additifs);
-        return additifsMapper.mapTo(additifsaved);
+        return new ResponseEntity<>(additifsMapper.mapTo(additifsaved), HttpStatus.CREATED);
     }
+
+
 }

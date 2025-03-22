@@ -1,10 +1,12 @@
-package com.example.Sahtech.controllers;
+package com.example.Sahtech.Controllers;
 
 
 import com.example.Sahtech.Dto.ProduitDto;
 import com.example.Sahtech.entities.Produit;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.ProduitService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,10 +25,11 @@ public class ProduitController {
     }
 
     @PostMapping(path = "/produit")
-    public ProduitDto createProduit(@RequestBody ProduitDto produitDto) {
+    public ResponseEntity<ProduitDto> createProduit(@RequestBody ProduitDto produitDto) {
         Produit produit = produitMapper.mapFrom(produitDto);
         Produit savedProduit = produitService.createProduit(produit);
-        return produitMapper.mapTo(savedProduit);
+        return new ResponseEntity<>(produitMapper.mapTo(savedProduit), HttpStatus.CREATED);
+
     }
 
 }
