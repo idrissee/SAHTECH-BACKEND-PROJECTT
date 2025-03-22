@@ -1,23 +1,24 @@
-package com.example.Sahtech.entities;
-
+package com.example.Sahtech.Dto;
 
 import com.example.Sahtech.Enum.TypeProduit;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Collection;
 import java.util.List;
 
-@Document(collection = "produits")
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class Produit {
+public class ProduitDto {
 
 
-    @Id
+
     private Long idProduit;  // MongoDB génère un ObjectId automatiquement (ou tu peux mettre ObjectId)
 
     private Long codeBarre;
@@ -30,5 +31,3 @@ public class Produit {
 
 
 }
-
-

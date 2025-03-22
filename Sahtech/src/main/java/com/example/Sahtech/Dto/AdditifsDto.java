@@ -1,21 +1,23 @@
-package com.example.Sahtech.entities;
-
+package com.example.Sahtech.Dto;
 
 import com.example.Sahtech.Enum.Maladie;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Document(collection = "additifs")
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
-public class Additifs {
+public class AdditifsDto {
 
-    @Id
+
     private Long idAdditif;
 
     private String nomAdditif;
