@@ -2,9 +2,7 @@ package com.example.Sahtech.Controllers;
 
 
 import com.example.Sahtech.Dto.IngrediantsDto;
-import com.example.Sahtech.Dto.ProduitDto;
 import com.example.Sahtech.entities.Ingrediants;
-import com.example.Sahtech.entities.Produit;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.IngrediantsService;
 import org.springframework.http.HttpStatus;
@@ -29,9 +27,9 @@ public class IngrediantsController {
     }
 
     @PostMapping(path = "ingrediants")
-    public ResponseEntity<IngrediantsDto> createIngrediants(@RequestBody IngrediantsDto ingrediantsDto) {
+    public ResponseEntity<IngrediantsDto> save(@RequestBody IngrediantsDto ingrediantsDto) {
         Ingrediants ingrediants = ingrediantsMapper.mapFrom(ingrediantsDto);
-        Ingrediants ingrediantsSaved = ingrediantsService.createIngrediants(ingrediants);
+        Ingrediants ingrediantsSaved = ingrediantsService.save(ingrediants);
         return new ResponseEntity<>(ingrediantsMapper.mapTo(ingrediantsSaved), HttpStatus.CREATED);
     }
 
@@ -50,5 +48,22 @@ public class IngrediantsController {
            IngrediantsDto ingrediantsDto = ingrediantsMapper.mapTo(produit);
             return new ResponseEntity<>(ingrediantsDto, HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PutMapping(path = "ingrediants/{id}")
+    public ResponseEntity<IngrediantsDto> fullUpdateIngredient(
+            @PathVariable("id") Long id,
+            @RequestBody IngrediantsDto ingrediantsDto) {
+
+        if(!ingrediantsService.isExists(id)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        ingrediantsDto.setIdIngrediant(id);
+        Ingrediants ingredient = ingrediantsMapper.mapFrom(ingrediantsDto);
+        Ingrediants savedIngredient = ingrediantsService.save(ingredient);
+        return new ResponseEntity<>(
+                ingrediantsMapper.mapTo(savedIngredient)
+                , HttpStatus.OK);
     }
 }

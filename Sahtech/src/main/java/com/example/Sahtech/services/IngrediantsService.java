@@ -7,9 +7,11 @@ import java.util.Optional;
 
 public interface IngrediantsService {
 
-    Ingrediants createIngrediants(Ingrediants ingrediants);
+    Ingrediants save(Ingrediants ingrediants);
 
     List<Ingrediants> findAll();
 
     Optional<Ingrediants> findOnebyId(Long id);
+
+    boolean isExists(Long id);
 }

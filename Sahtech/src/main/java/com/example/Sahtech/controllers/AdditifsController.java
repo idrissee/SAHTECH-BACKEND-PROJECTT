@@ -1,11 +1,7 @@
 package com.example.Sahtech.Controllers;
 
 import com.example.Sahtech.Dto.AdditifsDto;
-import com.example.Sahtech.Dto.IngrediantsDto;
-import com.example.Sahtech.Dto.ProduitDto;
 import com.example.Sahtech.entities.Additifs;
-import com.example.Sahtech.entities.Ingrediants;
-import com.example.Sahtech.entities.Produit;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.AdditifsService;
 import org.springframework.http.HttpStatus;
@@ -19,6 +15,7 @@ import java.util.stream.Collectors;
 @RestController
 public class AdditifsController {
 
+
     private AdditifsService additifsService;
 
     private Mapper<Additifs, AdditifsDto> additifsMapper;
@@ -31,7 +28,7 @@ public class AdditifsController {
     @PostMapping(path = "additifs")
     public ResponseEntity<AdditifsDto> createAdditifs(@RequestBody AdditifsDto additifsDto){
         Additifs additifs = additifsMapper.mapFrom(additifsDto);
-        Additifs additifsaved = additifsService.createAdditifs(additifs);
+        Additifs additifsaved = additifsService.save(additifs);
         return new ResponseEntity<>(additifsMapper.mapTo(additifsaved), HttpStatus.CREATED);
     }
 
@@ -50,6 +47,23 @@ public class AdditifsController {
            AdditifsDto additifsDto = additifsMapper.mapTo(additif);
             return new ResponseEntity<>(additifsDto, HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PutMapping(path = "additifs/{id}")
+    public ResponseEntity<AdditifsDto> fullUpdateAdditif(
+            @PathVariable("id") Long id,
+            @RequestBody AdditifsDto additifsDto) {
+
+        if(!additifsService.isExists(id)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        additifsDto.setIdAdditif(id);
+        Additifs additif = additifsMapper.mapFrom(additifsDto);
+        Additifs savedAdditif = additifsService.save(additif);
+        return new ResponseEntity<>(
+                additifsMapper.mapTo(savedAdditif)
+                , HttpStatus.OK);
     }
 
 

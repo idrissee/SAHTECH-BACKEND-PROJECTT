@@ -7,9 +7,13 @@ import java.util.Optional;
 
 public interface ProduitService {
 
-    Produit createProduit(Produit  produit);
+    Produit save(Produit  produit);
+
+    Produit createProduit(Produit produit);
 
     List<Produit> findAll();
 
     Optional<Produit> findOnebyId(Long id);
+
+    boolean isExists(Long id);
 }

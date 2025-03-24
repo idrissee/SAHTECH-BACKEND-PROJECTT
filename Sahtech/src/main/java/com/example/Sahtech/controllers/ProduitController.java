@@ -52,4 +52,21 @@ public class ProduitController {
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @PutMapping(path = "produits/{id}")
+    public ResponseEntity<ProduitDto> fullUpdateProduit(
+            @PathVariable("id") Long id,
+            @RequestBody ProduitDto produitDto) {
+
+        if(!produitService.isExists(id)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        produitDto.setIdProduit(id);
+        Produit produit = produitMapper.mapFrom(produitDto);
+        Produit savedProduit = produitService.save(produit);
+        return new ResponseEntity<>(
+                produitMapper.mapTo(savedProduit)
+                , HttpStatus.OK);
+    }
+
 }

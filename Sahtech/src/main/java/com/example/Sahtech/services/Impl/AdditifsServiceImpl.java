@@ -20,7 +20,7 @@ public class AdditifsServiceImpl implements AdditifsService {
     }
 
     @Override
-    public Additifs createAdditifs(Additifs additifs) {
+    public Additifs save(Additifs additifs) {
       return additifsRepository.save(additifs);
     }
 
@@ -36,5 +36,10 @@ public class AdditifsServiceImpl implements AdditifsService {
     @Override
     public Optional<Additifs> findOnebyId(Long id) {
         return additifsRepository.findById(id);
+    }
+
+    @Override
+    public boolean isExists(Long id) {
+        return additifsRepository.existsById(id);
     }
 }

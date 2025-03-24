@@ -21,7 +21,7 @@ public class IngrediantsServiceImpl implements IngrediantsService {
     }
 
     @Override
-    public Ingrediants createIngrediants(Ingrediants ingrediants) {
+    public Ingrediants save(Ingrediants ingrediants) {
         return ingrediantsRepository.save(ingrediants);
     }
 
@@ -37,6 +37,11 @@ public class IngrediantsServiceImpl implements IngrediantsService {
     @Override
     public Optional<Ingrediants> findOnebyId(Long id) {
         return ingrediantsRepository.findById(id);
+    }
+
+    @Override
+    public boolean isExists(Long id) {
+        return ingrediantsRepository.existsById(id);
     }
 }
 

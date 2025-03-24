@@ -59,4 +59,14 @@ public class ProduitServiceImpl implements ProduitService {
     public Optional<Produit> findOnebyId(Long id) {
         return produitRepository.findById(id);
     }
+
+    @Override
+    public boolean isExists(Long id) {
+        return produitRepository.existsById(id);
+    }
+
+    @Override
+    public Produit save(Produit produit) {
+       return  produitRepository.save(produit);
+    }
 }
