@@ -9,12 +9,10 @@ import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.IngrediantsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -43,5 +41,14 @@ public class IngrediantsController {
         return  ingrediants.stream()
                 .map(ingrediantsMapper::mapTo)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping(path ="ingrediants/{id}")
+    public ResponseEntity<IngrediantsDto> getIngrediant(@PathVariable("id") Long id){
+        Optional<Ingrediants> foundingrediant = ingrediantsService.findOnebyId(id);
+        return foundingrediant.map(produit-> {
+           IngrediantsDto ingrediantsDto = ingrediantsMapper.mapTo(produit);
+            return new ResponseEntity<>(ingrediantsDto, HttpStatus.OK);
+        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

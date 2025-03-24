@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -52,5 +53,10 @@ public class ProduitServiceImpl implements ProduitService {
                 .spliterator(),
                         false)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Produit> findOnebyId(Long id) {
+        return produitRepository.findById(id);
     }
 }

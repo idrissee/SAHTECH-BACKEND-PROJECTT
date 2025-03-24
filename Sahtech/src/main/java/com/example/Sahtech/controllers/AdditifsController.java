@@ -1,19 +1,19 @@
 package com.example.Sahtech.Controllers;
 
 import com.example.Sahtech.Dto.AdditifsDto;
+import com.example.Sahtech.Dto.IngrediantsDto;
 import com.example.Sahtech.Dto.ProduitDto;
 import com.example.Sahtech.entities.Additifs;
+import com.example.Sahtech.entities.Ingrediants;
 import com.example.Sahtech.entities.Produit;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.AdditifsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -41,6 +41,15 @@ public class AdditifsController {
         return  additifs.stream()
                 .map(additifsMapper::mapTo)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping(path ="additifs/{id}")
+    public ResponseEntity<AdditifsDto> getAdditif(@PathVariable("id") Long id){
+        Optional<Additifs> foundadditif = additifsService.findOnebyId(id);
+        return foundadditif.map(additif-> {
+           AdditifsDto additifsDto = additifsMapper.mapTo(additif);
+            return new ResponseEntity<>(additifsDto, HttpStatus.OK);
+        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
 

@@ -7,12 +7,10 @@ import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.ProduitService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -44,4 +42,14 @@ public class ProduitController {
                    .map(produitMapper::mapTo)
                    .collect(Collectors.toList());
     }
+
+    @GetMapping(path ="produits/{id}")
+    public ResponseEntity<ProduitDto> getProduit(@PathVariable("id") Long id){
+        Optional<Produit> foundproduit = produitService.findOnebyId(id);
+        return foundproduit.map(produit-> {
+            ProduitDto produitDto = produitMapper.mapTo(produit);
+            return new ResponseEntity<>(produitDto, HttpStatus.OK);
+        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
 }

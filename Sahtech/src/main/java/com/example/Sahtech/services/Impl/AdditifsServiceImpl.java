@@ -6,6 +6,7 @@ import com.example.Sahtech.services.AdditifsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -30,5 +31,10 @@ public class AdditifsServiceImpl implements AdditifsService {
                                 .spliterator(),
                         false)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Additifs> findOnebyId(Long id) {
+        return additifsRepository.findById(id);
     }
 }
