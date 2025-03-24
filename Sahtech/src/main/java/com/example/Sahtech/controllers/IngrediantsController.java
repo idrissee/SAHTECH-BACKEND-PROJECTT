@@ -66,4 +66,20 @@ public class IngrediantsController {
                 ingrediantsMapper.mapTo(savedIngredient)
                 , HttpStatus.OK);
     }
+
+    @PatchMapping(path ="ingrediants/{id}")
+    public ResponseEntity<IngrediantsDto> partialUpdateIngredient(
+            @PathVariable("id") Long id,
+                @RequestBody IngrediantsDto ingredientDto){
+
+        if(!ingrediantsService.isExists(id)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Ingrediants ingredient = ingrediantsMapper.mapFrom(ingredientDto);
+        Ingrediants savedIngredient = ingrediantsService.partialUpdate(id,ingredient);
+        return new ResponseEntity<>(
+                ingrediantsMapper.mapTo(savedIngredient)
+                , HttpStatus.OK);
+    }
 }

@@ -13,4 +13,6 @@ public interface AdditifsService {
     Optional<Additifs> findOnebyId(Long id);
 
     boolean isExists(Long id);
+
+    Additifs partialUpdate(Long id, Additifs additif);
 }

@@ -43,6 +43,17 @@ public class IngrediantsServiceImpl implements IngrediantsService {
     public boolean isExists(Long id) {
         return ingrediantsRepository.existsById(id);
     }
+
+    @Override
+    public Ingrediants partialUpdate(Long id,Ingrediants ingredient) {
+        ingredient.setIdIngrediant(id);
+
+        return ingrediantsRepository.findById(id).map(exisitingIngredient ->{
+            Optional.ofNullable(ingredient.getNomIngrediant()).ifPresent(exisitingIngredient::setNomIngrediant);
+            Optional.ofNullable(ingredient.getQuantite()).ifPresent(exisitingIngredient::setQuantite);
+            return ingrediantsRepository.save(exisitingIngredient);
+        }).orElseThrow(() -> new RuntimeException("Ingrediants not found"));
+    }
 }
 
 

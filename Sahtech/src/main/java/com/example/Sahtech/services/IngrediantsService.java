@@ -14,4 +14,6 @@ public interface IngrediantsService {
     Optional<Ingrediants> findOnebyId(Long id);
 
     boolean isExists(Long id);
+
+    Ingrediants partialUpdate(Long id ,Ingrediants ingredient);
 }

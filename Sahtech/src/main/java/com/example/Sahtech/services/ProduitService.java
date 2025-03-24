@@ -16,4 +16,6 @@ public interface ProduitService {
     Optional<Produit> findOnebyId(Long id);
 
     boolean isExists(Long id);
+
+    Produit partialUpdate(Long id, Produit produit);
 }

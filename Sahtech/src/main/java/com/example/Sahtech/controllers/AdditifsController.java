@@ -66,5 +66,21 @@ public class AdditifsController {
                 , HttpStatus.OK);
     }
 
+    @PatchMapping(path ="additifs/{id}")
+    public ResponseEntity<AdditifsDto> partialUpdateAdditif(
+            @PathVariable("id") Long id,
+            @RequestBody AdditifsDto additifDto){
+
+        if(!additifsService.isExists(id)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Additifs additif = additifsMapper.mapFrom(additifDto);
+        Additifs savedAdditif = additifsService.partialUpdate(id,additif);
+        return new ResponseEntity<>(
+                additifsMapper.mapTo(savedAdditif)
+                , HttpStatus.OK);
+    }
+
 
 }

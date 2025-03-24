@@ -6,7 +6,6 @@ import com.example.Sahtech.repositories.AdditifsRepository;
 import com.example.Sahtech.repositories.ProduitRepository;
 import com.example.Sahtech.services.ProduitService;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -63,6 +62,20 @@ public class ProduitServiceImpl implements ProduitService {
     @Override
     public boolean isExists(Long id) {
         return produitRepository.existsById(id);
+    }
+
+    @Override
+    public Produit partialUpdate(Long id, Produit produit) {
+
+        produit.setIdProduit(id);
+
+        return produitRepository.findById(id).map(exisitingProduit ->{
+            Optional.ofNullable(produit.getNomProduit()).ifPresent(exisitingProduit::setNomProduit);
+            Optional.ofNullable(produit.getTypeProduit()).ifPresent(exisitingProduit::setTypeProduit);
+            return produitRepository.save(exisitingProduit);
+        }).orElseThrow(() -> new RuntimeException("Produit not found"));
+
+
     }
 
     @Override

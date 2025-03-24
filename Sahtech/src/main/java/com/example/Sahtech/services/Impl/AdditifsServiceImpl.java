@@ -42,4 +42,15 @@ public class AdditifsServiceImpl implements AdditifsService {
     public boolean isExists(Long id) {
         return additifsRepository.existsById(id);
     }
+
+    @Override
+    public Additifs partialUpdate(Long id, Additifs additif) {
+        additif.setIdAdditif(id);
+
+        return additifsRepository.findById(id).map(exisitingAdditif ->{
+            Optional.ofNullable(additif.getNomAdditif()).ifPresent(exisitingAdditif::setNomAdditif);
+            Optional.ofNullable(additif.getSeuil()).ifPresent(exisitingAdditif::setSeuil);
+            return additifsRepository.save(exisitingAdditif);
+        }).orElseThrow(() -> new RuntimeException("Additif not found"));
+    }
 }

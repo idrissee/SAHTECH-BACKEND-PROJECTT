@@ -69,4 +69,19 @@ public class ProduitController {
                 , HttpStatus.OK);
     }
 
+    @PatchMapping(path ="produits/{id}")
+    public ResponseEntity<ProduitDto> partialUpdateProduit(
+            @PathVariable("id") Long id,
+            @RequestBody ProduitDto produitDto){
+
+        if(!produitService.isExists(id)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Produit produit = produitMapper.mapFrom(produitDto);
+        Produit updatedProduit = produitService.partialUpdate(id,produit);
+        return new ResponseEntity<>(
+                produitMapper.mapTo(updatedProduit),
+                HttpStatus.OK);
+    }
 }
