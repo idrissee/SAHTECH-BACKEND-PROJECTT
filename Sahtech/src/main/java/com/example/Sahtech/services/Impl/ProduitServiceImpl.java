@@ -8,6 +8,9 @@ import com.example.Sahtech.services.ProduitService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class ProduitServiceImpl implements ProduitService {
@@ -40,5 +43,14 @@ public class ProduitServiceImpl implements ProduitService {
 
         }
         return savedProduit;
+    }
+
+    @Override
+    public List<Produit> findAll() {
+        return StreamSupport.stream(produitRepository
+                .findAll()
+                .spliterator(),
+                        false)
+                .collect(Collectors.toList());
     }
 }

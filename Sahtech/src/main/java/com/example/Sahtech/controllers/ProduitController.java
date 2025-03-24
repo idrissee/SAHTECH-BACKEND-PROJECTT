@@ -7,9 +7,13 @@ import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.ProduitService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -24,7 +28,7 @@ public class ProduitController {
         this.produitMapper = produitMapper;
     }
 
-    @PostMapping(path = "/produit")
+    @PostMapping(path = "/produits")
     public ResponseEntity<ProduitDto> createProduit(@RequestBody ProduitDto produitDto) {
         Produit produit = produitMapper.mapFrom(produitDto);
         Produit savedProduit = produitService.createProduit(produit);
@@ -32,4 +36,12 @@ public class ProduitController {
 
     }
 
+
+    @GetMapping(path ="/produits")
+    public List<ProduitDto> listProduits() {
+            List<Produit> produits  = produitService.findAll();
+           return  produits.stream()
+                   .map(produitMapper::mapTo)
+                   .collect(Collectors.toList());
+    }
 }

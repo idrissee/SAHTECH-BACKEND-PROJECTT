@@ -5,6 +5,10 @@ import com.example.Sahtech.repositories.AdditifsRepository;
 import com.example.Sahtech.services.AdditifsService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 @Service
 public class AdditifsServiceImpl implements AdditifsService {
 
@@ -17,5 +21,14 @@ public class AdditifsServiceImpl implements AdditifsService {
     @Override
     public Additifs createAdditifs(Additifs additifs) {
       return additifsRepository.save(additifs);
+    }
+
+    @Override
+    public List<Additifs> findAll() {
+        return StreamSupport.stream(additifsRepository
+                                .findAll()
+                                .spliterator(),
+                        false)
+                .collect(Collectors.toList());
     }
 }

@@ -1,14 +1,20 @@
 package com.example.Sahtech.Controllers;
 
 import com.example.Sahtech.Dto.AdditifsDto;
+import com.example.Sahtech.Dto.ProduitDto;
 import com.example.Sahtech.entities.Additifs;
+import com.example.Sahtech.entities.Produit;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.AdditifsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class AdditifsController {
@@ -27,6 +33,14 @@ public class AdditifsController {
         Additifs additifs = additifsMapper.mapFrom(additifsDto);
         Additifs additifsaved = additifsService.createAdditifs(additifs);
         return new ResponseEntity<>(additifsMapper.mapTo(additifsaved), HttpStatus.CREATED);
+    }
+
+    @GetMapping(path ="/additifs")
+    public List<AdditifsDto> listAdditifs() {
+        List<Additifs> additifs  = additifsService.findAll();
+        return  additifs.stream()
+                .map(additifsMapper::mapTo)
+                .collect(Collectors.toList());
     }
 
 
