@@ -16,4 +16,6 @@ public interface IngrediantsService {
     boolean isExists(Long id);
 
     Ingrediants partialUpdate(Long id ,Ingrediants ingredient);
+
+    void delete(Long id);
 }

@@ -84,4 +84,10 @@ public class ProduitController {
                 produitMapper.mapTo(updatedProduit),
                 HttpStatus.OK);
     }
+
+    @DeleteMapping(path = "produits/{id}")
+    public ResponseEntity deleteProduit(@PathVariable("id") Long id){
+        produitService.delete(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 }

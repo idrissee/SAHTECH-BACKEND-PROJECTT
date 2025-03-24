@@ -79,6 +79,11 @@ public class ProduitServiceImpl implements ProduitService {
     }
 
     @Override
+    public void delete(Long id) {
+        produitRepository.deleteById(id);
+    }
+
+    @Override
     public Produit save(Produit produit) {
        return  produitRepository.save(produit);
     }

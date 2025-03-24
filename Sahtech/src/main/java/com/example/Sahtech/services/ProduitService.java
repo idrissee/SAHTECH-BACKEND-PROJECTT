@@ -18,4 +18,6 @@ public interface ProduitService {
     boolean isExists(Long id);
 
     Produit partialUpdate(Long id, Produit produit);
+
+    void delete(Long id);
 }

@@ -82,4 +82,10 @@ public class IngrediantsController {
                 ingrediantsMapper.mapTo(savedIngredient)
                 , HttpStatus.OK);
     }
+
+    @DeleteMapping(path = "ingrediants/{id}")
+    public ResponseEntity deleteIngredient(@PathVariable("id") Long id) {
+        ingrediantsService.delete(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 }

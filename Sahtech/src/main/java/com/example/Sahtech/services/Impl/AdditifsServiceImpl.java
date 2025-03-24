@@ -53,4 +53,11 @@ public class AdditifsServiceImpl implements AdditifsService {
             return additifsRepository.save(exisitingAdditif);
         }).orElseThrow(() -> new RuntimeException("Additif not found"));
     }
+
+    @Override
+    public void delete(Long id) {
+        additifsRepository.deleteById(id);
+    }
+
+
 }

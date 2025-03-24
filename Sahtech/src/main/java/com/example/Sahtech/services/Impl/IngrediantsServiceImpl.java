@@ -54,6 +54,11 @@ public class IngrediantsServiceImpl implements IngrediantsService {
             return ingrediantsRepository.save(exisitingIngredient);
         }).orElseThrow(() -> new RuntimeException("Ingrediants not found"));
     }
+
+    @Override
+    public void delete(Long id) {
+        ingrediantsRepository.deleteById(id);
+    }
 }
 
 

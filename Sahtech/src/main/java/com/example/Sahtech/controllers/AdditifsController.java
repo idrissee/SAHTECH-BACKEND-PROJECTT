@@ -82,5 +82,11 @@ public class AdditifsController {
                 , HttpStatus.OK);
     }
 
+    @DeleteMapping(path ="additifs/{id}")
+    public ResponseEntity deleteAdditif(@PathVariable("id") Long id){
+        additifsService.delete(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
 
 }

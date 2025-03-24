@@ -15,4 +15,6 @@ public interface AdditifsService {
     boolean isExists(Long id);
 
     Additifs partialUpdate(Long id, Additifs additif);
+
+    void delete(Long id);
 }
