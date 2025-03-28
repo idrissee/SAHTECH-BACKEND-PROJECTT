@@ -1,4 +1,4 @@
-package com.example.Sahtech.controllers;
+package com.example.Sahtech.Controllers;
 
 import com.example.Sahtech.Dto.AdditifsDto;
 import com.example.Sahtech.entities.Additifs;

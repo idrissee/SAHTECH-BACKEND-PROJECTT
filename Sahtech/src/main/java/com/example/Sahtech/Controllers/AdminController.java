@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,13 +22,16 @@ public class AdminController {
     @Autowired
     private AdminRepository adminRepository;
 
-    @GetMapping("/All")
+    @GetMapping("/All")//LISTER TOUT LES ADMINS
     public ResponseEntity<List<Admin>> getAllAdmins() {
         List<Admin> list = adminRepository.findAll();
         return new ResponseEntity<>(list, HttpStatus.OK);
 
     }
 
-
+    @GetMapping("/{id}")
+    public ResponseEntity<Admin> getAdminById(@PathVariable Long id) {
+         Admin admin  = adminRepository.getAdminsById(id);
+      return new ResponseEntity<>(admin, HttpStatus.OK);}
 
 }
