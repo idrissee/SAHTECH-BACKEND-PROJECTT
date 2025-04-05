@@ -32,5 +32,7 @@ public class ProduitDto {
     private LocalDateTime dateAjout;
 
     private String description;
+    
+    private Long nutriScoreId; // ID du NutriScore associé
 
 }

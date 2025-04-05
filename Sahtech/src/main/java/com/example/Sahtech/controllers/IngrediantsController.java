@@ -44,8 +44,8 @@ public class IngrediantsController {
     @GetMapping(path ="ingrediants/{id}")
     public ResponseEntity<IngrediantsDto> getIngrediant(@PathVariable("id") Long id){
         Optional<Ingrediants> foundingrediant = ingrediantsService.findOnebyId(id);
-        return foundingrediant.map(produit-> {
-           IngrediantsDto ingrediantsDto = ingrediantsMapper.mapTo(produit);
+        return foundingrediant.map(ingrediant-> {
+           IngrediantsDto ingrediantsDto = ingrediantsMapper.mapTo(ingrediant);
             return new ResponseEntity<>(ingrediantsDto, HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
