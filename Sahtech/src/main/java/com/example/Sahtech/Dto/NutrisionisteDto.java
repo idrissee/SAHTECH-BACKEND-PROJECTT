@@ -23,13 +23,15 @@ public class NutrisionisteDto {
     
     private String adresse;
     
+    private String role;
+    
     private String specialite;
     
     private Integer anneesExperience;
     
     private Long localisationId;
     
-    private String certifications;
+    private List<String> certifications;
     
     private String biographie;
     

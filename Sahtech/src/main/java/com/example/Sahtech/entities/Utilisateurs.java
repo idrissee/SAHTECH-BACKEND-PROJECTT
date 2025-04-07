@@ -14,12 +14,15 @@ import java.util.Date;
 @Builder
 @Data
 @Document(collection = "utilisateurs")
-public class Utilisateurs extends Personne{
-
+public class Utilisateurs {
     @Id
     private Long id;
-
-
-    private Date dateDeNaissence;
-
+    private String nom;
+    private String prenom;
+    private String email;
+    private String adresse;
+    private String password;
+    private String role;
+    private Date dateDeNaissance;
+    private String profileId; // Pour lier à un profil (admin ou nutritionniste)
 }

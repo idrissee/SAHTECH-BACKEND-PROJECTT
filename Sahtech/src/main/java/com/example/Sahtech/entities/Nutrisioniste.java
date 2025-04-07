@@ -9,29 +9,26 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Document(collection = "nutritionistes")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
-public class Nutrisioniste extends Personne {
-    
+@Document(collection = "nutrisioniste")
+public class Nutrisioniste {
     @Id
     private Long id;
-    
+    private String nom;
+    private String prenom;
+    private String email;
+    private String adresse;
+    private String password;
+    private String role;
     private String specialite;
-    
     private Integer anneesExperience;
-    
-    private Long localisationId; // ID de la localisation du nutritionniste
-    
-    private String certifications;
-    
+    private Long localisationId;
+    private List<String> certifications;
     private String biographie;
-    
-    private List<Long> recommendationsIds; // IDs des recommandations formulées
-    
+    private List<Long> recommendationsIds;
     private String numeroTelephone;
-    
-    private Boolean estVerifie; // Si le nutritionniste est vérifié par l'administration
+    private Boolean estVerifie;
 }
