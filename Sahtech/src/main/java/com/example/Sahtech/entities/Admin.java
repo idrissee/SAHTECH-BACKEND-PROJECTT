@@ -14,7 +14,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 @Data
 @Document(collection = "Admin")
-public class Admin {
-@Id
-private Long id;
+public class Admin extends Utilisateurs{
+
+    @Id
+    private Long id;
+
+
 }

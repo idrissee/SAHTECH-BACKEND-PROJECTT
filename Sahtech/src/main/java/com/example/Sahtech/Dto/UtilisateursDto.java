@@ -1,6 +1,5 @@
 package com.example.Sahtech.Dto;
 
-import com.example.Sahtech.entities.Personne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,12 +12,15 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @Data
-public class UtilisateursDto extends Personne {
-
+public class UtilisateursDto {
 
     private Long id;
-
-
+    private String nom;
+    private String prenom;
+    private Long telephone;
+    private String email;
+    private String adresse;
     private Date dateDeNaissence;
+
 
 }

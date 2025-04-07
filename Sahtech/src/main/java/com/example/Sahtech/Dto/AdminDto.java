@@ -1,7 +1,6 @@
 package com.example.Sahtech.Dto;
 
 
-import com.example.Sahtech.entities.Personne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class AdminDto extends Personne {
+public class AdminDto {
 
     private Long id;
 
