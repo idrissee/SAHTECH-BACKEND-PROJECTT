@@ -3,6 +3,7 @@ package com.example.Sahtech.services.Impl;
 import com.example.Sahtech.entities.Utilisateurs;
 import com.example.Sahtech.repositories.UtilisateursRepository;
 import com.example.Sahtech.services.UtilisateurService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
