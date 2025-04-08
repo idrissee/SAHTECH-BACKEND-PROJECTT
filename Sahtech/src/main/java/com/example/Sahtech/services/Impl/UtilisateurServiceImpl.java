@@ -1,6 +1,7 @@
 package com.example.Sahtech.services.Impl;
 
 import com.example.Sahtech.entities.Utilisateurs;
+import com.example.Sahtech.repositories.UtilisateursRepository;
 import com.example.Sahtech.services.UtilisateurService;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +9,9 @@ import java.util.List;
 
 @Service
 public class UtilisateurServiceImpl implements UtilisateurService {
+
+    @Autowired
+    private UtilisateursRepository utilisateursRepository;
 
     @Override
     public Utilisateurs getUtilisateurById(int id) {
@@ -24,11 +28,11 @@ public class UtilisateurServiceImpl implements UtilisateurService {
         return List.of();
     }
 
+
     @Override
     public List<Utilisateurs> getUtilisateursByEmail(String email) {
-        return List.of();
+        return utilisateursRepository.findByEmail(email); // à condition que cette méthode existe
     }
-
     @Override
     public List<Utilisateurs> getUtilisateursByRole(String role) {
         return List.of();
