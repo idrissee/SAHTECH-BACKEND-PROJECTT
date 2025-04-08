@@ -5,9 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -27,7 +25,14 @@ public class ProduitDto {
 
     private TypeProduit typeProduit;// Ou `private TypeProduit typeProduit;` si tu veux garder l'énumération
 
-    private List<Long> additifsIds; // Liste des IDs des additifs associés
+    private List<String> nomAdditif;  // Liste des IDs des additifs associés
 
+    private String marque;
+
+    private LocalDateTime dateAjout;
+
+    private String description;
+    
+    private Long nutriScoreId; // ID du NutriScore associé
 
 }
