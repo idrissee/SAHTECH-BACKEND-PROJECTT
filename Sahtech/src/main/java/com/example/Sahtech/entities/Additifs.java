@@ -25,4 +25,6 @@ public class Additifs {
     private Maladie maladieCause;
 
     private List<Long> produitsIds;
+
+
 }

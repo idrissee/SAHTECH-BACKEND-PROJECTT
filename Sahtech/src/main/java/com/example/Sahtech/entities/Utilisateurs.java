@@ -18,8 +18,12 @@ public class Utilisateurs {
 
     @Id
     private Long id;
-
-
+    private String nom;
+    private String prenom;
+    private Long telephone;
+    private String email;
+    private String adresse;
     private Date dateDeNaissence;
+
 
 }

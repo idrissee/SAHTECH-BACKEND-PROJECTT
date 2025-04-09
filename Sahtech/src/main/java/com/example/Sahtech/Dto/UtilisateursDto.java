@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 import java.util.Date;
 
 @AllArgsConstructor
@@ -12,12 +13,14 @@ import java.util.Date;
 @Builder
 @Data
 public class UtilisateursDto {
+
     private Long id;
     private String nom;
     private String prenom;
+    private Long telephone;
     private String email;
     private String adresse;
-    private String role;
-    private Date dateDeNaissance;
-    private String profileId;
+    private Date dateDeNaissence;
+
+
 }
