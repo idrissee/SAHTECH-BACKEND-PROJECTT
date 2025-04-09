@@ -15,4 +15,5 @@ public enum Maladie {
     HEPATITE,
     ASTHME,
     MALADIE_COELIAQUE
+
 }
