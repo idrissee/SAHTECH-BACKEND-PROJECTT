@@ -14,7 +14,7 @@ import java.util.Date;
 @Builder
 @Data
 @Document(collection = "utilisateurs")
-public class Utilisateurs extends Personne{
+public class Utilisateurs {
 
     @Id
     private Long id;
