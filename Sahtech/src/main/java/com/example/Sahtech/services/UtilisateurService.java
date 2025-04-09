@@ -14,6 +14,6 @@ public interface UtilisateurService {
     public List<Utilisateurs> getUtilisateursByRole(String role);
     public Utilisateurs addUtilisateur(Utilisateurs u);
     public Utilisateurs updateUtilisateur(Utilisateurs u);
-    public void deleteUtilisateur(int id);
+    public boolean deleteUtilisateur(Long id);
 
 }

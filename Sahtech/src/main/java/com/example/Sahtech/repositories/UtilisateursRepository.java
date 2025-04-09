@@ -12,6 +12,8 @@ import java.util.List;
 public interface UtilisateursRepository extends MongoRepository <Utilisateurs, Long> {
 
     List<Utilisateurs> findByEmail(String email);
+    List<Utilisateurs> findByNom(String nom);
+    List<Utilisateurs> findByRole(String role);
 
 
 }

@@ -1,8 +1,8 @@
 package com.example.Sahtech.services.Impl;
 
-import com.example.Sahtech.entities.Utilisateurs;
-import com.example.Sahtech.repositories.UtilisateursRepository;
-import com.example.Sahtech.services.UtilisateurService;
+import com.example.Sahtech.entities.Admin;
+import com.example.Sahtech.repositories.AdminRepository;
+import com.example.Sahtech.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,54 +10,45 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UtilisateurServiceImpl implements UtilisateurService {
+public class AdminServiceImpl implements AdminService {
 
     @Autowired
-    private UtilisateursRepository utilisateursRepository;
+    private AdminRepository adminRepository;
 
     @Override
-    public Utilisateurs getUtilisateurById(Long id) {
-        Optional<Utilisateurs> utilisateur = utilisateursRepository.findById(id);
-        return utilisateur.orElse(null);
+    public List<Admin> getAllAdmins() {
+        return adminRepository.findAll();
     }
 
     @Override
-    public List<Utilisateurs> getAllUtilisateurs() {
-        return utilisateursRepository.findAll();
+    public Admin getAdminById(Long id) {
+        Optional<Admin> admin = adminRepository.findById(id);
+        return admin.orElse(null);
     }
 
     @Override
-    public List<Utilisateurs> getUtilisateursByName(String nom) {
-        return utilisateursRepository.findByNom(nom);
+    public Admin getAdminByEmail(String email) {
+        return adminRepository.findByEmail(email);
     }
 
     @Override
-    public List<Utilisateurs> getUtilisateursByEmail(String email) {
-        return utilisateursRepository.findByEmail(email);
+    public Admin createAdmin(Admin admin) {
+        return adminRepository.save(admin);
     }
 
     @Override
-    public List<Utilisateurs> getUtilisateursByRole(String role) {
-        return utilisateursRepository.findByRole(role);
-    }
-
-    @Override
-    public Utilisateurs addUtilisateur(Utilisateurs u) {
-        return utilisateursRepository.save(u);
-    }
-
-    @Override
-    public Utilisateurs updateUtilisateur(Utilisateurs u) {
-        if (utilisateursRepository.existsById(u.getId())) {
-            return utilisateursRepository.save(u);
+    public Admin updateAdmin(Long id, Admin admin) {
+        if (adminRepository.existsById(id)) {
+            admin.setId(id);
+            return adminRepository.save(admin);
         }
         return null;
     }
 
     @Override
-    public boolean deleteUtilisateur(Long id) {
-        if (utilisateursRepository.existsById(id)) {
-            utilisateursRepository.deleteById(id);
+    public boolean deleteAdmin(Long id) {
+        if (adminRepository.existsById(id)) {
+            adminRepository.deleteById(id);
             return true;
         }
         return false;
