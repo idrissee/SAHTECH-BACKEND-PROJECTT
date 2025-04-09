@@ -1,6 +1,7 @@
 package com.example.Sahtech.Enum;
 
 public enum Maladie {
+
     DIABETIQUE,
     OBESITE,
     HYPERTENSION,
