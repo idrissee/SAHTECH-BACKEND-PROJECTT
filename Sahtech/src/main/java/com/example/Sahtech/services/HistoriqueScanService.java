@@ -1,6 +1,7 @@
 package com.example.Sahtech.services;
 
 import com.example.Sahtech.entities.HistoriqueScan;
+import com.example.Sahtech.entities.Utilisateurs;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,9 @@ public interface HistoriqueScanService {
     List<HistoriqueScan> getScansByImpactSante(String impact);
     List<HistoriqueScan> getScansByAdditif(String additif);
     List<HistoriqueScan> getScansByPeriode(LocalDateTime startDate, LocalDateTime endDate);
+    
+    // Nouvel ajout - Récupérer les utilisateurs qui ont scanné un produit spécifique
+    List<Utilisateurs> getUtilisateursByProduit(Long produitId);
     
     // Opérations d'analyse
     Map<String, Long> getStatistiquesNutriScore(Long utilisateurId);

@@ -35,8 +35,8 @@ public class ProduitServiceImpl implements ProduitService {
                 }
 
                 // Avoid duplicates
-                if (!additif.getProduitsIds().contains(savedProduit.getIdProduit())) {
-                    additif.getProduitsIds().add(savedProduit.getIdProduit());
+                if (!additif.getProduitsIds().contains(savedProduit.getId())) {
+                    additif.getProduitsIds().add(savedProduit.getId());
                     additifRepository.save(additif);
                 }
             });
@@ -60,6 +60,11 @@ public class ProduitServiceImpl implements ProduitService {
     }
 
     @Override
+    public Optional<Produit> findByCodeBarre(String codeBarre) {
+        return produitRepository.findByCodeBarre(codeBarre);
+    }
+
+    @Override
     public boolean isExists(Long id) {
         return produitRepository.existsById(id);
     }
@@ -67,11 +72,11 @@ public class ProduitServiceImpl implements ProduitService {
     @Override
     public Produit partialUpdate(Long id, Produit produit) {
 
-        produit.setIdProduit(id);
+        produit.setId(id);
 
         return produitRepository.findById(id).map(exisitingProduit ->{
-            Optional.ofNullable(produit.getNomProduit()).ifPresent(exisitingProduit::setNomProduit);
-            Optional.ofNullable(produit.getTypeProduit()).ifPresent(exisitingProduit::setTypeProduit);
+            Optional.ofNullable(produit.getNom()).ifPresent(exisitingProduit::setNom);
+            Optional.ofNullable(produit.getDescription()).ifPresent(exisitingProduit::setDescription);
             return produitRepository.save(exisitingProduit);
         }).orElseThrow(() -> new RuntimeException("Produit not found"));
 

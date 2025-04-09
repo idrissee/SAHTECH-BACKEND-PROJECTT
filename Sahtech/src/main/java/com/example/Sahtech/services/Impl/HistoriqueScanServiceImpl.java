@@ -1,6 +1,7 @@
 package com.example.Sahtech.services.Impl;
 
 import com.example.Sahtech.entities.HistoriqueScan;
+import com.example.Sahtech.entities.Utilisateurs;
 import com.example.Sahtech.repositories.HistoriqueScanRepository;
 import com.example.Sahtech.services.HistoriqueScanService;
 import lombok.RequiredArgsConstructor;
@@ -151,5 +152,14 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
                 .orElseThrow(() -> new RuntimeException("Scan non trouvé"));
         scan.setCommentaireUtilisateur(commentaire);
         return historiqueScanRepository.save(scan);
+    }
+
+    @Override
+    public List<Utilisateurs> getUtilisateursByProduit(Long produitId) {
+        List<HistoriqueScan> scans = historiqueScanRepository.findByProduitId(produitId);
+        return scans.stream()
+                .map(HistoriqueScan::getUtilisateur)
+                .distinct() // Pour éviter les doublons (si un utilisateur a scanné plusieurs fois le même produit)
+                .collect(Collectors.toList());
     }
 } 

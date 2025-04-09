@@ -1,41 +1,63 @@
 package com.example.Sahtech.entities;
 
-
-import com.example.Sahtech.Enum.TypeProduit;
-import lombok.*;
+import com.example.Sahtech.Enum.ValeurNutriScore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Document(collection = "produits")
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Produit {
-
-
     @Id
-    private Long idProduit;  // MongoDB génère un ObjectId automatiquement (ou tu peux mettre ObjectId)
-
-    private Long codeBarre;
-
-    private String nomProduit;
-
-    private TypeProduit typeProduit;// Ou `private TypeProduit typeProduit;` si tu veux garder l'énumération
-
-    private List<String> nomAdditif; // Liste des IDs des additifs associés
-
-    private String marque;
-
-    private LocalDateTime dateAjout;
-
-    private String description;
+    private Long id;
     
-    private Long nutriScoreId; // Référence à l'ID du NutriScore associé
-
+    private String nom;
+    private String codeBarre;
+    private String marque;
+    private String categorie;
+    private String description;
+    private String imageUrl;
+    
+    // Informations NutriScore intégrées
+    private ValeurNutriScore valeurNutriScore; // A, B, C, D, E
+    private String descriptionNutriScore;
+    private Integer scoreNumerique;
+    
+    // Informations nutritionnelles
+    private String nutriScore; // Texte descriptif du nutriscore (peut être supprimé si redondant)
+    private Double energie100g; // en kcal
+    private Double proteines100g;
+    private Double glucides100g;
+    private Double lipides100g;
+    private Double fibres100g;
+    private Double sel100g;
+    private Double sucre100g;
+    
+    // Composition
+    private List<String> ingredients;
+    private List<String> nomAdditif;
+    private List<String> allergenes;
+    
+    // Recommandations
+    private String recommandationIA;
+    private List<String> pointsPositifs;
+    private List<String> pointsNegatifs;
+    private String impactSante; // Bonne, Moyenne, Mauvaise
+    
+    // Métadonnées
+    private Boolean estValide;
+    private String sourceDonnees; // "SAHTECH", "OPEN_FOOD_FACTS", etc.
+    private String paysOrigine;
+    private String dateCreation;
+    private String dateModification;
 }
 
 

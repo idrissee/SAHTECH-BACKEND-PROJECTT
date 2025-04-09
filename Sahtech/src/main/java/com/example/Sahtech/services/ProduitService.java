@@ -15,6 +15,8 @@ public interface ProduitService {
 
     Optional<Produit> findOnebyId(Long id);
 
+    Optional<Produit> findByCodeBarre(String codeBarre);
+
     boolean isExists(Long id);
 
     Produit partialUpdate(Long id, Produit produit);
