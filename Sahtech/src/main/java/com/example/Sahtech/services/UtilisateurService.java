@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UtilisateurService {
 
-    public Utilisateurs getUtilisateurById(int id);
+    public Utilisateurs getUtilisateurById(Long id);
     public List<Utilisateurs> getAllUtilisateurs();
     public List<Utilisateurs> getUtilisateursByName(String nom);
     public List<Utilisateurs> getUtilisateursByEmail(String email);

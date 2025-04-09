@@ -3,9 +3,7 @@ package com.example.Sahtech.Controllers;
 import com.example.Sahtech.Dto.UtilisateursDto;
 import com.example.Sahtech.entities.Utilisateurs;
 import com.example.Sahtech.mappers.Mapper;
-import com.example.Sahtech.repositories.UtilisateursRepository;
 import com.example.Sahtech.services.UtilisateurService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +15,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/API/Sahtech/Utilisateurs")
 public class UtilisateursController {
-
-    @Autowired
-    private UtilisateursRepository utilisateursRepository;
 
     @Autowired
     private UtilisateurService utilisateurService;
@@ -39,9 +34,12 @@ public class UtilisateursController {
     // GET USER BY ID
     @GetMapping("/{id}")
     public ResponseEntity<UtilisateursDto> getUserById(@PathVariable Long id) {
-        return utilisateursRepository.findById(id)
-                .map(user -> new ResponseEntity<>(utilisateursMapper.mapTo(user), HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Utilisateurs user = utilisateurService.getUtilisateurById(id);
+        if (user != null) {
+            return new ResponseEntity<>(utilisateursMapper.mapTo(user), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET USERS BY EMAIL
@@ -58,7 +56,7 @@ public class UtilisateursController {
     @PostMapping
     public ResponseEntity<UtilisateursDto> addUser(@RequestBody UtilisateursDto userDto) {
         Utilisateurs user = utilisateursMapper.mapFrom(userDto);
-        Utilisateurs savedUser = utilisateursRepository.save(user);
+        Utilisateurs savedUser = utilisateurService.addUtilisateur(user);
         UtilisateursDto savedDto = utilisateursMapper.mapTo(savedUser);
         return new ResponseEntity<>(savedDto, HttpStatus.CREATED);
     }
@@ -66,21 +64,21 @@ public class UtilisateursController {
     // UPDATE USER
     @PutMapping("/{id}")
     public ResponseEntity<UtilisateursDto> updateUser(@PathVariable Long id, @RequestBody UtilisateursDto userDto) {
-        return utilisateursRepository.findById(id).map(existingUser -> {
-            Utilisateurs updatedUser = utilisateursMapper.mapFrom(userDto);
-            updatedUser.setId(id);
-            Utilisateurs saved = utilisateursRepository.save(updatedUser);
+        Utilisateurs updatedUser = utilisateursMapper.mapFrom(userDto);
+        updatedUser.setId(id);
+        Utilisateurs saved = utilisateurService.updateUtilisateur(updatedUser);
+        if (saved != null) {
             return new ResponseEntity<>(utilisateursMapper.mapTo(saved), HttpStatus.OK);
-        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // DELETE USER
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        if (utilisateursRepository.existsById(id)) {
-            utilisateursRepository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        boolean deleted = utilisateurService.deleteUtilisateur(id);
+        return deleted ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
