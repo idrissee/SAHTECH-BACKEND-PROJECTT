@@ -1,6 +1,5 @@
 package com.example.Sahtech.Dto;
 
-import com.example.Sahtech.Enum.Maladie;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
