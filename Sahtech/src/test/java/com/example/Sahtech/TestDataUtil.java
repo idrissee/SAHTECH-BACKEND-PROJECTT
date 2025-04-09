@@ -1,6 +1,5 @@
 package com.example.Sahtech;
 
-import com.example.Sahtech.Enum.Maladie;
 import com.example.Sahtech.Enum.TypeProduit;
 import com.example.Sahtech.entities.Additifs;
 import com.example.Sahtech.entities.Ingrediants;
