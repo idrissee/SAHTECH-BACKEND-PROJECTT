@@ -1,5 +1,6 @@
 package com.example.Sahtech.Dto;
 
+import com.example.Sahtech.Enum.Maladie;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class UtilisateursDto {
     private String email;
     private String adresse;
     private Date dateDeNaissence;
+    private Maladie maladie;
 
 
 }
