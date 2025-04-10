@@ -1,5 +1,7 @@
 package com.example.Sahtech.entities;
 
+import com.example.Sahtech.Enum.Maladie;
+import com.example.Sahtech.Enum.Objectif;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,8 +24,12 @@ public class Utilisateurs {
     private String prenom;
     private Long telephone;
     private String email;
-    private String adresse;
     private Date dateDeNaissence;
+    private Float taille;
+    private String sexe;
+    private Float poids;
+    private Maladie maladie;
+    private Objectif objectif;
 
 
 }

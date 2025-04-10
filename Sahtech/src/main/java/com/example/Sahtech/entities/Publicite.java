@@ -45,19 +45,4 @@ public class Publicite {
     private Date dateDebut;
     private Date dateFin;
     
-    // Informations sur le sponsor
-    private String nomEntreprise;
-    
-    // Budget et coûts
-    private Double budget;
-    private Double budgetJournalier;
-    private Double coutParClic;
-    private Double coutParImpression;
-    
-    // Statistiques
-    private Long impressions;
-    private Long clics;
-    
-    // Priorité d'affichage
-    private Integer priorite;
 }
