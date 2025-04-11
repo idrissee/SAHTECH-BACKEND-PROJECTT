@@ -19,6 +19,7 @@ public class Utilisateurs {
 
     @Id
     private Long id;
+
     private String nom;
     private String prenom;
     private Long telephone;
@@ -26,6 +27,13 @@ public class Utilisateurs {
     private String adresse;
     private Date dateDeNaissence;
     private Maladie maladie;
+    private Float poids;
+    private Float taille;
+    private Boolean sport;
+    private String sexe;
+
+
+
 
 
 }
