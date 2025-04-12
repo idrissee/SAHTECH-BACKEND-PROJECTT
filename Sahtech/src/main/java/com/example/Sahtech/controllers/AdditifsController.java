@@ -57,7 +57,6 @@ public class AdditifsController {
         if(!additifsService.isExists(id)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
         additifsDto.setIdAdditif(id);
         Additifs additif = additifsMapper.mapFrom(additifsDto);
         Additifs savedAdditif = additifsService.save(additif);
