@@ -41,7 +41,7 @@ public class AdditifsController {
     }
 
     @GetMapping(path ="additifs/{id}")
-    public ResponseEntity<AdditifsDto> getAdditif(@PathVariable("id") Long id){
+    public ResponseEntity<AdditifsDto> getAdditif(@PathVariable("id") String id){
         Optional<Additifs> foundadditif = additifsService.findOnebyId(id);
         return foundadditif.map(additif-> {
            AdditifsDto additifsDto = additifsMapper.mapTo(additif);
@@ -51,7 +51,7 @@ public class AdditifsController {
 
     @PutMapping(path = "additifs/{id}")
     public ResponseEntity<AdditifsDto> fullUpdateAdditif(
-            @PathVariable("id") Long id,
+            @PathVariable("id") String id,
             @RequestBody AdditifsDto additifsDto) {
 
         if(!additifsService.isExists(id)){
@@ -67,7 +67,7 @@ public class AdditifsController {
 
     @PatchMapping(path ="additifs/{id}")
     public ResponseEntity<AdditifsDto> partialUpdateAdditif(
-            @PathVariable("id") Long id,
+            @PathVariable("id") String id,
             @RequestBody AdditifsDto additifDto){
 
         if(!additifsService.isExists(id)) {
@@ -82,7 +82,7 @@ public class AdditifsController {
     }
 
     @DeleteMapping(path ="additifs/{id}")
-    public ResponseEntity deleteAdditif(@PathVariable("id") Long id){
+    public ResponseEntity deleteAdditif(@PathVariable("id") String id){
         additifsService.delete(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

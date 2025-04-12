@@ -50,7 +50,7 @@ public class ProduitController {
     }
 
     @GetMapping(path ="produits/{id}")
-    public ResponseEntity<ProduitDto> getProduit(@PathVariable("id") Long id){
+    public ResponseEntity<ProduitDto> getProduit(@PathVariable("id") String id){
         Optional<Produit> foundproduit = produitService.findOnebyId(id);
         return foundproduit.map(produit-> {
             ProduitDto produitDto = produitMapper.mapTo(produit);
@@ -60,7 +60,7 @@ public class ProduitController {
 
     @PutMapping(path = "produits/{id}")
     public ResponseEntity<ProduitDto> fullUpdateProduit(
-            @PathVariable("id") Long id,
+            @PathVariable("id") String id,
             @RequestBody ProduitDto produitDto) {
 
         if(!produitService.isExists(id)){
@@ -77,7 +77,7 @@ public class ProduitController {
 
     @PatchMapping(path ="produits/{id}")
     public ResponseEntity<ProduitDto> partialUpdateProduit(
-            @PathVariable("id") Long id,
+            @PathVariable("id") String id,
             @RequestBody ProduitDto produitDto){
 
         if(!produitService.isExists(id)) {
@@ -92,13 +92,13 @@ public class ProduitController {
     }
 
     @DeleteMapping(path = "produits/{id}")
-    public ResponseEntity deleteProduit(@PathVariable("id") Long id){
+    public ResponseEntity deleteProduit(@PathVariable("id") String id){
         produitService.delete(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
     
     @GetMapping(path = "produits/{id}/nutriscore")
-    public ResponseEntity<NutriScoreDto> getNutriScoreForProduit(@PathVariable("id") Long id) {
+    public ResponseEntity<NutriScoreDto> getNutriScoreForProduit(@PathVariable("id") String id) {
         // Récupérer d'abord le produit
         Optional<Produit> foundProduit = produitService.findOnebyId(id);
         
@@ -124,8 +124,8 @@ public class ProduitController {
     
     @PutMapping(path = "produits/{id}/nutriscore/{nutriScoreId}")
     public ResponseEntity<ProduitDto> setNutriScoreForProduit(
-            @PathVariable("id") Long id,
-            @PathVariable("nutriScoreId") Long nutriScoreId) {
+            @PathVariable("id") String id,
+            @PathVariable("nutriScoreId") String nutriScoreId) {
         
         // Vérifier que le produit existe
         if (!produitService.isExists(id)) {

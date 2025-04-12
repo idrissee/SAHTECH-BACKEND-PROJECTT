@@ -42,7 +42,7 @@ public class IngrediantsController {
     }
 
     @GetMapping(path ="ingrediants/{id}")
-    public ResponseEntity<IngrediantsDto> getIngrediant(@PathVariable("id") Long id){
+    public ResponseEntity<IngrediantsDto> getIngrediant(@PathVariable("id") String id){
         Optional<Ingrediants> foundingrediant = ingrediantsService.findOnebyId(id);
         return foundingrediant.map(ingrediant-> {
            IngrediantsDto ingrediantsDto = ingrediantsMapper.mapTo(ingrediant);
@@ -52,7 +52,7 @@ public class IngrediantsController {
 
     @PutMapping(path = "ingrediants/{id}")
     public ResponseEntity<IngrediantsDto> fullUpdateIngredient(
-            @PathVariable("id") Long id,
+            @PathVariable("id") String id,
             @RequestBody IngrediantsDto ingrediantsDto) {
 
         if(!ingrediantsService.isExists(id)){
@@ -69,7 +69,7 @@ public class IngrediantsController {
 
     @PatchMapping(path ="ingrediants/{id}")
     public ResponseEntity<IngrediantsDto> partialUpdateIngredient(
-            @PathVariable("id") Long id,
+            @PathVariable("id") String id,
                 @RequestBody IngrediantsDto ingredientDto){
 
         if(!ingrediantsService.isExists(id)) {
@@ -84,7 +84,7 @@ public class IngrediantsController {
     }
 
     @DeleteMapping(path = "ingrediants/{id}")
-    public ResponseEntity deleteIngredient(@PathVariable("id") Long id) {
+    public ResponseEntity deleteIngredient(@PathVariable("id") String id) {
         ingrediantsService.delete(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
