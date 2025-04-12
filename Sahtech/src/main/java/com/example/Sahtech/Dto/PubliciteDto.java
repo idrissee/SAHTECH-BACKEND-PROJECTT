@@ -2,10 +2,7 @@ package com.example.Sahtech.Dto;
 
 import com.example.Sahtech.Enum.EtatPublicite;
 import com.example.Sahtech.Enum.StatusPublicite;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 import java.util.Date;
@@ -13,6 +10,8 @@ import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
 @Data
 public class PubliciteDto {

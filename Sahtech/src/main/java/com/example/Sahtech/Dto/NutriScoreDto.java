@@ -1,13 +1,12 @@
 package com.example.Sahtech.Dto;
 
 import com.example.Sahtech.Enum.ValeurNutriScore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
 @Data
 public class NutriScoreDto {

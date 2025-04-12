@@ -1,14 +1,15 @@
 package com.example.Sahtech.Dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.example.Sahtech.Enum.Maladie;
+import lombok.*;
+
 import java.util.List;
 
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
 @Data
 public class AdditifsDto {
@@ -23,4 +24,5 @@ public class AdditifsDto {
     private Maladie maladieCause;
 
     private List<Long> produitsIds;
+
 }

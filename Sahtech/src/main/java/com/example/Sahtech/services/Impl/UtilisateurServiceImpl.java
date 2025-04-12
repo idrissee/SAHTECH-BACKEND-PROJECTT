@@ -1,8 +1,8 @@
 package com.example.Sahtech.services.Impl;
 
-import com.example.Sahtech.entities.Admin;
-import com.example.Sahtech.repositories.AdminRepository;
-import com.example.Sahtech.services.AdminService;
+import com.example.Sahtech.entities.Utilisateurs;
+import com.example.Sahtech.repositories.UtilisateursRepository;
+import com.example.Sahtech.services.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,45 +10,54 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AdminServiceImpl implements AdminService {
+public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Autowired
-    private AdminRepository adminRepository;
+    private UtilisateursRepository utilisateursRepository;
 
     @Override
-    public List<Admin> getAllAdmins() {
-        return adminRepository.findAll();
+    public Utilisateurs getUtilisateurById(Long id) {
+        Optional<Utilisateurs> user = utilisateursRepository.findById(id);
+        return user.orElse(null);
     }
 
     @Override
-    public Admin getAdminById(Long id) {
-        Optional<Admin> admin = adminRepository.findById(id);
-        return admin.orElse(null);
+    public List<Utilisateurs> getAllUtilisateurs() {
+        return utilisateursRepository.findAll();
     }
 
     @Override
-    public Admin getAdminByEmail(String email) {
-        return adminRepository.findByEmail(email);
+    public List<Utilisateurs> getUtilisateursByName(String nom) {
+        return utilisateursRepository.findByNom(nom);
     }
 
     @Override
-    public Admin createAdmin(Admin admin) {
-        return adminRepository.save(admin);
+    public List<Utilisateurs> getUtilisateursByEmail(String email) {
+        return utilisateursRepository.findByEmail(email);
     }
 
     @Override
-    public Admin updateAdmin(Long id, Admin admin) {
-        if (adminRepository.existsById(id)) {
-            admin.setId(id);
-            return adminRepository.save(admin);
+    public List<Utilisateurs> getUtilisateursByRole(String role) {
+        return utilisateursRepository.findByRole(role); // ATTENTION: assure-toi que le champ role existe dans l'entité Utilisateurs
+    }
+
+    @Override
+    public Utilisateurs addUtilisateur(Utilisateurs u) {
+        return utilisateursRepository.save(u);
+    }
+
+    @Override
+    public Utilisateurs updateUtilisateur(Utilisateurs u) {
+        if (utilisateursRepository.existsById(u.getId())) {
+            return utilisateursRepository.save(u);
         }
         return null;
     }
 
     @Override
-    public boolean deleteAdmin(Long id) {
-        if (adminRepository.existsById(id)) {
-            adminRepository.deleteById(id);
+    public boolean deleteUtilisateur(Long id) {
+        if (utilisateursRepository.existsById(id)) {
+            utilisateursRepository.deleteById(id);
             return true;
         }
         return false;
