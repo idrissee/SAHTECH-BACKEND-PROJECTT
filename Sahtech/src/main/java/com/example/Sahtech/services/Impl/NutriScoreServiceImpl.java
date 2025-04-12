@@ -31,12 +31,12 @@ public class NutriScoreServiceImpl implements NutriScoreService {
     }
 
     @Override
-    public Optional<NutriScore> findOneById(Long id) {
+    public Optional<NutriScore> findOneById(String id) {
         return nutriScoreRepository.findById(id);
     }
 
     @Override
-    public boolean isExists(Long id) {
+    public boolean isExists(String id) {
         return nutriScoreRepository.existsById(id);
     }
 
@@ -46,7 +46,7 @@ public class NutriScoreServiceImpl implements NutriScoreService {
     }
 
     @Override
-    public NutriScore update(Long id, NutriScore nutriScore) {
+    public NutriScore update(String id, NutriScore nutriScore) {
         Optional<NutriScore> existingNutriScore = nutriScoreRepository.findById(id);
         
         if (existingNutriScore.isEmpty()) {
@@ -58,7 +58,7 @@ public class NutriScoreServiceImpl implements NutriScoreService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         nutriScoreRepository.deleteById(id);
     }
 

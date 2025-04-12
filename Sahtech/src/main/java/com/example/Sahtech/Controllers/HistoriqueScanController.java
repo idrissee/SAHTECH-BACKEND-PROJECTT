@@ -34,7 +34,7 @@ public class HistoriqueScanController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HistoriqueScanDto> getScanById(@PathVariable Long id) {
+    public ResponseEntity<HistoriqueScanDto> getScanById(@PathVariable String id) {
         HistoriqueScan scan = historiqueScanService.getScanById(id);
         return ResponseEntity.ok(historiqueScanMapper.mapTo(scan));
     }
@@ -47,20 +47,20 @@ public class HistoriqueScanController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteScan(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteScan(@PathVariable String id) {
         historiqueScanService.deleteScan(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/utilisateur/{utilisateurId}")
-    public List<HistoriqueScanDto> getHistoriqueUtilisateur(@PathVariable Long utilisateurId) {
+    public List<HistoriqueScanDto> getHistoriqueUtilisateur(@PathVariable String utilisateurId) {
         return historiqueScanService.getHistoriqueUtilisateur(utilisateurId).stream()
                 .map(historiqueScanMapper::mapTo)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/produit/{produitId}")
-    public List<HistoriqueScanDto> getScansProduit(@PathVariable Long produitId) {
+    public List<HistoriqueScanDto> getScansProduit(@PathVariable String produitId) {
         return historiqueScanService.getScansProduit(produitId).stream()
                 .map(historiqueScanMapper::mapTo)
                 .collect(Collectors.toList());
@@ -74,7 +74,7 @@ public class HistoriqueScanController {
     }
 
     @GetMapping("/favoris/{utilisateurId}")
-    public List<HistoriqueScanDto> getFavorisUtilisateur(@PathVariable Long utilisateurId) {
+    public List<HistoriqueScanDto> getFavorisUtilisateur(@PathVariable String utilisateurId) {
         return historiqueScanService.getFavorisUtilisateur(utilisateurId).stream()
                 .map(historiqueScanMapper::mapTo)
                 .collect(Collectors.toList());
@@ -82,7 +82,7 @@ public class HistoriqueScanController {
 
     @GetMapping("/recents/{utilisateurId}")
     public List<HistoriqueScanDto> getScansRecents(
-            @PathVariable Long utilisateurId,
+            @PathVariable String utilisateurId,
             @RequestParam(defaultValue = "30") int jours) {
         return historiqueScanService.getScansRecents(utilisateurId, jours).stream()
                 .map(historiqueScanMapper::mapTo)
@@ -113,28 +113,28 @@ public class HistoriqueScanController {
     }
 
     @GetMapping("/statistiques/nutriscore/{utilisateurId}")
-    public Map<String, Long> getStatistiquesNutriScore(@PathVariable Long utilisateurId) {
+    public Map<String, Long> getStatistiquesNutriScore(@PathVariable String utilisateurId) {
         return historiqueScanService.getStatistiquesNutriScore(utilisateurId);
     }
 
     @GetMapping("/statistiques/impact/{utilisateurId}")
-    public Map<String, Long> getStatistiquesImpactSante(@PathVariable Long utilisateurId) {
+    public Map<String, Long> getStatistiquesImpactSante(@PathVariable String utilisateurId) {
         return historiqueScanService.getStatistiquesImpactSante(utilisateurId);
     }
 
     @GetMapping("/additifs-frequents/{utilisateurId}")
-    public List<String> getAdditifsFrequents(@PathVariable Long utilisateurId) {
+    public List<String> getAdditifsFrequents(@PathVariable String utilisateurId) {
         return historiqueScanService.getAdditifsFrequents(utilisateurId);
     }
 
     @GetMapping("/evolution/{utilisateurId}")
-    public String getEvolutionSante(@PathVariable Long utilisateurId) {
+    public String getEvolutionSante(@PathVariable String utilisateurId) {
         return historiqueScanService.getEvolutionSante(utilisateurId);
     }
 
     @PutMapping("/favori/{scanId}")
     public HistoriqueScanDto updateFavori(
-            @PathVariable Long scanId,
+            @PathVariable String scanId,
             @RequestParam Boolean estFavori) {
         HistoriqueScan updatedScan = historiqueScanService.updateFavori(scanId, estFavori);
         return historiqueScanMapper.mapTo(updatedScan);
@@ -142,7 +142,7 @@ public class HistoriqueScanController {
 
     @PutMapping("/commentaire/{scanId}")
     public HistoriqueScanDto addCommentaire(
-            @PathVariable Long scanId,
+            @PathVariable String scanId,
             @RequestParam String commentaire) {
         HistoriqueScan updatedScan = historiqueScanService.addCommentaire(scanId, commentaire);
         return historiqueScanMapper.mapTo(updatedScan);

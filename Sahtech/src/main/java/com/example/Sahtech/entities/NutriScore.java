@@ -6,16 +6,14 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "nutriscores")
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Getter
-@Setter
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class NutriScore {
     
     @Id
-    private Long id;
+    private String id;
     
     private ValeurNutriScore valeur; // A, B, C, D, E
     

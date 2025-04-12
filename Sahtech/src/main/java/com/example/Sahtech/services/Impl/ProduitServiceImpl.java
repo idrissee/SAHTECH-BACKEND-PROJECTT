@@ -55,17 +55,17 @@ public class ProduitServiceImpl implements ProduitService {
     }
 
     @Override
-    public Optional<Produit> findOnebyId(Long id) {
+    public Optional<Produit> findOnebyId(String id) {
         return produitRepository.findById(id);
     }
 
     @Override
-    public boolean isExists(Long id) {
+    public boolean isExists(String id) {
         return produitRepository.existsById(id);
     }
 
     @Override
-    public Produit partialUpdate(Long id, Produit produit) {
+    public Produit partialUpdate(String id, Produit produit) {
 
         produit.setIdProduit(id);
 
@@ -79,7 +79,7 @@ public class ProduitServiceImpl implements ProduitService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         produitRepository.deleteById(id);
     }
 

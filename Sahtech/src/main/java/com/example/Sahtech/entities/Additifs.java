@@ -9,16 +9,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
 @Document(collection = "additifs")
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Additifs {
 
     @Id
-    private Long idAdditif;
+    private String idAdditif;
 
     private String nomAdditif;
 
@@ -26,7 +24,7 @@ public class Additifs {
 
     private Maladie maladieCause;
 
-    private List<Long> produitsIds;
+    private List<String> produitsIds;
 
 
 }

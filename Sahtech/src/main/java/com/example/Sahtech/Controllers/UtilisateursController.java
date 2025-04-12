@@ -33,7 +33,7 @@ public class UtilisateursController {
 
     // GET USER BY ID
     @GetMapping("/{id}")
-    public ResponseEntity<UtilisateursDto> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UtilisateursDto> getUserById(@PathVariable String id) {
         Utilisateurs user = utilisateurService.getUtilisateurById(id);
         if (user != null) {
             return new ResponseEntity<>(utilisateursMapper.mapTo(user), HttpStatus.OK);
@@ -63,7 +63,7 @@ public class UtilisateursController {
 
     // UPDATE USER
     @PutMapping("/{id}")
-    public ResponseEntity<UtilisateursDto> updateUser(@PathVariable Long id, @RequestBody UtilisateursDto userDto) {
+    public ResponseEntity<UtilisateursDto> updateUser(@PathVariable String id, @RequestBody UtilisateursDto userDto) {
         Utilisateurs updatedUser = utilisateursMapper.mapFrom(userDto);
         updatedUser.setId(id);
         Utilisateurs saved = utilisateurService.updateUtilisateur(updatedUser);
@@ -76,7 +76,7 @@ public class UtilisateursController {
 
     // DELETE USER
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
         boolean deleted = utilisateurService.deleteUtilisateur(id);
         return deleted ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);

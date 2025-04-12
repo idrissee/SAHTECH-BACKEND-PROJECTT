@@ -31,7 +31,7 @@ public class NutrisionisteController {
 
     // GET BY ID
     @GetMapping("/{id}")
-    public NutrisionisteDto getNutrisionisteById(@PathVariable Long id) {
+    public NutrisionisteDto getNutrisionisteById(@PathVariable String id) {
         return nutrisionisteMapper.mapTo(nutrisionisteService.getNutrisionisteById(id));
     }
 
@@ -56,14 +56,14 @@ public class NutrisionisteController {
 
     // UPDATE
     @PutMapping("/Update/{id}")
-    public NutrisionisteDto updateNutrisioniste(@PathVariable Long id, @RequestBody NutrisionisteDto nutrisionisteDto) {
+    public NutrisionisteDto updateNutrisioniste(@PathVariable String id, @RequestBody NutrisionisteDto nutrisionisteDto) {
         Nutrisioniste nutrisioniste = nutrisionisteMapper.mapFrom(nutrisionisteDto);
         return nutrisionisteMapper.mapTo(nutrisionisteService.updateNutrisioniste(id, nutrisioniste));
     }
 
     // DELETE
     @DeleteMapping("/Delete/{id}")
-    public void deleteNutrisioniste(@PathVariable Long id) {
+    public void deleteNutrisioniste(@PathVariable String id) {
         nutrisionisteService.deleteNutrisioniste(id);
     }
 }

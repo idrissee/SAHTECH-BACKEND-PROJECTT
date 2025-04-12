@@ -16,7 +16,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     private UtilisateursRepository utilisateursRepository;
 
     @Override
-    public Utilisateurs getUtilisateurById(Long id) {
+    public Utilisateurs getUtilisateurById(String id) {
         Optional<Utilisateurs> user = utilisateursRepository.findById(id);
         return user.orElse(null);
     }
@@ -55,7 +55,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     }
 
     @Override
-    public boolean deleteUtilisateur(Long id) {
+    public boolean deleteUtilisateur(String id) {
         if (utilisateursRepository.existsById(id)) {
             utilisateursRepository.deleteById(id);
             return true;

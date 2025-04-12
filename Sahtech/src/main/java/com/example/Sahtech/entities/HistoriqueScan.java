@@ -9,15 +9,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Document(collection = "historique_scans")
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
-@Getter
-@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class HistoriqueScan {
     @Id
-    private Long id;
+    private String id;
 
     @DBRef
     private Utilisateurs utilisateur;

@@ -3,30 +3,30 @@ package com.example.Sahtech.Dto;
 import com.example.Sahtech.Enum.Maladie;
 import lombok.*;
 
-
 import java.util.Date;
+import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UtilisateursDto {
 
-    private Long id;
+    private String id;
     private String nom;
     private String prenom;
     private Long telephone;
     private String email;
     private String adresse;
     private Date dateDeNaissence;
-    private Maladie maladie;
+    private List<Maladie> maladies;
     private Float poids;
     private Float taille;
+    private String niveauActivite;
     private Boolean sport;
     private String sexe;
-
-
-
+    private List<String> allergies;
+    private String password;
+    private List<String> historiqueScanIds;
+    private List<String> nutritionisteFavorisIds;
 }

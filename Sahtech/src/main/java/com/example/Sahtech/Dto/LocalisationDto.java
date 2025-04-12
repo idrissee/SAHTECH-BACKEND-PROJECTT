@@ -2,15 +2,13 @@ package com.example.Sahtech.Dto;
 
 import lombok.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class LocalisationDto {
     
-    private Long id;
+    private String id;
     
     private String ville;
     

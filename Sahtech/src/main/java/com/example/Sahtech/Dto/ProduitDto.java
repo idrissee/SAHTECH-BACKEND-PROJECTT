@@ -6,33 +6,19 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
-@Getter
-@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class ProduitDto {
 
-
-
-    private Long idProduit;  // MongoDB génère un ObjectId automatiquement (ou tu peux mettre ObjectId)
-
+    private String idProduit;  // MongoDB génère un ObjectId automatiquement
     private Long codeBarre;
-
     private String nomProduit;
-
-    private TypeProduit typeProduit;// Ou `private TypeProduit typeProduit;` si tu veux garder l'énumération
-
+    private TypeProduit typeProduit;
     private List<String> nomAdditif;  // Liste des IDs des additifs associés
-
     private String marque;
-
     private LocalDateTime dateAjout;
-
     private String description;
-    
-    private Long nutriScoreId; // ID du NutriScore associé
-
+    private String nutriScoreId; // ID du NutriScore associé
 }

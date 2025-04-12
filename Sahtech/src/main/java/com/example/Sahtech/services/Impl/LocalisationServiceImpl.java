@@ -30,12 +30,12 @@ public class LocalisationServiceImpl implements LocalisationService {
     }
     
     @Override
-    public Optional<Localisation> findOneById(Long id) {
+    public Optional<Localisation> findOneById(String id) {
         return localisationRepository.findById(id);
     }
     
     @Override
-    public boolean isExists(Long id) {
+    public boolean isExists(String id) {
         return localisationRepository.existsById(id);
     }
     
@@ -45,7 +45,7 @@ public class LocalisationServiceImpl implements LocalisationService {
     }
     
     @Override
-    public Localisation update(Long id, Localisation localisation) {
+    public Localisation update(String id, Localisation localisation) {
         if (!localisationRepository.existsById(id)) {
             return null;
         }
@@ -55,7 +55,7 @@ public class LocalisationServiceImpl implements LocalisationService {
     }
     
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         localisationRepository.deleteById(id);
     }
     
@@ -77,5 +77,25 @@ public class LocalisationServiceImpl implements LocalisationService {
     @Override
     public List<Localisation> findByCodePostal(String codePostal) {
         return localisationRepository.findByCodePostal(codePostal);
+    }
+    
+    @Override
+    public List<Localisation> findAllByCountry(String country) {
+        return localisationRepository.findByPays(country);
+    }
+    
+    @Override
+    public List<Localisation> findAllByRegion(String region) {
+        return localisationRepository.findByRegion(region);
+    }
+    
+    @Override
+    public List<Localisation> findAllByCity(String city) {
+        return localisationRepository.findByVille(city);
+    }
+    
+    @Override
+    public List<Localisation> findAllByPostalCode(String postalCode) {
+        return localisationRepository.findByCodePostal(postalCode);
     }
 } 

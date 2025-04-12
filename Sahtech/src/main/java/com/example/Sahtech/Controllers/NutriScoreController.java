@@ -42,7 +42,7 @@ public class NutriScoreController {
     }
 
     @GetMapping(path = "/nutriscores/{id}")
-    public ResponseEntity<NutriScoreDto> getNutriScore(@PathVariable("id") Long id) {
+    public ResponseEntity<NutriScoreDto> getNutriScore(@PathVariable("id") String id) {
         Optional<NutriScore> foundNutriScore = nutriScoreService.findOneById(id);
         return foundNutriScore.map(nutriScore -> {
             NutriScoreDto nutriScoreDto = nutriScoreMapper.mapTo(nutriScore);
@@ -53,7 +53,7 @@ public class NutriScoreController {
 
     @PutMapping(path = "/nutriscores/{id}")
     public ResponseEntity<NutriScoreDto> fullupdateNutriScore(
-            @PathVariable("id") Long id,
+            @PathVariable("id") String id,
             @RequestBody NutriScoreDto nutriScoreDto) {
 
         if (!nutriScoreService.isExists(id)) {
@@ -68,7 +68,7 @@ public class NutriScoreController {
     }
 
     @DeleteMapping(path = "/nutriscores/{id}")
-    public ResponseEntity<Void> deleteNutriScore(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteNutriScore(@PathVariable("id") String id) {
         nutriScoreService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

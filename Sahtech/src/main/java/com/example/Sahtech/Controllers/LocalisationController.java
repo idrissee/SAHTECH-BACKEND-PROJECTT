@@ -39,7 +39,7 @@ public class LocalisationController {
     }
     
     @GetMapping(path = "/localisations/{id}")
-    public ResponseEntity<LocalisationDto> getLocalisation(@PathVariable("id") Long id) {
+    public ResponseEntity<LocalisationDto> getLocalisation(@PathVariable("id") String id) {
         Optional<Localisation> foundLocalisation = localisationService.findOneById(id);
         return foundLocalisation.map(localisation -> {
             LocalisationDto localisationDto = localisationMapper.mapTo(localisation);
@@ -49,7 +49,7 @@ public class LocalisationController {
     
     @PutMapping(path = "/localisations/{id}")
     public ResponseEntity<LocalisationDto> updateLocalisation(
-            @PathVariable("id") Long id,
+            @PathVariable("id") String id,
             @RequestBody LocalisationDto localisationDto) {
         
         if (!localisationService.isExists(id)) {
@@ -64,7 +64,7 @@ public class LocalisationController {
     }
     
     @DeleteMapping(path = "/localisations/{id}")
-    public ResponseEntity<Void> deleteLocalisation(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteLocalisation(@PathVariable("id") String id) {
         localisationService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

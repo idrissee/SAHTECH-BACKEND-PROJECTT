@@ -13,19 +13,19 @@ public interface NutriScoreService {
     List<NutriScore> findAll();
     
     // Trouver un Nutri-Score par son ID
-    Optional<NutriScore> findOneById(Long id);
+    Optional<NutriScore> findOneById(String id);
     
     // Vérifier si un Nutri-Score existe
-    boolean isExists(Long id);
+    boolean isExists(String id);
     
     // Sauvegarder un Nutri-Score
     NutriScore save(NutriScore nutriScore);
     
     // Mettre à jour un Nutri-Score
-    NutriScore update(Long id, NutriScore nutriScore);
+    NutriScore update(String id, NutriScore nutriScore);
     
     // Supprimer un Nutri-Score
-    void delete(Long id);
+    void delete(String id);
     
     // Trouver tous les Nutri-Scores d'une certaine valeur
     List<NutriScore> findByValeur(ValeurNutriScore valeur);

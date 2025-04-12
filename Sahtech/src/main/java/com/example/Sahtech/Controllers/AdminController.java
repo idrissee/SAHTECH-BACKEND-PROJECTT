@@ -33,7 +33,7 @@ public class AdminController {
 
     // GET ADMIN BY ID
     @GetMapping("/{id}")
-    public ResponseEntity<AdminDto> getAdminById(@PathVariable Long id) {
+    public ResponseEntity<AdminDto> getAdminById(@PathVariable String id) {
         Admin admin = adminService.getAdminById(id);
         if (admin != null) {
             return new ResponseEntity<>(adminMapper.mapTo(admin), HttpStatus.OK);
@@ -63,7 +63,7 @@ public class AdminController {
 
     // UPDATE ADMIN
     @PutMapping("/{id}")
-    public ResponseEntity<AdminDto> updateAdmin(@PathVariable Long id, @RequestBody AdminDto adminDto) {
+    public ResponseEntity<AdminDto> updateAdmin(@PathVariable String id, @RequestBody AdminDto adminDto) {
         Admin admin = adminMapper.mapFrom(adminDto);
         Admin updated = adminService.updateAdmin(id, admin);
         if (updated != null) {
@@ -75,7 +75,7 @@ public class AdminController {
 
     // DELETE ADMIN
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAdmin(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteAdmin(@PathVariable String id) {
         boolean deleted = adminService.deleteAdmin(id);
         return deleted ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);

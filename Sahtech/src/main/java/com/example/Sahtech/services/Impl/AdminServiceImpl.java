@@ -21,7 +21,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Admin getAdminById(Long id) {
+    public Admin getAdminById(String id) {
         Optional<Admin> admin = adminRepository.findById(id);
         return admin.orElse(null);
     }
@@ -37,7 +37,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Admin updateAdmin(Long id, Admin admin) {
+    public Admin updateAdmin(String id, Admin admin) {
         if (adminRepository.existsById(id)) {
             admin.setId(id);
             return adminRepository.save(admin);
@@ -46,7 +46,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public boolean deleteAdmin(Long id) {
+    public boolean deleteAdmin(String id) {
         if (adminRepository.existsById(id)) {
             adminRepository.deleteById(id);
             return true;

@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface PubliciteRepository extends MongoRepository< Publicite,Long> {
+public interface PubliciteRepository extends MongoRepository<Publicite, String> {
 }

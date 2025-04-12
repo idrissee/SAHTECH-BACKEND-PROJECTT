@@ -10,34 +10,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Document(collection = "produits")
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
-@Getter
-@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Produit {
 
-
     @Id
-    private Long idProduit;  // MongoDB génère un ObjectId automatiquement (ou tu peux mettre ObjectId)
+    private String idProduit;  // MongoDB génère un ObjectId automatiquement
 
     private Long codeBarre;
-
     private String nomProduit;
-
-    private TypeProduit typeProduit;// Ou `private TypeProduit typeProduit;` si tu veux garder l'énumération
-
+    private TypeProduit typeProduit;
     private List<String> nomAdditif; // Liste des IDs des additifs associés
-
     private String marque;
-
     private LocalDateTime dateAjout;
-
     private String description;
-    
-    private Long nutriScoreId; // Référence à l'ID du NutriScore associé
-
+    private String nutriScoreId; // Référence à l'ID du NutriScore associé
 }
 
 

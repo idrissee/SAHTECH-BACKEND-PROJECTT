@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface NutritionisteRepository extends MongoRepository<Nutrisioniste,Long>{
+public interface NutritionisteRepository extends MongoRepository<Nutrisioniste, String> {
 
-    List<Nutrisioniste> findByLocalisationId(Long localisationId);
+    List<Nutrisioniste> findByLocalisationId(String localisationId);
 
     List<Nutrisioniste> findBySpecialite(String specialite);
 

@@ -6,18 +6,16 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Getter
-@Setter
+@Document(collection = "nutritionistes")
 @Data
-@Document(collation = "Nutrisioniste")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Nutrisioniste extends Utilisateurs {
 
     @Id
-    private Long id;
+    private String id;
 
-    private String Specialite;
+    private String specialite;
 
 }

@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface AdminService {
     List<Admin> getAllAdmins();
-    Admin getAdminById(Long id);
+    Admin getAdminById(String id);
     Admin getAdminByEmail(String email);
     Admin createAdmin(Admin admin);
-    Admin updateAdmin(Long id, Admin admin);
-    boolean deleteAdmin(Long id);
+    Admin updateAdmin(String id, Admin admin);
+    boolean deleteAdmin(String id);
 }

@@ -7,17 +7,17 @@ import java.util.Optional;
 
 public interface ProduitService {
 
-    Produit save(Produit  produit);
+    Produit save(Produit produit);
 
     Produit createProduit(Produit produit);
 
     List<Produit> findAll();
 
-    Optional<Produit> findOnebyId(Long id);
+    Optional<Produit> findOnebyId(String id);
 
-    boolean isExists(Long id);
+    boolean isExists(String id);
 
-    Produit partialUpdate(Long id, Produit produit);
+    Produit partialUpdate(String id, Produit produit);
 
-    void delete(Long id);
+    void delete(String id);
 }

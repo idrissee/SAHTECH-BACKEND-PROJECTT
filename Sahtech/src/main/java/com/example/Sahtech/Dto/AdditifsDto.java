@@ -5,24 +5,14 @@ import lombok.*;
 
 import java.util.List;
 
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class AdditifsDto {
-
-
-    private Long idAdditif;
-
+    private String idAdditif;
     private String nomAdditif;
-
     private Float seuil;
-
     private Maladie maladieCause;
-
-    private List<Long> produitsIds;
-
+    private List<String> produitsIds;
 }

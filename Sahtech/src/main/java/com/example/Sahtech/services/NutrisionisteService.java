@@ -8,7 +8,7 @@ public interface NutrisionisteService {
 
     List<Nutrisioniste> getAllNutrisionistes();
 
-    Nutrisioniste getNutrisionisteById(Long id);
+    Nutrisioniste getNutrisionisteById(String id);
 
     Nutrisioniste getNutrisionisteByEmail(String email);
 
@@ -16,7 +16,7 @@ public interface NutrisionisteService {
 
     Nutrisioniste createNutrisioniste(Nutrisioniste nutrisioniste);
 
-    Nutrisioniste updateNutrisioniste(Long id, Nutrisioniste nutrisioniste);
+    Nutrisioniste updateNutrisioniste(String id, Nutrisioniste nutrisioniste);
 
-    void deleteNutrisioniste(Long id);
+    void deleteNutrisioniste(String id);
 }

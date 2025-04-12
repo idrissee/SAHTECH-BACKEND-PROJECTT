@@ -6,15 +6,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@Getter
-@Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class HistoriqueScanDto {
-    private Long id;
-    private Long utilisateurId;
-    private Long produitId;
+    private String id;
+    private String utilisateurId;
+    private String produitId;
     private LocalDateTime dateScan;
     private String noteNutriScore;
     private String recommandationIA;

@@ -9,21 +9,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Document(collection = "publicites")
 @Data
-@Getter
-@Setter
-@Document(collection = "Publicite")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Publicite {
     @Id
-    private Long id;
+    private String id;
     private StatusPublicite statusPublicite;
     private EtatPublicite etatPublicite;
     private String nomEntreprise;
     private Date dateDebut;
     private Date dateFin;
-
-    
 }

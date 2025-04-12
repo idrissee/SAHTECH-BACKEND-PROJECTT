@@ -3,19 +3,14 @@ package com.example.Sahtech.Dto;
 import com.example.Sahtech.Enum.ValeurNutriScore;
 import lombok.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class NutriScoreDto {
     
-    private Long id;
-    
+    private String id;
     private ValeurNutriScore valeur;
-    
     private String description;
-    
     private Integer scoreNumerique;
 } 

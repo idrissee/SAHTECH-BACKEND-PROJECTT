@@ -9,7 +9,7 @@ import java.util.List;
 
 
 @Repository
-public interface UtilisateursRepository extends MongoRepository <Utilisateurs, Long> {
+public interface UtilisateursRepository extends MongoRepository <Utilisateurs, String> {
 
     List<Utilisateurs> findByEmail(String email);
     List<Utilisateurs> findByNom(String nom);

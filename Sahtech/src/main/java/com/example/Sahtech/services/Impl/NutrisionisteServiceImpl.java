@@ -21,7 +21,7 @@ public class NutrisionisteServiceImpl implements NutrisionisteService {
     }
 
     @Override
-    public Nutrisioniste getNutrisionisteById(Long id) {
+    public Nutrisioniste getNutrisionisteById(String id) {
         return nutrisionisteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Nutrisioniste introuvable avec l'ID: " + id));
     }
@@ -50,14 +50,14 @@ public class NutrisionisteServiceImpl implements NutrisionisteService {
     }
 
     @Override
-    public Nutrisioniste updateNutrisioniste(Long id, Nutrisioniste updatedNutrisioniste) {
+    public Nutrisioniste updateNutrisioniste(String id, Nutrisioniste updatedNutrisioniste) {
         Nutrisioniste existing = getNutrisionisteById(id);
         updatedNutrisioniste.setId(existing.getId()); // garder l'ID original
         return nutrisionisteRepository.save(updatedNutrisioniste);
     }
 
     @Override
-    public void deleteNutrisioniste(Long id) {
+    public void deleteNutrisioniste(String id) {
         nutrisionisteRepository.deleteById(id);
     }
 }
