@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
@@ -16,8 +17,9 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PartenaireDto {
-    private Long id;
-    
+
+    private String id;
+
     // Informations de base
     private String nom;
     private String domaineActivite;
@@ -25,14 +27,14 @@ public class PartenaireDto {
     private String telephone;
     private String siteWeb;
     private String logo;
-    
+
     // Dates et statut
     private Date dateInscription;
     private StatutPartenaire statut;
-    
+
     // Informations financières
     private Double solde;
-    
+
     // Informations supplémentaires
     private String description;
     private String conditions;

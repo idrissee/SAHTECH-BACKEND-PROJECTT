@@ -12,7 +12,7 @@ import java.util.Optional;
  * Repository pour l'entité Partenaire
  */
 @Repository
-public interface PartenaireRepository extends MongoRepository<Partenaire, Long> {
+public interface PartenaireRepository extends MongoRepository<Partenaire, String> {
     
     /**
      * Trouver un partenaire par son email

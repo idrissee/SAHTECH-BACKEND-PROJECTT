@@ -13,19 +13,19 @@ public interface LocalisationService {
     List<Localisation> findAll();
     
     // Trouver une localisation par son ID
-    Optional<Localisation> findOneById(Long id);
+    Optional<Localisation> findOneById(String id);
     
     // Vérifier si une localisation existe
-    boolean isExists(Long id);
+    boolean isExists(String id);
     
     // Sauvegarder une localisation
     Localisation save(Localisation localisation);
     
     // Mettre à jour une localisation
-    Localisation update(Long id, Localisation localisation);
+    Localisation update(String id, Localisation localisation);
     
     // Supprimer une localisation
-    void delete(Long id);
+    void delete(String id);
     
     // Trouver des localisations par pays
     List<Localisation> findByPays(String pays);

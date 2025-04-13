@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/API/Sahtech/Produits")
 public class ProduitController {
 
     private ProduitService produitService;
@@ -25,14 +26,14 @@ public class ProduitController {
         this.produitMapper = produitMapper;
     }
 
-    @PostMapping(path = "/produits")
+    @PostMapping()
     public ResponseEntity<ProduitDto> createProduit(@RequestBody ProduitDto produitDto) {
         Produit produit = produitMapper.mapFrom(produitDto);
         Produit savedProduit = produitService.createProduit(produit);
         return new ResponseEntity<>(produitMapper.mapTo(savedProduit), HttpStatus.CREATED);
     }
 
-    @GetMapping(path ="/produits")
+    @GetMapping(path ="/All")
     public List<ProduitDto> listProduits() {
             List<Produit> produits  = produitService.findAll();
            return  produits.stream()
@@ -40,8 +41,8 @@ public class ProduitController {
                    .collect(Collectors.toList());
     }
 
-    @GetMapping(path ="produits/{id}")
-    public ResponseEntity<ProduitDto> getProduit(@PathVariable("id") Long id){
+    @GetMapping(path ="/{id}")
+    public ResponseEntity<ProduitDto> getProduit(@PathVariable("id") String id){
         Optional<Produit> foundproduit = produitService.findOnebyId(id);
         return foundproduit.map(produit-> {
             ProduitDto produitDto = produitMapper.mapTo(produit);
@@ -49,9 +50,9 @@ public class ProduitController {
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping(path = "produits/{id}")
+    @PutMapping(path = "/{id}")
     public ResponseEntity<ProduitDto> fullUpdateProduit(
-            @PathVariable("id") Long id,
+            @PathVariable("id") String id,
             @RequestBody ProduitDto produitDto) {
 
         if(!produitService.isExists(id)){
@@ -66,9 +67,9 @@ public class ProduitController {
                 , HttpStatus.OK);
     }
 
-    @PatchMapping(path ="produits/{id}")
+    @PatchMapping(path ="/{id}")
     public ResponseEntity<ProduitDto> partialUpdateProduit(
-            @PathVariable("id") Long id,
+            @PathVariable("id") String id,
             @RequestBody ProduitDto produitDto){
 
         if(!produitService.isExists(id)) {
@@ -82,14 +83,14 @@ public class ProduitController {
                 HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "produits/{id}")
-    public ResponseEntity deleteProduit(@PathVariable("id") Long id){
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity deleteProduit(@PathVariable("id") String id){
         produitService.delete(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
     
-    @GetMapping(path = "produits/{id}/nutriscore")
-    public ResponseEntity<ValeurNutriScore> getNutriScoreForProduit(@PathVariable("id") Long id) {
+    @GetMapping(path = "/{id}/nutriscore")
+    public ResponseEntity<ValeurNutriScore> getNutriScoreForProduit(@PathVariable("id") String id) {
         // Récupérer le produit
         Optional<Produit> foundProduit = produitService.findOnebyId(id);
         
@@ -108,9 +109,9 @@ public class ProduitController {
         return new ResponseEntity<>(produit.getValeurNutriScore(), HttpStatus.OK);
     }
     
-    @PutMapping(path = "produits/{id}/nutriscore/{valeurNutriScore}")
+    @PutMapping(path = "/{id}/nutriscore/{valeurNutriScore}")
     public ResponseEntity<ProduitDto> setNutriScoreForProduit(
-            @PathVariable("id") Long id,
+            @PathVariable("id") String id,
             @PathVariable("valeurNutriScore") ValeurNutriScore valeurNutriScore) {
         
         // Vérifier que le produit existe
@@ -130,24 +131,7 @@ public class ProduitController {
         // Mettre à jour le NutriScore du produit
         produit.setValeurNutriScore(valeurNutriScore);
         
-        // Mettre à jour le score numérique en fonction de la valeur
-        switch (valeurNutriScore) {
-            case A:
-                produit.setScoreNumerique(1);
-                break;
-            case B:
-                produit.setScoreNumerique(2);
-                break;
-            case C:
-                produit.setScoreNumerique(3);
-                break;
-            case D:
-                produit.setScoreNumerique(4);
-                break;
-            case E:
-                produit.setScoreNumerique(5);
-                break;
-        }
+
         
         Produit updatedProduit = produitService.save(produit);
         

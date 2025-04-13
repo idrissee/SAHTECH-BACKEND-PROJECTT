@@ -25,7 +25,7 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
     }
 
     @Override
-    public HistoriqueScan getScanById(Long id) {
+    public HistoriqueScan getScanById(String id) {
         return historiqueScanRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Scan non trouvé"));
     }
@@ -40,17 +40,17 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
     }
 
     @Override
-    public void deleteScan(Long id) {
+    public void deleteScan(String id) {
         historiqueScanRepository.deleteById(id);
     }
 
     @Override
-    public List<HistoriqueScan> getHistoriqueUtilisateur(Long utilisateurId) {
+    public List<HistoriqueScan> getHistoriqueUtilisateur(String utilisateurId) {
         return historiqueScanRepository.findByUtilisateurId(utilisateurId);
     }
 
     @Override
-    public List<HistoriqueScan> getScansProduit(Long produitId) {
+    public List<HistoriqueScan> getScansProduit(String produitId) {
         return historiqueScanRepository.findByProduitId(produitId);
     }
 
@@ -60,12 +60,7 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
     }
 
     @Override
-    public List<HistoriqueScan> getFavorisUtilisateur(Long utilisateurId) {
-        return historiqueScanRepository.findByUtilisateurIdAndEstFavoriTrue(utilisateurId);
-    }
-
-    @Override
-    public List<HistoriqueScan> getScansRecents(Long utilisateurId, int jours) {
+    public List<HistoriqueScan> getScansRecents(String utilisateurId, int jours) {
         LocalDateTime dateLimite = LocalDateTime.now().minusDays(jours);
         return historiqueScanRepository.findByUtilisateurIdAndDateScanAfter(utilisateurId, dateLimite);
     }
@@ -85,28 +80,12 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
         return historiqueScanRepository.findByDateScanBetween(startDate, endDate);
     }
 
-    @Override
-    public Map<String, Long> getStatistiquesNutriScore(Long utilisateurId) {
-        return historiqueScanRepository.findByUtilisateurId(utilisateurId)
-                .stream()
-                .collect(Collectors.groupingBy(
-                        HistoriqueScan::getNoteNutriScore,
-                        Collectors.counting()
-                ));
-    }
+
+
+
 
     @Override
-    public Map<String, Long> getStatistiquesImpactSante(Long utilisateurId) {
-        return historiqueScanRepository.findByUtilisateurId(utilisateurId)
-                .stream()
-                .collect(Collectors.groupingBy(
-                        HistoriqueScan::getImpactSante,
-                        Collectors.counting()
-                ));
-    }
-
-    @Override
-    public List<String> getAdditifsFrequents(Long utilisateurId) {
+    public List<String> getAdditifsFrequents(String utilisateurId) {
         return historiqueScanRepository.findByUtilisateurId(utilisateurId)
                 .stream()
                 .flatMap(scan -> scan.getAdditifsDetectes().stream())
@@ -122,7 +101,7 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
     }
 
     @Override
-    public String getEvolutionSante(Long utilisateurId) {
+    public String getEvolutionSante(String utilisateurId) {
         List<HistoriqueScan> scans = historiqueScanRepository.findByUtilisateurId(utilisateurId);
         if (scans.isEmpty()) {
             return "Pas assez de données pour analyser l'évolution";
@@ -138,16 +117,9 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
                 scans.size(), pourcentageBons);
     }
 
-    @Override
-    public HistoriqueScan updateFavori(Long scanId, Boolean estFavori) {
-        HistoriqueScan scan = historiqueScanRepository.findById(scanId)
-                .orElseThrow(() -> new RuntimeException("Scan non trouvé"));
-        scan.setEstFavori(estFavori);
-        return historiqueScanRepository.save(scan);
-    }
 
     @Override
-    public HistoriqueScan addCommentaire(Long scanId, String commentaire) {
+    public HistoriqueScan addCommentaire(String scanId, String commentaire) {
         HistoriqueScan scan = historiqueScanRepository.findById(scanId)
                 .orElseThrow(() -> new RuntimeException("Scan non trouvé"));
         scan.setCommentaireUtilisateur(commentaire);
@@ -155,7 +127,7 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
     }
 
     @Override
-    public List<Utilisateurs> getUtilisateursByProduit(Long produitId) {
+    public List<Utilisateurs> getUtilisateursByProduit(String produitId) {
         List<HistoriqueScan> scans = historiqueScanRepository.findByProduitId(produitId);
         return scans.stream()
                 .map(HistoriqueScan::getUtilisateur)

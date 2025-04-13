@@ -40,7 +40,7 @@ public class PartenaireServiceImpl implements PartenaireService {
     }
 
     @Override
-    public Partenaire update(Long id, Partenaire partenaire) {
+    public Partenaire update(String id, Partenaire partenaire) {
         Optional<Partenaire> existingPartenaireOpt = partenaireRepository.findById(id);
         
         if (existingPartenaireOpt.isPresent()) {
@@ -68,7 +68,7 @@ public class PartenaireServiceImpl implements PartenaireService {
     }
 
     @Override
-    public Optional<Partenaire> findById(Long id) {
+    public Optional<Partenaire> findById(String id) {
         return partenaireRepository.findById(id);
     }
 
@@ -98,7 +98,7 @@ public class PartenaireServiceImpl implements PartenaireService {
     }
 
     @Override
-    public Partenaire approuverPartenaire(Long id) {
+    public Partenaire approuverPartenaire(String id) {
         Optional<Partenaire> partenaireOpt = partenaireRepository.findById(id);
         
         if (partenaireOpt.isPresent()) {
@@ -111,7 +111,7 @@ public class PartenaireServiceImpl implements PartenaireService {
     }
 
     @Override
-    public Partenaire suspendrePartenaire(Long id) {
+    public Partenaire suspendrePartenaire(String id) {
         Optional<Partenaire> partenaireOpt = partenaireRepository.findById(id);
         
         if (partenaireOpt.isPresent()) {
@@ -124,7 +124,7 @@ public class PartenaireServiceImpl implements PartenaireService {
     }
 
     @Override
-    public Partenaire resilierPartenariat(Long id, String motif) {
+    public Partenaire resilierPartenariat(String id, String motif) {
         Optional<Partenaire> partenaireOpt = partenaireRepository.findById(id);
         
         if (partenaireOpt.isPresent()) {
@@ -138,7 +138,7 @@ public class PartenaireServiceImpl implements PartenaireService {
     }
 
     @Override
-    public Partenaire ajouterFonds(Long id, Double montant) {
+    public Partenaire ajouterFonds(String id, Double montant) {
         if (montant <= 0) {
             throw new IllegalArgumentException("Le montant doit être supérieur à zéro");
         }
@@ -156,7 +156,7 @@ public class PartenaireServiceImpl implements PartenaireService {
     }
 
     @Override
-    public Partenaire debiterFonds(Long id, Double montant) {
+    public Partenaire debiterFonds(String id, Double montant) {
         if (montant <= 0) {
             throw new IllegalArgumentException("Le montant doit être supérieur à zéro");
         }
@@ -179,7 +179,7 @@ public class PartenaireServiceImpl implements PartenaireService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         partenaireRepository.deleteById(id);
     }
 } 

@@ -36,14 +36,7 @@ public class PubliciteServiceImpl implements PubliciteService {
         if (publicite.getEtatPublicite() == null) {
             publicite.setEtatPublicite(EtatPublicite.DESACTIVEE);
         }
-        
-        if (publicite.getImpressions() == null) {
-            publicite.setImpressions(0L);
-        }
-        
-        if (publicite.getClics() == null) {
-            publicite.setClics(0L);
-        }
+
         
         // Vérifier que le partenaire existe
         if (publicite.getPartenaire_id() != null) {
@@ -57,7 +50,7 @@ public class PubliciteServiceImpl implements PubliciteService {
     }
 
     @Override
-    public Publicite update(Long id, Publicite publicite) {
+    public Publicite update(String id, Publicite publicite) {
         Optional<Publicite> existingPubliciteOpt = publiciteRepository.findById(id);
         
         if (existingPubliciteOpt.isPresent()) {
@@ -69,14 +62,8 @@ public class PubliciteServiceImpl implements PubliciteService {
             existingPublicite.setImageUrl(publicite.getImageUrl());
             existingPublicite.setLienRedirection(publicite.getLienRedirection());
             existingPublicite.setTypePub(publicite.getTypePub());
-            existingPublicite.setNomEntreprise(publicite.getNomEntreprise());
             existingPublicite.setDateDebut(publicite.getDateDebut());
             existingPublicite.setDateFin(publicite.getDateFin());
-            existingPublicite.setBudget(publicite.getBudget());
-            existingPublicite.setBudgetJournalier(publicite.getBudgetJournalier());
-            existingPublicite.setCoutParClic(publicite.getCoutParClic());
-            existingPublicite.setCoutParImpression(publicite.getCoutParImpression());
-            existingPublicite.setPriorite(publicite.getPriorite());
             
             // Ne pas mettre à jour certains champs sensibles directement
             // comme le statut, l'état, les impressions et les clics
@@ -89,7 +76,7 @@ public class PubliciteServiceImpl implements PubliciteService {
     }
 
     @Override
-    public Optional<Publicite> findById(Long id) {
+    public Optional<Publicite> findById(String id) {
         return publiciteRepository.findById(id);
     }
 
@@ -109,7 +96,7 @@ public class PubliciteServiceImpl implements PubliciteService {
     }
 
     @Override
-    public List<Publicite> findByPartenaireId(Long partenaireId) {
+    public List<Publicite> findByPartenaireId(String partenaireId) {
         return publiciteRepository.findByPartenaire_id(partenaireId);
     }
 
@@ -131,7 +118,7 @@ public class PubliciteServiceImpl implements PubliciteService {
     }
 
     @Override
-    public Publicite accepterPublicite(Long id) {
+    public Publicite accepterPublicite(String id) {
         Optional<Publicite> publiciteOpt = publiciteRepository.findById(id);
         
         if (publiciteOpt.isPresent()) {
@@ -144,7 +131,7 @@ public class PubliciteServiceImpl implements PubliciteService {
     }
 
     @Override
-    public Publicite rejeterPublicite(Long id, String motif) {
+    public Publicite rejeterPublicite(String id, String motif) {
         Optional<Publicite> publiciteOpt = publiciteRepository.findById(id);
         
         if (publiciteOpt.isPresent()) {
@@ -158,7 +145,7 @@ public class PubliciteServiceImpl implements PubliciteService {
     }
 
     @Override
-    public Publicite activerPublicite(Long id) {
+    public Publicite activerPublicite(String id) {
         Optional<Publicite> publiciteOpt = publiciteRepository.findById(id);
         
         if (publiciteOpt.isPresent()) {
@@ -171,7 +158,7 @@ public class PubliciteServiceImpl implements PubliciteService {
     }
 
     @Override
-    public Publicite desactiverPublicite(Long id) {
+    public Publicite desactiverPublicite(String id) {
         Optional<Publicite> publiciteOpt = publiciteRepository.findById(id);
         
         if (publiciteOpt.isPresent()) {
@@ -183,55 +170,9 @@ public class PubliciteServiceImpl implements PubliciteService {
         return null;
     }
 
-    @Override
-    public Publicite updateStatistiques(Long id, boolean isClicked) {
-        Optional<Publicite> publiciteOpt = publiciteRepository.findById(id);
-        
-        if (publiciteOpt.isPresent()) {
-            Publicite publicite = publiciteOpt.get();
-            
-            // Incrémenter les impressions
-            publicite.setImpressions(publicite.getImpressions() + 1);
-            
-            // Si c'est un clic, incrémenter les clics
-            if (isClicked) {
-                publicite.setClics(publicite.getClics() + 1);
-            }
-            
-            return publiciteRepository.save(publicite);
-        }
-        
-        return null;
-    }
 
     @Override
-    public List<Publicite> findPublicitesToDisplay(Long utilisateurId, String emplacement, int limit) {
-        // Trouver toutes les publicités actives et dont la période est en cours
-        List<Publicite> publicites = publiciteRepository.findByStatusPubliciteAndEtatPublicite(
-                StatusPublicite.ACCEPTEE, EtatPublicite.PUBLIEE);
-        
-        Date now = new Date();
-        publicites = publicites.stream()
-                .filter(p -> p.getDateDebut().before(now) && p.getDateFin().after(now))
-                .collect(Collectors.toList());
-        
-        // Trier par priorité (descendante)
-        publicites.sort((p1, p2) -> {
-            if (p1.getPriorite() == null) return 1;
-            if (p2.getPriorite() == null) return -1;
-            return p2.getPriorite().compareTo(p1.getPriorite());
-        });
-        
-        // Limiter le nombre de résultats
-        if (publicites.size() > limit) {
-            publicites = publicites.subList(0, limit);
-        }
-        
-        return publicites;
-    }
-
-    @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         publiciteRepository.deleteById(id);
     }
 } 

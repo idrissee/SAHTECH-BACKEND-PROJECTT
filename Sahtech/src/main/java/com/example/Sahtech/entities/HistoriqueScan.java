@@ -18,7 +18,7 @@ import java.util.List;
 @Builder
 public class HistoriqueScan {
     @Id
-    private Long id;
+    private String id;
 
     @DBRef
     private Utilisateurs utilisateur;

@@ -17,7 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Ingrediants {
 
     @Id
-    private Long idIngrediant;
+    private String idIngrediant;
 
     private String nomIngrediant;
     private String nutriScore; // Texte descriptif du nutriscore (peut être supprimé si redondant)

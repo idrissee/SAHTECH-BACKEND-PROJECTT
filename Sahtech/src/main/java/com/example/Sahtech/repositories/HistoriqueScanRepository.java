@@ -8,22 +8,19 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface HistoriqueScanRepository extends MongoRepository<HistoriqueScan, Long> {
+public interface HistoriqueScanRepository extends MongoRepository<HistoriqueScan, String> {
     
     // Trouver l'historique d'un utilisateur spécifique
-    List<HistoriqueScan> findByUtilisateurId(Long utilisateurId);
+    List<HistoriqueScan> findByUtilisateurId(String utilisateurId);
     
     // Trouver les scans d'un produit spécifique
-    List<HistoriqueScan> findByProduitId(Long produitId);
+    List<HistoriqueScan> findByProduitId(String produitId);
     
     // Trouver les scans par note NutriScore
     List<HistoriqueScan> findByNoteNutriScore(String noteNutriScore);
     
-    // Trouver les scans favoris d'un utilisateur
-    List<HistoriqueScan> findByUtilisateurIdAndEstFavoriTrue(Long utilisateurId);
-    
     // Trouver les scans récents d'un utilisateur (des 30 derniers jours)
-    List<HistoriqueScan> findByUtilisateurIdAndDateScanAfter(Long utilisateurId, LocalDateTime date);
+    List<HistoriqueScan> findByUtilisateurIdAndDateScanAfter(String utilisateurId, LocalDateTime date);
     
     // Trouver les scans par impact sur la santé
     List<HistoriqueScan> findByImpactSante(String impactSante);

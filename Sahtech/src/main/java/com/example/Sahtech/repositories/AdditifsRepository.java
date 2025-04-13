@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface AdditifsRepository extends MongoRepository<Additifs,Long> {
+public interface AdditifsRepository extends MongoRepository<Additifs,String> {
 
     Optional<Additifs> findByNomAdditif(String name);
 }

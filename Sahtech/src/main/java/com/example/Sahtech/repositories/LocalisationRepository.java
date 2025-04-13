@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface LocalisationRepository extends MongoRepository<Localisation, Long> {
+public interface LocalisationRepository extends MongoRepository<Localisation, String> {
     
     // Trouver les localisations par pays
     List<Localisation> findByPays(String pays);

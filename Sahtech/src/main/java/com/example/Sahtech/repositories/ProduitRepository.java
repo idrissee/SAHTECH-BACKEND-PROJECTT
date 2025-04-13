@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ProduitRepository extends MongoRepository<Produit, Long> {
+public interface ProduitRepository extends MongoRepository<Produit, String> {
     Optional<Produit> findByCodeBarre(String codeBarre);
 }

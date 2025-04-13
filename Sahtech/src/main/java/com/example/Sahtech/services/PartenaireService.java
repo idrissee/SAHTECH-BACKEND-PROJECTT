@@ -19,12 +19,12 @@ public interface PartenaireService {
     /**
      * Mettre à jour un partenaire existant
      */
-    Partenaire update(Long id, Partenaire partenaire);
+    Partenaire update(String id, Partenaire partenaire);
     
     /**
      * Trouver un partenaire par son ID
      */
-    Optional<Partenaire> findById(Long id);
+    Optional<Partenaire> findById(String id);
     
     /**
      * Trouver un partenaire par son email
@@ -54,30 +54,30 @@ public interface PartenaireService {
     /**
      * Approuver un partenaire
      */
-    Partenaire approuverPartenaire(Long id);
+    Partenaire approuverPartenaire(String id);
     
     /**
      * Suspendre un partenaire
      */
-    Partenaire suspendrePartenaire(Long id);
+    Partenaire suspendrePartenaire(String id);
     
     /**
      * Résilier un partenariat
      */
-    Partenaire resilierPartenariat(Long id, String motif);
+    Partenaire resilierPartenariat(String id, String motif);
     
     /**
      * Ajouter des fonds au solde d'un partenaire
      */
-    Partenaire ajouterFonds(Long id, Double montant);
+    Partenaire ajouterFonds(String id, Double montant);
     
     /**
      * Débiter des fonds du solde d'un partenaire
      */
-    Partenaire debiterFonds(Long id, Double montant);
+    Partenaire debiterFonds(String id, Double montant);
     
     /**
      * Supprimer un partenaire
      */
-    void delete(Long id);
+    void delete(String id);
 } 

@@ -34,17 +34,17 @@ public class AdditifsServiceImpl implements AdditifsService {
     }
 
     @Override
-    public Optional<Additifs> findOnebyId(Long id) {
+    public Optional<Additifs> findOnebyId(String id) {
         return additifsRepository.findById(id);
     }
 
     @Override
-    public boolean isExists(Long id) {
+    public boolean isExists(String id) {
         return additifsRepository.existsById(id);
     }
 
     @Override
-    public Additifs partialUpdate(Long id, Additifs additif) {
+    public Additifs partialUpdate(String id, Additifs additif) {
         additif.setIdAdditif(id);
 
         return additifsRepository.findById(id).map(exisitingAdditif ->{
@@ -55,7 +55,7 @@ public class AdditifsServiceImpl implements AdditifsService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         additifsRepository.deleteById(id);
     }
 

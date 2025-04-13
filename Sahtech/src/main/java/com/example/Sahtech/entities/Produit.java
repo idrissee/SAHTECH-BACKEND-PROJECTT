@@ -1,5 +1,6 @@
 package com.example.Sahtech.entities;
 
+import com.example.Sahtech.Enum.TypeProduit;
 import com.example.Sahtech.Enum.ValeurNutriScore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,14 +18,15 @@ import java.util.List;
 @AllArgsConstructor
 public class Produit {
     @Id
-    private Long id;
+    private String id;
     
     private String nom;
-    private String codeBarre;
+    private Long codeBarre;
     private String marque;
     private String categorie;
     private String description;
     private String imageUrl;
+    private TypeProduit typeProduit;
     
     // Informations NutriScore intégrées
     private ValeurNutriScore valeurNutriScore; // A, B, C, D, E

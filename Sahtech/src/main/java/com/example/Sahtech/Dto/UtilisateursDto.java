@@ -1,5 +1,7 @@
 package com.example.Sahtech.Dto;
 
+import com.example.Sahtech.Enum.Maladie;
+import com.example.Sahtech.Enum.Objectif;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,13 +16,18 @@ import java.util.Date;
 @Data
 public class UtilisateursDto {
 
-    private Long id;
+    private String id;
     private String nom;
     private String prenom;
-    private Long telephone;
     private String email;
-    private String adresse;
-    private Date dateDeNaissence;
+    private Long numTelephone;
+    private String password;
+    private Date dateDeNaissance;
+    private Float taille;
+    private Float poids;
+    private String sexe;
+    private Maladie maladie;
+    private Objectif objectif;
 
 
 }

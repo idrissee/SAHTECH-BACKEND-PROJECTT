@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/partenaires")
+@RequestMapping("/API/Sahtech/Partenaires")
 @RequiredArgsConstructor
 public class PartenaireController {
 
@@ -32,7 +32,7 @@ public class PartenaireController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PartenaireDto> updatePartenaire(
-            @PathVariable Long id,
+            @PathVariable String id,
             @RequestBody PartenaireDto partenaireDto) {
         Partenaire partenaire = partenaireMapper.mapFrom(partenaireDto);
         Partenaire updatedPartenaire = partenaireService.update(id, partenaire);
@@ -40,7 +40,7 @@ public class PartenaireController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PartenaireDto> getPartenaire(@PathVariable Long id) {
+    public ResponseEntity<PartenaireDto> getPartenaire(@PathVariable String id) {
         Optional<Partenaire> partenaire = partenaireService.findById(id);
         return partenaire.map(p -> new ResponseEntity<>(partenaireMapper.mapTo(p), HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -82,7 +82,7 @@ public class PartenaireController {
     }
 
     @PostMapping("/{id}/approuver")
-    public ResponseEntity<PartenaireDto> approuverPartenaire(@PathVariable Long id) {
+    public ResponseEntity<PartenaireDto> approuverPartenaire(@PathVariable String id) {
         Partenaire partenaire = partenaireService.approuverPartenaire(id);
         if (partenaire != null) {
             return new ResponseEntity<>(partenaireMapper.mapTo(partenaire), HttpStatus.OK);
@@ -91,7 +91,7 @@ public class PartenaireController {
     }
 
     @PostMapping("/{id}/suspendre")
-    public ResponseEntity<PartenaireDto> suspendrePartenaire(@PathVariable Long id) {
+    public ResponseEntity<PartenaireDto> suspendrePartenaire(@PathVariable String id) {
         Partenaire partenaire = partenaireService.suspendrePartenaire(id);
         if (partenaire != null) {
             return new ResponseEntity<>(partenaireMapper.mapTo(partenaire), HttpStatus.OK);
@@ -101,7 +101,7 @@ public class PartenaireController {
 
     @PostMapping("/{id}/resilier")
     public ResponseEntity<PartenaireDto> resilierPartenariat(
-            @PathVariable Long id,
+            @PathVariable String id,
             @RequestParam String motif) {
         Partenaire partenaire = partenaireService.resilierPartenariat(id, motif);
         if (partenaire != null) {
@@ -112,7 +112,7 @@ public class PartenaireController {
 
     @PostMapping("/{id}/ajouterFonds")
     public ResponseEntity<?> ajouterFonds(
-            @PathVariable Long id,
+            @PathVariable String id,
             @RequestParam Double montant) {
         try {
             Partenaire partenaire = partenaireService.ajouterFonds(id, montant);
@@ -127,7 +127,7 @@ public class PartenaireController {
 
     @PostMapping("/{id}/debiterFonds")
     public ResponseEntity<?> debiterFonds(
-            @PathVariable Long id,
+            @PathVariable String id,
             @RequestParam Double montant) {
         try {
             Partenaire partenaire = partenaireService.debiterFonds(id, montant);
@@ -143,7 +143,7 @@ public class PartenaireController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePartenaire(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePartenaire(@PathVariable String id) {
         partenaireService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

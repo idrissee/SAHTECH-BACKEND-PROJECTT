@@ -19,17 +19,17 @@ import java.util.Date;
 public class Utilisateurs {
 
     @Id
-    private Long id;
+    private String id;
     private String nom;
     private String prenom;
-    private Long telephone;
     private String email;
-    private Date dateDeNaissence;
+    private Long numTelephone;
+    private String password;
+    private Date dateDeNaissance;
     private Float taille;
-    private String sexe;
     private Float poids;
+    private String sexe;
     private Maladie maladie;
     private Objectif objectif;
-
 
 }

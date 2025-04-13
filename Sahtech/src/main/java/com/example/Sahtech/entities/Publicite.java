@@ -23,12 +23,12 @@ import java.util.Date;
 @Document(collection = "Publicite")
 public class Publicite {
     @Id
-    private Long id;
+    private String id;
     
     // Relations
     @DBRef
     private Partenaire partenaire;
-    private Long partenaire_id;
+    private String partenaire_id;
     
     // Informations de base
     private String titre;

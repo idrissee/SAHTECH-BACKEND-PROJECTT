@@ -35,17 +35,17 @@ public class IngrediantsServiceImpl implements IngrediantsService {
     }
 
     @Override
-    public Optional<Ingrediants> findOnebyId(Long id) {
+    public Optional<Ingrediants> findOnebyId(String id) {
         return ingrediantsRepository.findById(id);
     }
 
     @Override
-    public boolean isExists(Long id) {
+    public boolean isExists(String id) {
         return ingrediantsRepository.existsById(id);
     }
 
     @Override
-    public Ingrediants partialUpdate(Long id,Ingrediants ingredient) {
+    public Ingrediants partialUpdate(String id,Ingrediants ingredient) {
         ingredient.setIdIngrediant(id);
 
         return ingrediantsRepository.findById(id).map(exisitingIngredient ->{
@@ -56,7 +56,7 @@ public class IngrediantsServiceImpl implements IngrediantsService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         ingrediantsRepository.deleteById(id);
     }
 }

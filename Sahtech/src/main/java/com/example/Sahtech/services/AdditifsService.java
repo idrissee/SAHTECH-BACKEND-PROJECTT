@@ -10,11 +10,11 @@ public interface AdditifsService {
 
     List<Additifs> findAll();
 
-    Optional<Additifs> findOnebyId(Long id);
+    Optional<Additifs> findOnebyId(String id);
 
-    boolean isExists(Long id);
+    boolean isExists(String id);
 
-    Additifs partialUpdate(Long id, Additifs additif);
+    Additifs partialUpdate(String id, Additifs additif);
 
-    void delete(Long id);
+    void delete(String id);
 }

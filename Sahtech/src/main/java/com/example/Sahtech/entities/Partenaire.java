@@ -20,7 +20,7 @@ import java.util.Date;
 @Document(collection = "Partenaire")
 public class Partenaire {
     @Id
-    private Long id;
+    private String id;
     
     // Informations de base
     private String nom;

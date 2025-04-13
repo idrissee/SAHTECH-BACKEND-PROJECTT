@@ -2,6 +2,7 @@ package com.example.Sahtech.entities;
 
 
 import com.example.Sahtech.Enum.Maladie;
+import com.example.Sahtech.Enum.TypeAdditif;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,7 +17,9 @@ import java.util.List;
 public class Additifs {
 
     @Id
-    private Long idAdditif;
+    private String idAdditif;
+
+    private String codeAdditif;
 
     private String nomAdditif;
 
@@ -24,7 +27,11 @@ public class Additifs {
 
     private Maladie maladieCause;
 
-    private List<Long> produitsIds;
+    private TypeAdditif typeAdditif;
+
+
+
+
 
 
 }

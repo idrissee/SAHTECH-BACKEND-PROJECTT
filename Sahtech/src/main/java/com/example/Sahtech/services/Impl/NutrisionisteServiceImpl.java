@@ -1,6 +1,7 @@
 package com.example.Sahtech.services.Impl;
 
 import com.example.Sahtech.entities.Nutrisioniste;
+import com.example.Sahtech.exceptions.ResourceNotFoundException;
 import com.example.Sahtech.repositories.NutritionisteRepository;
 import com.example.Sahtech.services.NutrisionisteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,27 +22,24 @@ public class NutrisionisteServiceImpl implements NutrisionisteService {
     }
 
     @Override
-    public Nutrisioniste getNutrisionisteById(Long id) {
-        return nutrisionisteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Nutrisioniste introuvable avec l'ID: " + id));
+    public Nutrisioniste getNutrisionisteById(String id) {
+        Optional<Nutrisioniste> nutrisioniste = nutrisionisteRepository.findById(id);
+        return nutrisioniste.orElse(null);
     }
 
     @Override
     public Nutrisioniste getNutrisionisteByEmail(String email) {
-        return nutrisionisteRepository.findAll()
-                .stream()
-                .filter(n -> email.equalsIgnoreCase(n.getEmail()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Nutrisioniste introuvable avec l'email: " + email));
+        Optional<Nutrisioniste> nutrisioniste = nutrisionisteRepository.findByEmail(email);
+        return nutrisioniste.orElse(null);
     }
 
     @Override
     public Nutrisioniste getNutrisionisteByTelephone(String telephone) {
         return nutrisionisteRepository.findAll()
                 .stream()
-                .filter(n -> telephone.equals(n.getTelephone()))
+                .filter(n -> telephone.equals(n.getNumTelephone().toString()))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Nutrisioniste introuvable avec le téléphone: " + telephone));
+                .orElseThrow(() -> new ResourceNotFoundException("Nutrisioniste", "téléphone", telephone));
     }
 
     @Override
@@ -50,14 +48,25 @@ public class NutrisionisteServiceImpl implements NutrisionisteService {
     }
 
     @Override
-    public Nutrisioniste updateNutrisioniste(Long id, Nutrisioniste updatedNutrisioniste) {
-        Nutrisioniste existing = getNutrisionisteById(id);
-        updatedNutrisioniste.setId(existing.getId()); // garder l'ID original
-        return nutrisionisteRepository.save(updatedNutrisioniste);
+    public Nutrisioniste updateNutrisioniste(String id, Nutrisioniste nutrisioniste) {
+        if (nutrisionisteRepository.existsById(id)) {
+            nutrisioniste.setId(id);
+            return nutrisionisteRepository.save(nutrisioniste);
+        }
+        return null;
     }
 
     @Override
-    public void deleteNutrisioniste(Long id) {
-        nutrisionisteRepository.deleteById(id);
+    public boolean deleteNutrisioniste(String id) {
+        if (nutrisionisteRepository.existsById(id)) {
+            nutrisionisteRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<Nutrisioniste> getNutrisionistesBySpecialite(String specialite) {
+        return nutrisionisteRepository.findBySpecialite(specialite);
     }
 }
