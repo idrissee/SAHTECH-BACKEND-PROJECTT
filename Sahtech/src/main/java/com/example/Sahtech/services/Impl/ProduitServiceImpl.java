@@ -24,26 +24,28 @@ public class ProduitServiceImpl implements ProduitService {
     }
 
     @Override
-    public Produit createProduit(Produit produit) {
-        Produit savedProduit = produitRepository.save(produit);
-
-        // Step 2: For each additif, update its list of product IDs
-        for (String nomAdditifs : produit.getNomAdditif()) {
-            additifRepository.findByNomAdditif(nomAdditifs).ifPresent(additif -> {
-                if (additif.getProduitsIds() == null) {
-                    additif.setProduitsIds(new ArrayList<>());
-                }
-
-                // Avoid duplicates
-                if (!additif.getProduitsIds().contains(savedProduit.getIdProduit())) {
-                    additif.getProduitsIds().add(savedProduit.getIdProduit());
-                    additifRepository.save(additif);
-                }
-            });
-
-        }
-        return savedProduit;
-    }
+   public Produit createProduit(Produit produit) { return produitRepository.save(produit); }
+//    @Override
+//    public Produit createProduit(Produit produit) {
+//        Produit savedProduit = produitRepository.save(produit);
+//
+//        // Step 2: For each additif, update its list of product IDs
+//        for (String nomAdditifs : produit.getNomAdditif()) {
+//            additifRepository.findByNomAdditif(nomAdditifs).ifPresent(additif -> {
+//                if (additif.getProduitsIds() == null) {
+//                    additif.setProduitsIds(new ArrayList<>());
+//                }
+//
+//                // Avoid duplicates
+//                if (!additif.getProduitsIds().contains(savedProduit.getIdProduit())) {
+//                    additif.getProduitsIds().add(savedProduit.getIdProduit());
+//                    additifRepository.save(additif);
+//                }
+//            });
+//
+//        }
+//        return savedProduit;
+//    }
 
     @Override
     public List<Produit> findAll() {

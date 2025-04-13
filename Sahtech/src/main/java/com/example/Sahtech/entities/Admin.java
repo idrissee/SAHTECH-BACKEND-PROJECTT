@@ -2,9 +2,11 @@ package com.example.Sahtech.entities;
 
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -13,11 +15,18 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Admin extends Utilisateurs{
-
+public class Admin {
     @Id
     private String id;
-    
+
+    private String nom;
+    private String prenom;
+    private Long telephone;
+    private String email;
+    private String adresse;
+    private Date dateDeNaissence;
+
+
     private String role; // SUPER_ADMIN, CONTENT_ADMIN, USER_ADMIN, etc.
     private List<String> permissions;
     private String departement;
@@ -27,5 +36,4 @@ public class Admin extends Utilisateurs{
     private Boolean canApproveProducts; // Permission to approve supplement product submissions
     private Boolean canManageUsers; // Permission to manage user accounts
     private Boolean canManageNutritionists; // Permission to manage nutritionist accounts
-
 }

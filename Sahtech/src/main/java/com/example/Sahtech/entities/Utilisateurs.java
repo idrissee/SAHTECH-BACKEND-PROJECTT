@@ -2,6 +2,7 @@ package com.example.Sahtech.entities;
 
 import com.example.Sahtech.Enum.Maladie;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -34,9 +35,9 @@ public class Utilisateurs {
     private String sexe;
     private List<String> allergies;
     private String password;
-    private List<String> historiqueScanIds;
-    private List<String> nutritionisteFavorisIds;
-    
+//    private List<String> historiqueScanIds;
+//    private List<String> nutritionisteFavorisIds;
+
     public int getAge() {
         if (dateDeNaissence == null) return 0;
         LocalDate birthDate = new java.sql.Date(dateDeNaissence.getTime()).toLocalDate();

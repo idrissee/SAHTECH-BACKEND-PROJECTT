@@ -18,10 +18,11 @@ public interface LocalisationRepository extends MongoRepository<Localisation, St
     
     // Trouver par région
     List<Localisation> findByRegion(String region);
-    
+
     // Trouver par code postal
     Optional<Localisation> findByCodePostal(String codePostal);
-    
+
     // Trouver par coordonnées proches (approximatives)
     List<Localisation> findByLatitudeBetweenAndLongitudeBetween(Double latMin, Double latMax, Double longMin, Double longMax);
-} 
+
+}

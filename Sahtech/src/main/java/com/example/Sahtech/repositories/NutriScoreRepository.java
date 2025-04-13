@@ -11,12 +11,12 @@ import java.util.Optional;
 @Repository
 public interface NutriScoreRepository extends MongoRepository<NutriScore, String> {
     
-//    // Trouver tous les NutriScores ayant une certaine valeur
-//    List<NutriScore> findByValeur(ValeurNutriScore valeur);
+    // Trouver tous les NutriScores ayant une certaine valeur
+    List<NutriScore> findByValeur(ValeurNutriScore valeur);
 //
 //    // Trouver par valeur (A, B, C, D, E)
 //    Optional<NutriScore> findByValeur(ValeurNutriScore valeur);
-//
+
     // Trouver par score numérique
     Optional<NutriScore> findByScoreNumerique(Integer scoreNumerique);
 } 

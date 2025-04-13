@@ -73,10 +73,11 @@ public class LocalisationServiceImpl implements LocalisationService {
     public List<Localisation> findByVille(String ville) {
         return localisationRepository.findByVille(ville);
     }
-    
+
     @Override
     public List<Localisation> findByCodePostal(String codePostal) {
-        return localisationRepository.findByCodePostal(codePostal);
+        Optional<Localisation> localisation = localisationRepository.findByCodePostal(codePostal);
+        return localisation.map(List::of).orElse(List.of());
     }
     
     @Override
@@ -96,6 +97,6 @@ public class LocalisationServiceImpl implements LocalisationService {
     
     @Override
     public List<Localisation> findAllByPostalCode(String postalCode) {
-        return localisationRepository.findByCodePostal(postalCode);
+        return localisationRepository.findByCodePostal(postalCode).map(List::of).orElse(List.of());
     }
 } 
