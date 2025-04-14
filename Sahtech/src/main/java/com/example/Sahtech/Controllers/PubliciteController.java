@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/publicites")
+@RequestMapping("/API/Sahtech/Publicites")
 @RequiredArgsConstructor
 public class PubliciteController {
 
@@ -33,7 +33,7 @@ public class PubliciteController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PubliciteDto> updatePublicite(
-            @PathVariable Long id,
+            @PathVariable String id,
             @RequestBody PubliciteDto publiciteDto) {
         Publicite publicite = publiciteMapper.mapFrom(publiciteDto);
         Publicite updatedPublicite = publiciteService.update(id, publicite);
@@ -41,7 +41,7 @@ public class PubliciteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PubliciteDto> getPublicite(@PathVariable Long id) {
+    public ResponseEntity<PubliciteDto> getPublicite(@PathVariable String id) {
         Optional<Publicite> publicite = publiciteService.findById(id);
         return publicite.map(p -> new ResponseEntity<>(publiciteMapper.mapTo(p), HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -69,7 +69,7 @@ public class PubliciteController {
     }
 
     @GetMapping("/partenaire/{partenaireId}")
-    public List<PubliciteDto> getPublicitesByPartenaire(@PathVariable Long partenaireId) {
+    public List<PubliciteDto> getPublicitesByPartenaire(@PathVariable String partenaireId) {
         return publiciteService.findByPartenaireId(partenaireId).stream()
                 .map(publiciteMapper::mapTo)
                 .collect(Collectors.toList());
@@ -97,7 +97,7 @@ public class PubliciteController {
     }
 
     @PostMapping("/{id}/accepter")
-    public ResponseEntity<PubliciteDto> accepterPublicite(@PathVariable Long id) {
+    public ResponseEntity<PubliciteDto> accepterPublicite(@PathVariable String id) {
         Publicite publicite = publiciteService.accepterPublicite(id);
         if (publicite != null) {
             return new ResponseEntity<>(publiciteMapper.mapTo(publicite), HttpStatus.OK);
@@ -107,7 +107,7 @@ public class PubliciteController {
 
     @PostMapping("/{id}/rejeter")
     public ResponseEntity<PubliciteDto> rejeterPublicite(
-            @PathVariable Long id,
+            @PathVariable String id,
             @RequestParam String motif) {
         Publicite publicite = publiciteService.rejeterPublicite(id, motif);
         if (publicite != null) {
@@ -117,7 +117,7 @@ public class PubliciteController {
     }
 
     @PostMapping("/{id}/activer")
-    public ResponseEntity<PubliciteDto> activerPublicite(@PathVariable Long id) {
+    public ResponseEntity<PubliciteDto> activerPublicite(@PathVariable String id) {
         Publicite publicite = publiciteService.activerPublicite(id);
         if (publicite != null) {
             return new ResponseEntity<>(publiciteMapper.mapTo(publicite), HttpStatus.OK);
@@ -126,7 +126,7 @@ public class PubliciteController {
     }
 
     @PostMapping("/{id}/desactiver")
-    public ResponseEntity<PubliciteDto> desactiverPublicite(@PathVariable Long id) {
+    public ResponseEntity<PubliciteDto> desactiverPublicite(@PathVariable String id) {
         Publicite publicite = publiciteService.desactiverPublicite(id);
         if (publicite != null) {
             return new ResponseEntity<>(publiciteMapper.mapTo(publicite), HttpStatus.OK);
@@ -134,29 +134,10 @@ public class PubliciteController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/{id}/statistiques")
-    public ResponseEntity<PubliciteDto> updateStatistiques(
-            @PathVariable Long id,
-            @RequestParam boolean isClicked) {
-        Publicite publicite = publiciteService.updateStatistiques(id, isClicked);
-        if (publicite != null) {
-            return new ResponseEntity<>(publiciteMapper.mapTo(publicite), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
 
-    @GetMapping("/afficher")
-    public List<PubliciteDto> getPublicitesToDisplay(
-            @RequestParam Long utilisateurId,
-            @RequestParam String emplacement,
-            @RequestParam(defaultValue = "5") int limit) {
-        return publiciteService.findPublicitesToDisplay(utilisateurId, emplacement, limit).stream()
-                .map(publiciteMapper::mapTo)
-                .collect(Collectors.toList());
-    }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePublicite(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePublicite(@PathVariable String id) {
         publiciteService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

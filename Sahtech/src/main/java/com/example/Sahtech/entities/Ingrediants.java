@@ -17,9 +17,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Ingrediants {
 
     @Id
-    private Long idIngrediant;
+    private String idIngrediant;
 
     private String nomIngrediant;
+    private String nutriScore; // Texte descriptif du nutriscore (peut être supprimé si redondant)
+    private Double energie100g; // en kcal
+    private Double proteines100g;
+    private Double glucides100g;
+    private Double lipides100g;
+    private Double fibres100g;
+    private Double sel100g;
+    private Double sucre100g;
 
     private Float Quantite;
 

@@ -26,22 +26,6 @@ public class ProduitServiceImpl implements ProduitService {
     @Override
     public Produit createProduit(Produit produit) {
         Produit savedProduit = produitRepository.save(produit);
-
-        // Step 2: For each additif, update its list of product IDs
-        for (String nomAdditifs : produit.getNomAdditif()) {
-            additifRepository.findByNomAdditif(nomAdditifs).ifPresent(additif -> {
-                if (additif.getProduitsIds() == null) {
-                    additif.setProduitsIds(new ArrayList<>());
-                }
-
-                // Avoid duplicates
-                if (!additif.getProduitsIds().contains(savedProduit.getId())) {
-                    additif.getProduitsIds().add(savedProduit.getId());
-                    additifRepository.save(additif);
-                }
-            });
-
-        }
         return savedProduit;
     }
 
@@ -55,7 +39,7 @@ public class ProduitServiceImpl implements ProduitService {
     }
 
     @Override
-    public Optional<Produit> findOnebyId(Long id) {
+    public Optional<Produit> findOnebyId(String id) {
         return produitRepository.findById(id);
     }
 
@@ -65,12 +49,12 @@ public class ProduitServiceImpl implements ProduitService {
     }
 
     @Override
-    public boolean isExists(Long id) {
+    public boolean isExists(String id) {
         return produitRepository.existsById(id);
     }
 
     @Override
-    public Produit partialUpdate(Long id, Produit produit) {
+    public Produit partialUpdate(String id, Produit produit) {
 
         produit.setId(id);
 
@@ -84,7 +68,7 @@ public class ProduitServiceImpl implements ProduitService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         produitRepository.deleteById(id);
     }
 

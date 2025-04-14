@@ -11,11 +11,11 @@ public interface IngrediantsService {
 
     List<Ingrediants> findAll();
 
-    Optional<Ingrediants> findOnebyId(Long id);
+    Optional<Ingrediants> findOnebyId(String id);
 
-    boolean isExists(Long id);
+    boolean isExists(String id);
 
-    Ingrediants partialUpdate(Long id ,Ingrediants ingredient);
+    Ingrediants partialUpdate(String id ,Ingrediants ingredient);
 
-    void delete(Long id);
+    void delete(String id);
 }

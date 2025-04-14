@@ -13,13 +13,13 @@ public interface ProduitService {
 
     List<Produit> findAll();
 
-    Optional<Produit> findOnebyId(Long id);
+    Optional<Produit> findOnebyId(String id);
 
     Optional<Produit> findByCodeBarre(String codeBarre);
 
-    boolean isExists(Long id);
+    boolean isExists(String id);
 
-    Produit partialUpdate(Long id, Produit produit);
+    Produit partialUpdate(String id, Produit produit);
 
-    void delete(Long id);
+    void delete(String id);
 }

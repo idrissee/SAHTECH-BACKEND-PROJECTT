@@ -5,11 +5,11 @@ package com.example.Sahtech.exceptions;
  */
 public class FondsInsuffisantsException extends RuntimeException {
     
-    private final Long partenaireId;
+    private final String partenaireId;
     private final Double montantDemande;
     private final Double soldeActuel;
     
-    public FondsInsuffisantsException(Long partenaireId, Double montantDemande, Double soldeActuel) {
+    public FondsInsuffisantsException(String partenaireId, Double montantDemande, Double soldeActuel) {
         super(String.format("Fonds insuffisants pour le partenaire %d : solde actuel %.2f, montant demandé %.2f", 
                 partenaireId, soldeActuel, montantDemande));
         this.partenaireId = partenaireId;
@@ -17,7 +17,7 @@ public class FondsInsuffisantsException extends RuntimeException {
         this.soldeActuel = soldeActuel;
     }
     
-    public Long getPartenaireId() {
+    public String getPartenaireId() {
         return partenaireId;
     }
     

@@ -1,9 +1,13 @@
 package com.example.Sahtech.Dto;
 
+import com.example.Sahtech.Enum.Maladie;
+import com.example.Sahtech.Enum.TypeAdditif;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+
 import java.util.List;
 
 
@@ -14,7 +18,10 @@ import java.util.List;
 public class AdditifsDto {
 
 
-    private Long idAdditif;
+
+    private String idAdditif;
+
+    private String codeAdditif;
 
     private String nomAdditif;
 
@@ -22,5 +29,7 @@ public class AdditifsDto {
 
     private Maladie maladieCause;
 
-    private List<Long> produitsIds;
+    private TypeAdditif typeAdditif;
+
+
 }

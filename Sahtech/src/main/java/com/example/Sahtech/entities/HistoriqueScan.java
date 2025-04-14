@@ -18,7 +18,7 @@ import java.util.List;
 @Builder
 public class HistoriqueScan {
     @Id
-    private Long id;
+    private String id;
 
     @DBRef
     private Utilisateurs utilisateur;
@@ -35,5 +35,4 @@ public class HistoriqueScan {
     private List<String> pointsNegatifs;
     private String impactSante; // Bonne, Moyenne, Mauvaise
     private String commentaireUtilisateur;
-    private Boolean estFavori;
 } 

@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/API/Sahtech/Additifs")
 public class AdditifsController {
 
 
@@ -25,14 +26,14 @@ public class AdditifsController {
         this.additifsMapper = additifsMapper;
     }
 
-    @PostMapping(path = "additifs")
+    @PostMapping()
     public ResponseEntity<AdditifsDto> createAdditifs(@RequestBody AdditifsDto additifsDto){
         Additifs additifs = additifsMapper.mapFrom(additifsDto);
         Additifs additifsaved = additifsService.save(additifs);
         return new ResponseEntity<>(additifsMapper.mapTo(additifsaved), HttpStatus.CREATED);
     }
 
-    @GetMapping(path ="/additifs")
+    @GetMapping(path ="/All")
     public List<AdditifsDto> listAdditifs() {
         List<Additifs> additifs  = additifsService.findAll();
         return  additifs.stream()
@@ -40,8 +41,8 @@ public class AdditifsController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping(path ="additifs/{id}")
-    public ResponseEntity<AdditifsDto> getAdditif(@PathVariable("id") Long id){
+    @GetMapping(path ="/{id}")
+    public ResponseEntity<AdditifsDto> getAdditif(@PathVariable("id") String id){
         Optional<Additifs> foundadditif = additifsService.findOnebyId(id);
         return foundadditif.map(additif-> {
            AdditifsDto additifsDto = additifsMapper.mapTo(additif);
@@ -49,9 +50,9 @@ public class AdditifsController {
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping(path = "additifs/{id}")
+    @PutMapping(path = "/{id}")
     public ResponseEntity<AdditifsDto> fullUpdateAdditif(
-            @PathVariable("id") Long id,
+            @PathVariable("id") String id,
             @RequestBody AdditifsDto additifsDto) {
 
         if(!additifsService.isExists(id)){
@@ -66,9 +67,9 @@ public class AdditifsController {
                 , HttpStatus.OK);
     }
 
-    @PatchMapping(path ="additifs/{id}")
+    @PatchMapping(path ="/{id}")
     public ResponseEntity<AdditifsDto> partialUpdateAdditif(
-            @PathVariable("id") Long id,
+            @PathVariable("id") String id,
             @RequestBody AdditifsDto additifDto){
 
         if(!additifsService.isExists(id)) {
@@ -82,8 +83,8 @@ public class AdditifsController {
                 , HttpStatus.OK);
     }
 
-    @DeleteMapping(path ="additifs/{id}")
-    public ResponseEntity deleteAdditif(@PathVariable("id") Long id){
+    @DeleteMapping(path ="/{id}")
+    public ResponseEntity deleteAdditif(@PathVariable("id") String id){
         additifsService.delete(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

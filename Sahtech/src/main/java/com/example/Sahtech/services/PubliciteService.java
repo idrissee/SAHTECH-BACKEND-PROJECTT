@@ -22,12 +22,12 @@ public interface PubliciteService {
     /**
      * Mettre à jour une publicité existante
      */
-    Publicite update(Long id, Publicite publicite);
+    Publicite update(String id, Publicite publicite);
     
     /**
      * Trouver une publicité par son ID
      */
-    Optional<Publicite> findById(Long id);
+    Optional<Publicite> findById(String id);
     
     /**
      * Lister toutes les publicités
@@ -47,7 +47,7 @@ public interface PubliciteService {
     /**
      * Lister les publicités par partenaire
      */
-    List<Publicite> findByPartenaireId(Long partenaireId);
+    List<Publicite> findByPartenaireId(String partenaireId);
     
     /**
      * Lister les publicités par type
@@ -67,35 +67,27 @@ public interface PubliciteService {
     /**
      * Accepter une publicité
      */
-    Publicite accepterPublicite(Long id);
+    Publicite accepterPublicite(String id);
     
     /**
      * Rejeter une publicité
      */
-    Publicite rejeterPublicite(Long id, String motif);
+    Publicite rejeterPublicite(String id, String motif);
     
     /**
      * Activer une publicité
      */
-    Publicite activerPublicite(Long id);
+    Publicite activerPublicite(String id);
     
     /**
      * Désactiver une publicité
      */
-    Publicite desactiverPublicite(Long id);
-    
-    /**
-     * Mettre à jour les statistiques d'une publicité (impressions, clics)
-     */
-    Publicite updateStatistiques(Long id, boolean isClicked);
-    
-    /**
-     * Trouver les publicités à afficher pour un utilisateur
-     */
-    List<Publicite> findPublicitesToDisplay(Long utilisateurId, String emplacement, int limit);
+    Publicite desactiverPublicite(String id);
+
+
     
     /**
      * Supprimer une publicité
      */
-    void delete(Long id);
+    void delete(String id);
 } 

@@ -23,12 +23,12 @@ import java.util.Date;
 @Document(collection = "Publicite")
 public class Publicite {
     @Id
-    private Long id;
+    private String id;
     
     // Relations
     @DBRef
     private Partenaire partenaire;
-    private Long partenaire_id;
+    private String partenaire_id;
     
     // Informations de base
     private String titre;
@@ -45,19 +45,4 @@ public class Publicite {
     private Date dateDebut;
     private Date dateFin;
     
-    // Informations sur le sponsor
-    private String nomEntreprise;
-    
-    // Budget et coûts
-    private Double budget;
-    private Double budgetJournalier;
-    private Double coutParClic;
-    private Double coutParImpression;
-    
-    // Statistiques
-    private Long impressions;
-    private Long clics;
-    
-    // Priorité d'affichage
-    private Integer priorite;
 }
