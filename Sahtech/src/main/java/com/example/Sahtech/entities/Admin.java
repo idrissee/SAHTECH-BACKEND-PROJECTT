@@ -1,6 +1,8 @@
 package com.example.Sahtech.entities;
 
 
+import com.example.Sahtech.Enum.Maladie;
+import com.example.Sahtech.Enum.Objectif;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
@@ -18,22 +20,18 @@ import java.util.Map;
 public class Admin {
     @Id
     private String id;
-
+    private String role;
+    private List<String> permissions;
     private String nom;
     private String prenom;
-    private Long telephone;
+    private Long numTelephone;
     private String email;
-    private String adresse;
-    private Date dateDeNaissence;
+    private Date dateDeNaissance;
+    private Float taille;
+    private String sexe;
+    private Float poids;
+    private Maladie maladie;
+    private Objectif objectif;
+    private String password;
 
-
-    private String role; // SUPER_ADMIN, CONTENT_ADMIN, USER_ADMIN, etc.
-    private List<String> permissions;
-    private String departement;
-    private Map<String, Boolean> dashboardAccess; // Controls which dashboard sections this admin can access
-    private List<String> nutritionistesGeres; // Nutritionists managed by this admin
-    private List<String> issuesAssigned; // Issues assigned to this admin for review
-    private Boolean canApproveProducts; // Permission to approve supplement product submissions
-    private Boolean canManageUsers; // Permission to manage user accounts
-    private Boolean canManageNutritionists; // Permission to manage nutritionist accounts
 }

@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/API/Sahtech/Ingredients")
 public class IngrediantsController {
 
     private IngrediantsService ingrediantsService;
@@ -26,14 +27,14 @@ public class IngrediantsController {
         this.ingrediantsMapper = ingrediantsMapper;
     }
 
-    @PostMapping(path = "ingrediants")
+    @PostMapping()
     public ResponseEntity<IngrediantsDto> save(@RequestBody IngrediantsDto ingrediantsDto) {
         Ingrediants ingrediants = ingrediantsMapper.mapFrom(ingrediantsDto);
         Ingrediants ingrediantsSaved = ingrediantsService.save(ingrediants);
         return new ResponseEntity<>(ingrediantsMapper.mapTo(ingrediantsSaved), HttpStatus.CREATED);
     }
 
-    @GetMapping(path ="/ingrediants")
+    @GetMapping(path ="/All")
     public List<IngrediantsDto> listIngrediants() {
         List<Ingrediants> ingrediants  =ingrediantsService.findAll();
         return  ingrediants.stream()
@@ -41,7 +42,7 @@ public class IngrediantsController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping(path ="ingrediants/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<IngrediantsDto> getIngrediant(@PathVariable("id") String id){
         Optional<Ingrediants> foundingrediant = ingrediantsService.findOnebyId(id);
         return foundingrediant.map(ingrediant-> {
@@ -50,7 +51,7 @@ public class IngrediantsController {
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping(path = "ingrediants/{id}")
+    @PutMapping(path = "/{id}")
     public ResponseEntity<IngrediantsDto> fullUpdateIngredient(
             @PathVariable("id") String id,
             @RequestBody IngrediantsDto ingrediantsDto) {
@@ -67,7 +68,7 @@ public class IngrediantsController {
                 , HttpStatus.OK);
     }
 
-    @PatchMapping(path ="ingrediants/{id}")
+    @PatchMapping(path ="/{id}")
     public ResponseEntity<IngrediantsDto> partialUpdateIngredient(
             @PathVariable("id") String id,
                 @RequestBody IngrediantsDto ingredientDto){
@@ -83,7 +84,7 @@ public class IngrediantsController {
                 , HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "ingrediants/{id}")
+    @DeleteMapping(path = "/{id}")
     public ResponseEntity deleteIngredient(@PathVariable("id") String id) {
         ingrediantsService.delete(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);

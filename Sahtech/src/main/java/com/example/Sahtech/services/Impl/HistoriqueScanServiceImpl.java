@@ -1,6 +1,7 @@
 package com.example.Sahtech.services.Impl;
 
 import com.example.Sahtech.entities.HistoriqueScan;
+import com.example.Sahtech.entities.Utilisateurs;
 import com.example.Sahtech.repositories.HistoriqueScanRepository;
 import com.example.Sahtech.services.HistoriqueScanService;
 import lombok.RequiredArgsConstructor;
@@ -59,11 +60,6 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
     }
 
     @Override
-    public List<HistoriqueScan> getFavorisUtilisateur(String utilisateurId) {
-        return historiqueScanRepository.findByUtilisateurIdAndEstFavoriTrue(utilisateurId);
-    }
-
-    @Override
     public List<HistoriqueScan> getScansRecents(String utilisateurId, int jours) {
         LocalDateTime dateLimite = LocalDateTime.now().minusDays(jours);
         return historiqueScanRepository.findByUtilisateurIdAndDateScanAfter(utilisateurId, dateLimite);
@@ -84,25 +80,9 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
         return historiqueScanRepository.findByDateScanBetween(startDate, endDate);
     }
 
-    @Override
-    public Map<String, Long> getStatistiquesNutriScore(String utilisateurId) {
-        return historiqueScanRepository.findByUtilisateurId(utilisateurId)
-                .stream()
-                .collect(Collectors.groupingBy(
-                        HistoriqueScan::getNoteNutriScore,
-                        Collectors.counting()
-                ));
-    }
 
-    @Override
-    public Map<String, Long> getStatistiquesImpactSante(String utilisateurId) {
-        return historiqueScanRepository.findByUtilisateurId(utilisateurId)
-                .stream()
-                .collect(Collectors.groupingBy(
-                        HistoriqueScan::getImpactSante,
-                        Collectors.counting()
-                ));
-    }
+
+
 
     @Override
     public List<String> getAdditifsFrequents(String utilisateurId) {
@@ -137,13 +117,6 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
                 scans.size(), pourcentageBons);
     }
 
-    @Override
-    public HistoriqueScan updateFavori(String scanId, Boolean estFavori) {
-        HistoriqueScan scan = historiqueScanRepository.findById(scanId)
-                .orElseThrow(() -> new RuntimeException("Scan non trouvé"));
-        scan.setEstFavori(estFavori);
-        return historiqueScanRepository.save(scan);
-    }
 
     @Override
     public HistoriqueScan addCommentaire(String scanId, String commentaire) {
@@ -151,5 +124,14 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
                 .orElseThrow(() -> new RuntimeException("Scan non trouvé"));
         scan.setCommentaireUtilisateur(commentaire);
         return historiqueScanRepository.save(scan);
+    }
+
+    @Override
+    public List<Utilisateurs> getUtilisateursByProduit(String produitId) {
+        List<HistoriqueScan> scans = historiqueScanRepository.findByProduitId(produitId);
+        return scans.stream()
+                .map(HistoriqueScan::getUtilisateur)
+                .distinct() // Pour éviter les doublons (si un utilisateur a scanné plusieurs fois le même produit)
+                .collect(Collectors.toList());
     }
 } 

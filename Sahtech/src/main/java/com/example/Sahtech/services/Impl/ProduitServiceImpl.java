@@ -24,28 +24,10 @@ public class ProduitServiceImpl implements ProduitService {
     }
 
     @Override
-   public Produit createProduit(Produit produit) { return produitRepository.save(produit); }
-//    @Override
-//    public Produit createProduit(Produit produit) {
-//        Produit savedProduit = produitRepository.save(produit);
-//
-//        // Step 2: For each additif, update its list of product IDs
-//        for (String nomAdditifs : produit.getNomAdditif()) {
-//            additifRepository.findByNomAdditif(nomAdditifs).ifPresent(additif -> {
-//                if (additif.getProduitsIds() == null) {
-//                    additif.setProduitsIds(new ArrayList<>());
-//                }
-//
-//                // Avoid duplicates
-//                if (!additif.getProduitsIds().contains(savedProduit.getIdProduit())) {
-//                    additif.getProduitsIds().add(savedProduit.getIdProduit());
-//                    additifRepository.save(additif);
-//                }
-//            });
-//
-//        }
-//        return savedProduit;
-//    }
+    public Produit createProduit(Produit produit) {
+        Produit savedProduit = produitRepository.save(produit);
+        return savedProduit;
+    }
 
     @Override
     public List<Produit> findAll() {
@@ -62,6 +44,11 @@ public class ProduitServiceImpl implements ProduitService {
     }
 
     @Override
+    public Optional<Produit> findByCodeBarre(String codeBarre) {
+        return produitRepository.findByCodeBarre(codeBarre);
+    }
+
+    @Override
     public boolean isExists(String id) {
         return produitRepository.existsById(id);
     }
@@ -69,11 +56,11 @@ public class ProduitServiceImpl implements ProduitService {
     @Override
     public Produit partialUpdate(String id, Produit produit) {
 
-        produit.setIdProduit(id);
+        produit.setId(id);
 
         return produitRepository.findById(id).map(exisitingProduit ->{
-            Optional.ofNullable(produit.getNomProduit()).ifPresent(exisitingProduit::setNomProduit);
-            Optional.ofNullable(produit.getTypeProduit()).ifPresent(exisitingProduit::setTypeProduit);
+            Optional.ofNullable(produit.getNom()).ifPresent(exisitingProduit::setNom);
+            Optional.ofNullable(produit.getDescription()).ifPresent(exisitingProduit::setDescription);
             return produitRepository.save(exisitingProduit);
         }).orElseThrow(() -> new RuntimeException("Produit not found"));
 

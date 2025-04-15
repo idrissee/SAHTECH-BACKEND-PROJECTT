@@ -2,32 +2,44 @@ package com.example.Sahtech.Dto;
 
 import com.example.Sahtech.Enum.EtatPublicite;
 import com.example.Sahtech.Enum.StatusPublicite;
-import lombok.*;
+import com.example.Sahtech.Enum.TypePublicite;
+import com.example.Sahtech.entities.Partenaire;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class PubliciteDto {
+
+
     private String id;
-    private StatusPublicite statusPublicite;
-    private EtatPublicite etatPublicite;
-    private String fabricantId;
-    private String nomEntreprise;
-    private Date dateDebut;
-    private Date dateFin;
+
+    // Relations
+
+    private Partenaire partenaire;
+    private Long partenaire_id;
+
+    // Informations de base
     private String titre;
     private String description;
-    private String urlImage;
-    private String urlRedirection;
-    private List<String> publicCible;
-    private List<String> produitsPromus;
-    private Integer nombreImpressions;
-    private Integer nombreClics;
-    private Double coutPublicite;
-    private Boolean estPaye;
-    private String adminApprobateurId;
+    private String imageUrl;
+    private String lienRedirection;
+    private TypePublicite typePub;
+
+    // État et statut
+    private StatusPublicite statusPublicite;
+    private EtatPublicite etatPublicite;
+
+    // Période de validité
+    private Date dateDebut;
+    private Date dateFin;
+
 }

@@ -11,4 +11,6 @@ public interface AdminService {
     Admin createAdmin(Admin admin);
     Admin updateAdmin(String id, Admin admin);
     boolean deleteAdmin(String id);
+
+    boolean isExists(String id);
 }

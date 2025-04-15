@@ -15,10 +15,10 @@ public class UtilisateursDto {
     private String id;
     private String nom;
     private String prenom;
-    private Long telephone;
+    private Long numTelephone;
     private String email;
     private String adresse;
-    private Date dateDeNaissence;
+    private Date dateDeNaissance;
     private List<Maladie> maladies;
     private Float poids;
     private Float taille;

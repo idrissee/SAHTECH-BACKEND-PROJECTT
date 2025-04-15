@@ -14,9 +14,11 @@ public interface NutrisionisteService {
 
     Nutrisioniste getNutrisionisteByTelephone(String telephone);
 
+    List<Nutrisioniste> getNutrisionistesBySpecialite(String specialite);
+
     Nutrisioniste createNutrisioniste(Nutrisioniste nutrisioniste);
 
     Nutrisioniste updateNutrisioniste(String id, Nutrisioniste nutrisioniste);
 
-    void deleteNutrisioniste(String id);
+    boolean deleteNutrisioniste(String id);
 }

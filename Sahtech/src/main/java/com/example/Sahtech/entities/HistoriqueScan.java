@@ -32,5 +32,4 @@ public class HistoriqueScan {
     private List<String> pointsNegatifs;
     private String impactSante; // Bonne, Moyenne, Mauvaise
     private String commentaireUtilisateur;
-    private Boolean estFavori;
 } 

@@ -3,9 +3,15 @@ package com.example.Sahtech.Controllers;
 import com.example.Sahtech.Dto.HistoriqueScanDto;
 import com.example.Sahtech.entities.HistoriqueScan;
 import com.example.Sahtech.mappers.Mapper;
+import com.example.Sahtech.services.AuthorizationService;
 import com.example.Sahtech.services.HistoriqueScanService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -14,11 +20,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/historique")
+@RequestMapping("/API/Sahtech/HistoriqueScan")
 public class HistoriqueScanController {
 
     private final HistoriqueScanService historiqueScanService;
     private final Mapper<HistoriqueScan, HistoriqueScanDto> historiqueScanMapper;
+    
+    @Autowired
+    private AuthorizationService authorizationService;
 
     public HistoriqueScanController(HistoriqueScanService historiqueScanService, 
                                   Mapper<HistoriqueScan, HistoriqueScanDto> historiqueScanMapper) {
@@ -28,6 +37,7 @@ public class HistoriqueScanController {
 
     @PostMapping
     public ResponseEntity<HistoriqueScanDto> saveScan(@RequestBody HistoriqueScanDto scanDto) {
+        // Cette méthode est réservée aux admins (géré par SecurityConfig)
         HistoriqueScan scan = historiqueScanMapper.mapFrom(scanDto);
         HistoriqueScan savedScan = historiqueScanService.saveScan(scan);
         return new ResponseEntity<>(historiqueScanMapper.mapTo(savedScan), HttpStatus.CREATED);
@@ -35,116 +45,144 @@ public class HistoriqueScanController {
 
     @GetMapping("/{id}")
     public ResponseEntity<HistoriqueScanDto> getScanById(@PathVariable String id) {
+        // Cette méthode est réservée aux admins (géré par SecurityConfig)
         HistoriqueScan scan = historiqueScanService.getScanById(id);
         return ResponseEntity.ok(historiqueScanMapper.mapTo(scan));
     }
 
-    @GetMapping
-    public List<HistoriqueScanDto> getAllScans() {
-        return historiqueScanService.getAllScans().stream()
+    @GetMapping("/All")
+    public ResponseEntity<List<HistoriqueScanDto>> getAllScans() {
+        // Cette méthode est réservée aux admins (géré par SecurityConfig)
+        // Double vérification que l'utilisateur est admin
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        
+        List<HistoriqueScanDto> scanDtos = historiqueScanService.getAllScans().stream()
                 .map(historiqueScanMapper::mapTo)
                 .collect(Collectors.toList());
+        return new ResponseEntity<>(scanDtos, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteScan(@PathVariable String id) {
+        // Cette méthode est réservée aux admins (géré par SecurityConfig)
         historiqueScanService.deleteScan(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/utilisateur/{utilisateurId}")
-    public List<HistoriqueScanDto> getHistoriqueUtilisateur(@PathVariable String utilisateurId) {
-        return historiqueScanService.getHistoriqueUtilisateur(utilisateurId).stream()
+    @GetMapping("/utilisateur/{id}")
+    public ResponseEntity<List<HistoriqueScanDto>> getHistoriqueUtilisateur(
+            @PathVariable String id, 
+            HttpServletRequest request) {
+        
+        // Vérifier si l'utilisateur est autorisé (admin ou lui-même)
+        if (!authorizationService.isAuthorizedToAccessResource(id, request)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        
+        List<HistoriqueScanDto> scanDtos = historiqueScanService.getHistoriqueUtilisateur(id).stream()
                 .map(historiqueScanMapper::mapTo)
                 .collect(Collectors.toList());
-    }
-
-    @GetMapping("/produit/{produitId}")
-    public List<HistoriqueScanDto> getScansProduit(@PathVariable String produitId) {
-        return historiqueScanService.getScansProduit(produitId).stream()
-                .map(historiqueScanMapper::mapTo)
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("/nutriscore/{note}")
-    public List<HistoriqueScanDto> getScansByNutriScore(@PathVariable String note) {
-        return historiqueScanService.getScansByNutriScore(note).stream()
-                .map(historiqueScanMapper::mapTo)
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("/favoris/{utilisateurId}")
-    public List<HistoriqueScanDto> getFavorisUtilisateur(@PathVariable String utilisateurId) {
-        return historiqueScanService.getFavorisUtilisateur(utilisateurId).stream()
-                .map(historiqueScanMapper::mapTo)
-                .collect(Collectors.toList());
+        return new ResponseEntity<>(scanDtos, HttpStatus.OK);
     }
 
     @GetMapping("/recents/{utilisateurId}")
-    public List<HistoriqueScanDto> getScansRecents(
+    public ResponseEntity<List<HistoriqueScanDto>> getScansRecents(
             @PathVariable String utilisateurId,
-            @RequestParam(defaultValue = "30") int jours) {
-        return historiqueScanService.getScansRecents(utilisateurId, jours).stream()
+            @RequestParam(defaultValue = "30") int jours,
+            HttpServletRequest request) {
+        
+        // Vérifier si l'utilisateur est autorisé (admin ou lui-même)
+        if (!authorizationService.isAuthorizedToAccessResource(utilisateurId, request)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        
+        List<HistoriqueScanDto> scanDtos = historiqueScanService.getScansRecents(utilisateurId, jours).stream()
                 .map(historiqueScanMapper::mapTo)
                 .collect(Collectors.toList());
+        return new ResponseEntity<>(scanDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/impact/{impact}")
-    public List<HistoriqueScanDto> getScansByImpactSante(@PathVariable String impact) {
-        return historiqueScanService.getScansByImpactSante(impact).stream()
-                .map(historiqueScanMapper::mapTo)
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("/additif/{additif}")
-    public List<HistoriqueScanDto> getScansByAdditif(@PathVariable String additif) {
-        return historiqueScanService.getScansByAdditif(additif).stream()
-                .map(historiqueScanMapper::mapTo)
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("/periode")
-    public List<HistoriqueScanDto> getScansByPeriode(
-            @RequestParam LocalDateTime startDate,
-            @RequestParam LocalDateTime endDate) {
-        return historiqueScanService.getScansByPeriode(startDate, endDate).stream()
-                .map(historiqueScanMapper::mapTo)
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("/statistiques/nutriscore/{utilisateurId}")
-    public Map<String, Long> getStatistiquesNutriScore(@PathVariable String utilisateurId) {
-        return historiqueScanService.getStatistiquesNutriScore(utilisateurId);
-    }
-
-    @GetMapping("/statistiques/impact/{utilisateurId}")
-    public Map<String, Long> getStatistiquesImpactSante(@PathVariable String utilisateurId) {
-        return historiqueScanService.getStatistiquesImpactSante(utilisateurId);
-    }
 
     @GetMapping("/additifs-frequents/{utilisateurId}")
-    public List<String> getAdditifsFrequents(@PathVariable String utilisateurId) {
-        return historiqueScanService.getAdditifsFrequents(utilisateurId);
+    public ResponseEntity<List<String>> getAdditifsFrequents(
+            @PathVariable String utilisateurId,
+            HttpServletRequest request) {
+        
+        // Vérifier si l'utilisateur est autorisé (admin ou lui-même)
+        if (!authorizationService.isAuthorizedToAccessResource(utilisateurId, request)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        
+        List<String> additifs = historiqueScanService.getAdditifsFrequents(utilisateurId);
+        return new ResponseEntity<>(additifs, HttpStatus.OK);
     }
 
     @GetMapping("/evolution/{utilisateurId}")
-    public String getEvolutionSante(@PathVariable String utilisateurId) {
-        return historiqueScanService.getEvolutionSante(utilisateurId);
+    public ResponseEntity<String> getEvolutionSante(
+            @PathVariable String utilisateurId,
+            HttpServletRequest request) {
+        
+        // Vérifier si l'utilisateur est autorisé (admin ou lui-même)
+        if (!authorizationService.isAuthorizedToAccessResource(utilisateurId, request)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        
+        String evolution = historiqueScanService.getEvolutionSante(utilisateurId);
+        return new ResponseEntity<>(evolution, HttpStatus.OK);
     }
 
-    @PutMapping("/favori/{scanId}")
-    public HistoriqueScanDto updateFavori(
-            @PathVariable String scanId,
-            @RequestParam Boolean estFavori) {
-        HistoriqueScan updatedScan = historiqueScanService.updateFavori(scanId, estFavori);
-        return historiqueScanMapper.mapTo(updatedScan);
+    // Les méthodes suivantes sont réservées aux admins (géré par SecurityConfig)
+    
+    @GetMapping("/produit/{produitId}")
+    public ResponseEntity<List<HistoriqueScanDto>> getScansProduit(@PathVariable String produitId) {
+        List<HistoriqueScanDto> scanDtos = historiqueScanService.getScansProduit(produitId).stream()
+                .map(historiqueScanMapper::mapTo)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(scanDtos, HttpStatus.OK);
+    }
+
+    @GetMapping("/nutriscore/{note}")
+    public ResponseEntity<List<HistoriqueScanDto>> getScansByNutriScore(@PathVariable String note) {
+        List<HistoriqueScanDto> scanDtos = historiqueScanService.getScansByNutriScore(note).stream()
+                .map(historiqueScanMapper::mapTo)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(scanDtos, HttpStatus.OK);
+    }
+
+    @GetMapping("/impact/{impact}")
+    public ResponseEntity<List<HistoriqueScanDto>> getScansByImpactSante(@PathVariable String impact) {
+        List<HistoriqueScanDto> scanDtos = historiqueScanService.getScansByImpactSante(impact).stream()
+                .map(historiqueScanMapper::mapTo)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(scanDtos, HttpStatus.OK);
+    }
+
+    @GetMapping("/additif/{additif}")
+    public ResponseEntity<List<HistoriqueScanDto>> getScansByAdditif(@PathVariable String additif) {
+        List<HistoriqueScanDto> scanDtos = historiqueScanService.getScansByAdditif(additif).stream()
+                .map(historiqueScanMapper::mapTo)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(scanDtos, HttpStatus.OK);
+    }
+
+    @GetMapping("/periode")
+    public ResponseEntity<List<HistoriqueScanDto>> getScansByPeriode(
+            @RequestParam LocalDateTime startDate,
+            @RequestParam LocalDateTime endDate) {
+        List<HistoriqueScanDto> scanDtos = historiqueScanService.getScansByPeriode(startDate, endDate).stream()
+                .map(historiqueScanMapper::mapTo)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(scanDtos, HttpStatus.OK);
     }
 
     @PutMapping("/commentaire/{scanId}")
-    public HistoriqueScanDto addCommentaire(
+    public ResponseEntity<HistoriqueScanDto> addCommentaire(
             @PathVariable String scanId,
             @RequestParam String commentaire) {
         HistoriqueScan updatedScan = historiqueScanService.addCommentaire(scanId, commentaire);
-        return historiqueScanMapper.mapTo(updatedScan);
+        return new ResponseEntity<>(historiqueScanMapper.mapTo(updatedScan), HttpStatus.OK);
     }
 } 

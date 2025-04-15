@@ -28,7 +28,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Admin getAdminByEmail(String email) {
-        return adminRepository.findByEmail(email);
+        Optional<Admin> admin = adminRepository.findByEmail(email);
+        return admin.orElse(null);
     }
 
     @Override
@@ -53,4 +54,10 @@ public class AdminServiceImpl implements AdminService {
         }
         return false;
     }
+
+    @Override
+    public boolean isExists(String id) {
+        return adminRepository.existsById(id);
+    }
 }
+ 

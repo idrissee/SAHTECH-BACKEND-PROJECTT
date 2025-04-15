@@ -45,7 +45,7 @@ public class IngrediantsServiceImpl implements IngrediantsService {
     }
 
     @Override
-    public Ingrediants partialUpdate(String id, Ingrediants ingredient) {
+    public Ingrediants partialUpdate(String id,Ingrediants ingredient) {
         ingredient.setIdIngrediant(id);
 
         return ingrediantsRepository.findById(id).map(exisitingIngredient ->{

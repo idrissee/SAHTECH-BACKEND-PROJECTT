@@ -1,6 +1,8 @@
 package com.example.Sahtech.Controllers;
 
+import com.example.Sahtech.Dto.AdditifsDto;
 import com.example.Sahtech.Dto.AdminDto;
+import com.example.Sahtech.entities.Additifs;
 import com.example.Sahtech.entities.Admin;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.AdminService;
@@ -64,13 +66,19 @@ public class AdminController {
     // UPDATE ADMIN
     @PutMapping("/{id}")
     public ResponseEntity<AdminDto> updateAdmin(@PathVariable String id, @RequestBody AdminDto adminDto) {
+        if(!adminService.isExists(id)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        adminDto.setId(id);
         Admin admin = adminMapper.mapFrom(adminDto);
         Admin updated = adminService.updateAdmin(id, admin);
         if (updated != null) {
-            return new ResponseEntity<>(adminMapper.mapTo(updated), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(
+                    adminMapper.mapTo(updated),
+                    HttpStatus.OK);
         }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     // DELETE ADMIN

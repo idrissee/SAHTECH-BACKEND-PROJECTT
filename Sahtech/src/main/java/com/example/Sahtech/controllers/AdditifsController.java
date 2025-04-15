@@ -13,9 +13,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/API/Sahtech/Additifs")
 public class AdditifsController {
 
-
+    //autowired ??
     private AdditifsService additifsService;
 
     private Mapper<Additifs, AdditifsDto> additifsMapper;
@@ -25,14 +26,14 @@ public class AdditifsController {
         this.additifsMapper = additifsMapper;
     }
 
-    @PostMapping(path = "additifs")
+    @PostMapping()
     public ResponseEntity<AdditifsDto> createAdditifs(@RequestBody AdditifsDto additifsDto){
         Additifs additifs = additifsMapper.mapFrom(additifsDto);
         Additifs additifsaved = additifsService.save(additifs);
         return new ResponseEntity<>(additifsMapper.mapTo(additifsaved), HttpStatus.CREATED);
     }
 
-    @GetMapping(path ="/additifs")
+    @GetMapping(path ="/All")
     public List<AdditifsDto> listAdditifs() {
         List<Additifs> additifs  = additifsService.findAll();
         return  additifs.stream()
@@ -40,7 +41,7 @@ public class AdditifsController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping(path ="additifs/{id}")
+    @GetMapping(path ="/{id}")
     public ResponseEntity<AdditifsDto> getAdditif(@PathVariable("id") String id){
         Optional<Additifs> foundadditif = additifsService.findOnebyId(id);
         return foundadditif.map(additif-> {
@@ -49,7 +50,7 @@ public class AdditifsController {
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping(path = "additifs/{id}")
+    @PutMapping(path = "/{id}")
     public ResponseEntity<AdditifsDto> fullUpdateAdditif(
             @PathVariable("id") String id,
             @RequestBody AdditifsDto additifsDto) {
@@ -57,6 +58,7 @@ public class AdditifsController {
         if(!additifsService.isExists(id)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
         additifsDto.setIdAdditif(id);
         Additifs additif = additifsMapper.mapFrom(additifsDto);
         Additifs savedAdditif = additifsService.save(additif);
@@ -65,7 +67,7 @@ public class AdditifsController {
                 , HttpStatus.OK);
     }
 
-    @PatchMapping(path ="additifs/{id}")
+    @PatchMapping(path ="/{id}")
     public ResponseEntity<AdditifsDto> partialUpdateAdditif(
             @PathVariable("id") String id,
             @RequestBody AdditifsDto additifDto){
@@ -81,7 +83,7 @@ public class AdditifsController {
                 , HttpStatus.OK);
     }
 
-    @DeleteMapping(path ="additifs/{id}")
+    @DeleteMapping(path ="/{id}")
     public ResponseEntity deleteAdditif(@PathVariable("id") String id){
         additifsService.delete(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);

@@ -6,14 +6,15 @@ import org.springframework.stereotype.Repository;
 import com.example.Sahtech.entities.Utilisateurs;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
 public interface UtilisateursRepository extends MongoRepository <Utilisateurs, String> {
 
-    List<Utilisateurs> findByEmail(String email);
+    Optional<Utilisateurs> findByEmail(String email);
     List<Utilisateurs> findByNom(String nom);
-    List<Utilisateurs> findByRole(String role);
 
 
+    boolean existsByEmail(String email);
 }

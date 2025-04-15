@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/API/Sahtech/Localisations")
 public class LocalisationController {
     
     private final LocalisationService localisationService;
@@ -23,14 +24,14 @@ public class LocalisationController {
         this.localisationMapper = localisationMapper;
     }
     
-    @PostMapping(path = "/localisations")
+    @PostMapping()
     public ResponseEntity<LocalisationDto> createLocalisation(@RequestBody LocalisationDto localisationDto) {
         Localisation localisation = localisationMapper.mapFrom(localisationDto);
         Localisation savedLocalisation = localisationService.save(localisation);
         return new ResponseEntity<>(localisationMapper.mapTo(savedLocalisation), HttpStatus.CREATED);
     }
     
-    @GetMapping(path = "/localisations")
+    @GetMapping(path = "/All")
     public List<LocalisationDto> listLocalisations() {
         List<Localisation> localisations = localisationService.findAll();
         return localisations.stream()
@@ -38,7 +39,7 @@ public class LocalisationController {
                 .collect(Collectors.toList());
     }
     
-    @GetMapping(path = "/localisations/{id}")
+    @GetMapping(path = "/{id}")
     public ResponseEntity<LocalisationDto> getLocalisation(@PathVariable("id") String id) {
         Optional<Localisation> foundLocalisation = localisationService.findOneById(id);
         return foundLocalisation.map(localisation -> {
@@ -47,7 +48,7 @@ public class LocalisationController {
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     
-    @PutMapping(path = "/localisations/{id}")
+    @PutMapping(path = "/{id}")
     public ResponseEntity<LocalisationDto> updateLocalisation(
             @PathVariable("id") String id,
             @RequestBody LocalisationDto localisationDto) {
@@ -63,13 +64,13 @@ public class LocalisationController {
                 HttpStatus.OK);
     }
     
-    @DeleteMapping(path = "/localisations/{id}")
+    @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> deleteLocalisation(@PathVariable("id") String id) {
         localisationService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
-    @GetMapping(path = "/localisations/pays/{pays}")
+    @GetMapping(path = "/pays/{pays}")
     public List<LocalisationDto> getLocalisationsByPays(@PathVariable("pays") String pays) {
         List<Localisation> localisations = localisationService.findByPays(pays);
         return localisations.stream()
@@ -77,7 +78,7 @@ public class LocalisationController {
                 .collect(Collectors.toList());
     }
     
-    @GetMapping(path = "/localisations/region/{region}")
+    @GetMapping(path = "/region/{region}")
     public List<LocalisationDto> getLocalisationsByRegion(@PathVariable("region") String region) {
         List<Localisation> localisations = localisationService.findByRegion(region);
         return localisations.stream()
@@ -85,7 +86,7 @@ public class LocalisationController {
                 .collect(Collectors.toList());
     }
     
-    @GetMapping(path = "/localisations/ville/{ville}")
+    @GetMapping(path = "/ville/{ville}")
     public List<LocalisationDto> getLocalisationsByVille(@PathVariable("ville") String ville) {
         List<Localisation> localisations = localisationService.findByVille(ville);
         return localisations.stream()
@@ -93,7 +94,7 @@ public class LocalisationController {
                 .collect(Collectors.toList());
     }
     
-    @GetMapping(path = "/localisations/codePostal/{codePostal}")
+    @GetMapping(path = "/codePostal/{codePostal}")
     public List<LocalisationDto> getLocalisationsByCodePostal(@PathVariable("codePostal") String codePostal) {
         List<Localisation> localisations = localisationService.findByCodePostal(codePostal);
         return localisations.stream()

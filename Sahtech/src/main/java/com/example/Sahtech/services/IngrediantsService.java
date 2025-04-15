@@ -15,7 +15,7 @@ public interface IngrediantsService {
 
     boolean isExists(String id);
 
-    Ingrediants partialUpdate(String id, Ingrediants ingredient);
+    Ingrediants partialUpdate(String id ,Ingrediants ingredient);
 
     void delete(String id);
 }
