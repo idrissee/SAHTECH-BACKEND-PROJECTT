@@ -62,15 +62,15 @@ public class NutrisionisteController {
     }
 
     // GET BY EMAIL - réservé à l'admin (déjà géré par SecurityConfig)
-    @GetMapping("/email/{email}")
-    public NutrisionisteDto getNutrisionisteByEmail(@PathVariable String email) {
-        return nutrisionisteMapper.mapTo(nutrisionisteService.getNutrisionisteByEmail(email));
+    @GetMapping("/email")
+    public ResponseEntity<NutrisionisteDto> getNutrisionisteByEmail(@RequestParam String email) {
+        return new ResponseEntity<>(nutrisionisteMapper.mapTo(nutrisionisteService.getNutrisionisteByEmail(email)), HttpStatus.OK);
     }
 
     // GET BY NUMÉRO DE TÉLÉPHONE - réservé à l'admin (déjà géré par SecurityConfig)
     @GetMapping("/telephone/{telephone}")
-    public NutrisionisteDto getNutrisionisteByTelephone(@PathVariable String telephone) {
-        return nutrisionisteMapper.mapTo(nutrisionisteService.getNutrisionisteByTelephone(telephone));
+    public ResponseEntity<NutrisionisteDto> getNutrisionisteByTelephone(@PathVariable String telephone) {
+        return new ResponseEntity<>(nutrisionisteMapper.mapTo(nutrisionisteService.getNutrisionisteByTelephone(telephone)), HttpStatus.OK);
     }
 
     // GET BY SPECIALITE - réservé à l'admin (déjà géré par SecurityConfig)
@@ -83,13 +83,13 @@ public class NutrisionisteController {
 
     // CREATE - réservé à l'admin (déjà géré par SecurityConfig)
     @PostMapping("/Create")
-    public NutrisionisteDto createNutrisioniste(@RequestBody NutrisionisteDto nutrisionisteDto) {
+    public ResponseEntity<NutrisionisteDto> createNutrisioniste(@RequestBody NutrisionisteDto nutrisionisteDto) {
         Nutrisioniste nutrisioniste = nutrisionisteMapper.mapFrom(nutrisionisteDto);
-        return nutrisionisteMapper.mapTo(nutrisionisteService.createNutrisioniste(nutrisioniste));
+        return new  ResponseEntity<>(nutrisionisteMapper.mapTo(nutrisionisteService.createNutrisioniste(nutrisioniste)), HttpStatus.CREATED);
     }
 
     // UPDATE - accessible à l'admin et au nutritionniste lui-même
-    @PutMapping("/Update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<NutrisionisteDto> updateNutrisioniste(@PathVariable String id, @RequestBody NutrisionisteDto nutrisionisteDto, HttpServletRequest request) {
         // Vérifier si l'utilisateur est autorisé
         if (!authorizationService.isAuthorizedToAccessResource(id, request)) {

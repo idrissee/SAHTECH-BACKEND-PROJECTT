@@ -63,11 +63,7 @@ public class SecurityConfig {
                 
                 // Historique de scan : utilisateur peut uniquement consulter son propre historique et statistiques
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/utilisateur/{id}").hasAnyRole("ADMIN", "USER")
-                .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/recents/{id}").hasAnyRole("ADMIN", "USER")
-                .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/statistiques/nutriscore/{id}").hasAnyRole("ADMIN", "USER")
-                .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/statistiques/impact/{id}").hasAnyRole("ADMIN", "USER")
-                .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/additifs-frequents/{id}").hasAnyRole("ADMIN", "USER")
-                .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/evolution/{id}").hasAnyRole("ADMIN", "USER")
+    
                 
                 // Pour toutes les autres opérations sur Utilisateurs, seul Admin a accès
                 .requestMatchers("/API/Sahtech/Utilisateurs/**").hasRole("ADMIN")

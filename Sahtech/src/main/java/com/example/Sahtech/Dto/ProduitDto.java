@@ -35,6 +35,6 @@ public class ProduitDto {
 
 
     // Composition
-    private List<String> ingredients;
+    private List<String> nomingredients;
     private List<String> nomAdditif;
 }
