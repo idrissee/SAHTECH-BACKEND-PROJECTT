@@ -62,8 +62,8 @@ public class NutrisionisteController {
     }
 
     // GET BY EMAIL - réservé à l'admin (déjà géré par SecurityConfig)
-    @GetMapping("/email/{email}")
-    public NutrisionisteDto getNutrisionisteByEmail(@PathVariable String email) {
+    @GetMapping("/email")
+    public NutrisionisteDto getNutrisionisteByEmail(@RequestParam String email) {
         return nutrisionisteMapper.mapTo(nutrisionisteService.getNutrisionisteByEmail(email));
     }
 
@@ -89,7 +89,7 @@ public class NutrisionisteController {
     }
 
     // UPDATE - accessible à l'admin et au nutritionniste lui-même
-    @PutMapping("/Update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<NutrisionisteDto> updateNutrisioniste(@PathVariable String id, @RequestBody NutrisionisteDto nutrisionisteDto, HttpServletRequest request) {
         // Vérifier si l'utilisateur est autorisé
         if (!authorizationService.isAuthorizedToAccessResource(id, request)) {

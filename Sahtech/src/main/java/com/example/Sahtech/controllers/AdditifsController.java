@@ -89,5 +89,14 @@ public class AdditifsController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping(path = "/nom")
+    public ResponseEntity<AdditifsDto> getByNom(@PathVariable("nom") String nom){
+        Optional<Additifs> foundadditif = additifsService.getByNom(nom);
+        return foundadditif.map(additif-> {
+            AdditifsDto additifsDto = additifsMapper.mapTo(additif);
+            return new ResponseEntity<>(additifsDto, HttpStatus.OK);
+        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
 
 }
