@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IngrediantsRepository  extends MongoRepository<Ingrediants, String> {
+    Ingrediants findByNomIngrediant(String nomIngrediant);
 }

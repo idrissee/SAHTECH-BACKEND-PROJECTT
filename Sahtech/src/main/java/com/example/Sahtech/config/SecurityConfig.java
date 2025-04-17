@@ -54,6 +54,11 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/Nutrisionistes/{id}").hasAnyRole("ADMIN", "NUTRITIONIST")
                 .requestMatchers(HttpMethod.PUT, "/API/Sahtech/Nutrisionistes/{id}").hasAnyRole("ADMIN", "NUTRITIONIST")
                 
+                // Accès pour Nutritionnistes aux APIs de localisation spécifiques
+                .requestMatchers(HttpMethod.POST, "/localisations").hasAnyRole("ADMIN", "NUTRITIONIST")
+                .requestMatchers(HttpMethod.GET, "/localisations/{id}").hasAnyRole("ADMIN", "NUTRITIONIST")
+                .requestMatchers(HttpMethod.PUT, "/localisations/{id}").hasAnyRole("ADMIN", "NUTRITIONIST")
+                
                 // Pour toutes les autres opérations sur Nutritionnistes, seul Admin a accès
                 .requestMatchers("/API/Sahtech/Nutrisionistes/**").hasRole("ADMIN")
                 
@@ -61,9 +66,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/Utilisateurs/{id}").hasAnyRole("ADMIN", "USER")
                 .requestMatchers(HttpMethod.PUT, "/API/Sahtech/Utilisateurs/{id}").hasAnyRole("ADMIN", "USER")
                 
-                // Historique de scan : utilisateur peut uniquement consulter son propre historique et statistiques
+                // Historique de scan : utilisateur peut uniquement consulter son propre historique
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/utilisateur/{id}").hasAnyRole("ADMIN", "USER")
-    
+
                 
                 // Pour toutes les autres opérations sur Utilisateurs, seul Admin a accès
                 .requestMatchers("/API/Sahtech/Utilisateurs/**").hasRole("ADMIN")
@@ -71,10 +76,10 @@ public class SecurityConfig {
                 // Pour toutes les autres opérations sur HistoriqueScan, seul Admin a accès
                 .requestMatchers("/API/Sahtech/HistoriqueScan/**").hasRole("ADMIN")
                 
-                // Toutes les autres APIs uniquement pour Admin
+                // Toutes les autres APIs uniquement pour Admin (sauf celles spécifiées pour les nutritionnistes)
                 .requestMatchers("/API/Sahtech/Ingredients/**").hasRole("ADMIN")
                 .requestMatchers("/API/Sahtech/Additifs/**").hasRole("ADMIN")
-                .requestMatchers("/API/Sahtech/Localisations/**").hasRole("ADMIN")
+                .requestMatchers("/localisations/**").hasRole("ADMIN") // Autres opérations sur localisations
                 .requestMatchers("/API/Sahtech/Partenaires/**").hasRole("ADMIN")
                 .requestMatchers("/API/Sahtech/Publicites/**").hasRole("ADMIN")
                 .requestMatchers("/API/Sahtech/Produits/**").hasRole("ADMIN")

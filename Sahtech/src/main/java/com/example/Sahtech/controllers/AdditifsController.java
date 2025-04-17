@@ -2,6 +2,7 @@ package com.example.Sahtech.Controllers;
 
 import com.example.Sahtech.Dto.AdditifsDto;
 import com.example.Sahtech.entities.Additifs;
+import com.example.Sahtech.entities.Utilisateurs;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.AdditifsService;
 import org.springframework.http.HttpStatus;
@@ -89,13 +90,14 @@ public class AdditifsController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping(path = "/nom")
-    public ResponseEntity<AdditifsDto> getByNom(@PathVariable("nom") String nom){
-        Optional<Additifs> foundadditif = additifsService.getByNom(nom);
-        return foundadditif.map(additif-> {
-            AdditifsDto additifsDto = additifsMapper.mapTo(additif);
-            return new ResponseEntity<>(additifsDto, HttpStatus.OK);
-        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @GetMapping(path = "/codeAdditif")
+    public ResponseEntity<AdditifsDto> getByCodeAdditif(@RequestParam("codeAdditif") String codeAdditif){
+        Additifs additifs = additifsService.getBycodeAdditif(codeAdditif);
+        if (!(additifs==null)) {
+            return new ResponseEntity<>(additifsMapper.mapTo(additifs), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 

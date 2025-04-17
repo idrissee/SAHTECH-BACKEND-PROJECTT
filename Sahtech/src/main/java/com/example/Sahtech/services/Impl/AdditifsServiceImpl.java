@@ -60,8 +60,8 @@ public class AdditifsServiceImpl implements AdditifsService {
     }
 
     @Override
-    public  Optional<Additifs> getByNom(String nom) {
-        return additifsRepository.findByNomAdditif(nom);
+    public  Additifs getBycodeAdditif(String nom) {
+        return additifsRepository.findByCodeAdditif(nom);
     }
 
 

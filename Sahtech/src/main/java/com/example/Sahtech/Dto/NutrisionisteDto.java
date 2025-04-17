@@ -32,7 +32,7 @@ public class NutrisionisteDto {
     private Maladie maladie;
     private Objectif objectif;
     private String password;
-    private Long localisationId;
+    private String localisationId;
     private Boolean estVerifie;
 
 }

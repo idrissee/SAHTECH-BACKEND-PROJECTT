@@ -18,5 +18,5 @@ public interface AdditifsService {
 
     void delete(String id);
 
-    Optional<Additifs> getByNom(String nom);
+    Additifs getBycodeAdditif(String nom);
 }
