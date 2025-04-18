@@ -38,8 +38,10 @@ public class Utilisateurs {
     private String password;
     private Objectif objectif;
     private Maladie maladie;
-//    private List<String> historiqueScanIds;
-//    private List<String> nutritionisteFavorisIds;
+    private List<String> historiqueScanIds;
+    private List<String> nutritionisteFavorisIds;
+    private String photoUrl; // lien Cloudinary
+
 
     public int getAge() {
         if (dateDeNaissance == null) return 0;

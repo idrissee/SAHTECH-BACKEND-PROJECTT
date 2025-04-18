@@ -25,12 +25,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     public boolean isAuthorizedToAccessResource(String resourceId, HttpServletRequest request) {
         // Récupérer l'authentification courante
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
+
         // Vérifier si l'utilisateur est un admin (ils peuvent tout faire)
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             return true;
         }
-        
+
         // Extraire le token JWT
         String token = extractTokenFromRequest(request);
         if (token == null) {
@@ -40,11 +40,11 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         // Récupérer le type d'utilisateur et son ID à partir du token
         String userType = jwtTokenProvider.getUserType(token);
         String userId = jwtTokenProvider.getUserId(token);
-        
+
         // Vérifier si l'utilisateur accède à ses propres données
         return userId.equals(resourceId);
     }
-    
+
     /**
      * Extrait le token JWT de la requête HTTP
      */
@@ -55,4 +55,4 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         }
         return null;
     }
-} 
+}

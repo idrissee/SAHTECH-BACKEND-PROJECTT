@@ -23,10 +23,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     private AdminRepository adminRepository;
-    
+
     @Autowired
     private NutritionisteRepository nutrisionisteRepository;
-    
+
     @Autowired
     private UtilisateursRepository utilisateursRepository;
 
@@ -42,7 +42,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"))
             );
         }
-        
+
         // Then check nutritionist
         Optional<Nutrisioniste> nutrisionisteOpt = nutrisionisteRepository.findByEmail(email);
         if (nutrisionisteOpt.isPresent()) {
@@ -53,7 +53,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_NUTRITIONIST"))
             );
         }
-        
+
         // Finally check regular user
         Optional<Utilisateurs> userOpt = utilisateursRepository.findByEmail(email);
         if (userOpt.isPresent()) {
@@ -64,10 +64,10 @@ public class CustomUserDetailsService implements UserDetailsService {
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
             );
         }
-        
+
         throw new UsernameNotFoundException("User not found with email: " + email);
     }
-    
+
     public UserDetails loadUserByEmailAndType(String email, String userType) throws UsernameNotFoundException {
         switch (userType.toUpperCase()) {
             case "ADMIN":
@@ -104,7 +104,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 }
                 break;
         }
-        
+
         throw new UsernameNotFoundException("User not found with email: " + email + " and type: " + userType);
     }
-} 
+}

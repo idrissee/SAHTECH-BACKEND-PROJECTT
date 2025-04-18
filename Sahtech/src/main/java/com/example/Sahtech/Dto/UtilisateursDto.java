@@ -29,4 +29,5 @@ public class UtilisateursDto {
     private String password;
     private List<String> historiqueScanIds;
     private List<String> nutritionisteFavorisIds;
+    private String photoUrl; // lien Cloudinary
 }

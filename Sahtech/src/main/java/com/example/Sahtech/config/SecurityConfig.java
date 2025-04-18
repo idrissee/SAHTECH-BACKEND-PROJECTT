@@ -43,24 +43,25 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/API/Sahtech/auth/**").permitAll()
-                
+
                 // Admin a accès à tout
                 .requestMatchers("/API/Sahtech/Admins/**").hasRole("ADMIN")
-                
+
                 // Pour GET All Utilisateurs - réservé aux admins
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/Utilisateurs/All").hasRole("ADMIN")
-                
+
                 // Nutritionniste : accès uniquement au GET et PUT de son propre profil
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/Nutrisionistes/{id}").hasAnyRole("ADMIN", "NUTRITIONIST")
                 .requestMatchers(HttpMethod.PUT, "/API/Sahtech/Nutrisionistes/{id}").hasAnyRole("ADMIN", "NUTRITIONIST")
-                
+
                 // Pour toutes les autres opérations sur Nutritionnistes, seul Admin a accès
                 .requestMatchers("/API/Sahtech/Nutrisionistes/**").hasRole("ADMIN")
-                
+
                 // Utilisateur : accès uniquement au GET et PUT de son propre profil
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/Utilisateurs/{id}").hasAnyRole("ADMIN", "USER")
                 .requestMatchers(HttpMethod.PUT, "/API/Sahtech/Utilisateurs/{id}").hasAnyRole("ADMIN", "USER")
-                
+                .requestMatchers(HttpMethod.POST, "/API/Sahtech/Utilisateurs/{id}/uploadPhoto").hasAnyRole("ADMIN", "USER")
+
                 // Historique de scan : utilisateur peut uniquement consulter son propre historique et statistiques
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/utilisateur/{id}").hasAnyRole("ADMIN", "USER")
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/recents/{id}").hasAnyRole("ADMIN", "USER")
@@ -68,13 +69,13 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/statistiques/impact/{id}").hasAnyRole("ADMIN", "USER")
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/additifs-frequents/{id}").hasAnyRole("ADMIN", "USER")
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/evolution/{id}").hasAnyRole("ADMIN", "USER")
-                
+
                 // Pour toutes les autres opérations sur Utilisateurs, seul Admin a accès
                 .requestMatchers("/API/Sahtech/Utilisateurs/**").hasRole("ADMIN")
-                
+
                 // Pour toutes les autres opérations sur HistoriqueScan, seul Admin a accès
                 .requestMatchers("/API/Sahtech/HistoriqueScan/**").hasRole("ADMIN")
-                
+
                 // Toutes les autres APIs uniquement pour Admin
                 .requestMatchers("/API/Sahtech/Ingredients/**").hasRole("ADMIN")
                 .requestMatchers("/API/Sahtech/Additifs/**").hasRole("ADMIN")
@@ -86,7 +87,7 @@ public class SecurityConfig {
             );
 
         http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-        
+
         return http.build();
     }
-} 
+}

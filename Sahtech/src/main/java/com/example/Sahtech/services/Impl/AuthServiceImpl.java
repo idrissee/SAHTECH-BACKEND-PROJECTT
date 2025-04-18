@@ -28,22 +28,22 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-    
+
     @Autowired
     private JwtTokenProvider tokenProvider;
-    
+
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
+
     @Autowired
     private AdminRepository adminRepository;
-    
+
     @Autowired
     private NutritionisteRepository nutrisionisteRepository;
-    
+
     @Autowired
     private UtilisateursRepository utilisateursRepository;
-    
+
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
@@ -60,13 +60,13 @@ public class AuthServiceImpl implements AuthService {
 
         // Get user details
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
-        
+
         // Get user ID based on type
         String userId = getUserIdByEmailAndType(email, userType);
-        
+
         // Generate token
         String token = tokenProvider.generateToken(authentication, userType, userId);
-        
+
         // Build response
         return AuthResponse.builder()
                 .token(token)
@@ -81,12 +81,12 @@ public class AuthServiceImpl implements AuthService {
         String email = registerRequest.getEmail();
         String password = passwordEncoder.encode(registerRequest.getPassword());
         String userType = registerRequest.getUserType();
-        
+
         // Check if email already exists
         if (emailExistsInAnyRepository(email)) {
             throw new RuntimeException("Email already in use");
         }
-        
+
         // Create appropriate user based on type
         switch (userType.toUpperCase()) {
             case "ADMIN":
@@ -100,7 +100,7 @@ public class AuthServiceImpl implements AuthService {
                         .build();
                 admin = adminRepository.save(admin);
                 break;
-                
+
             case "NUTRITIONIST":
                 Nutrisioniste nutritionist = Nutrisioniste.builder()
                         .nom(registerRequest.getNom())
@@ -113,7 +113,7 @@ public class AuthServiceImpl implements AuthService {
                         .build();
                 nutritionist = nutrisionisteRepository.save(nutritionist);
                 break;
-                
+
             case "USER":
                 Utilisateurs user = Utilisateurs.builder()
                         .nom(registerRequest.getNom())
@@ -125,21 +125,21 @@ public class AuthServiceImpl implements AuthService {
                         .build();
                 user = utilisateursRepository.save(user);
                 break;
-                
+
             default:
                 throw new IllegalArgumentException("Invalid user type: " + userType);
         }
-        
+
         // Return login response
         return login(new LoginRequest(email, registerRequest.getPassword(), userType));
     }
-    
+
     private boolean emailExistsInAnyRepository(String email) {
         return adminRepository.existsByEmail(email) ||
                nutrisionisteRepository.existsByEmail(email) ||
                utilisateursRepository.existsByEmail(email);
     }
-    
+
     private String getUserIdByEmailAndType(String email, String userType) {
         switch (userType.toUpperCase()) {
             case "ADMIN":
@@ -155,4 +155,4 @@ public class AuthServiceImpl implements AuthService {
                 throw new IllegalArgumentException("Invalid user type: " + userType);
         }
     }
-} 
+}
