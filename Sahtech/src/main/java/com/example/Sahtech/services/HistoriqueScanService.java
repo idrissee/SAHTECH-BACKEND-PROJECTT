@@ -25,4 +25,7 @@ public interface HistoriqueScanService {
     
     // Opérations de mise à jour
     HistoriqueScan addCommentaire(String scanId, String commentaire);
+
+    // Vérifier si un utilisateur a scanné un produit spécifique
+    boolean hasUserScannedProduct(String utilisateurId, String produitId);
 } 

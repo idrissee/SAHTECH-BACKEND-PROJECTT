@@ -74,4 +74,5 @@ public class LocalisationServiceImpl implements LocalisationService {
     public List<Localisation> findByCodePostal(String codePostal) {
         return localisationRepository.findByCodePostal(codePostal);
     }
+
 } 

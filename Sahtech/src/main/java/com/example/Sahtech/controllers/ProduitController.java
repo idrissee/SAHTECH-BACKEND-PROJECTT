@@ -4,7 +4,10 @@ import com.example.Sahtech.Dto.ProduitDto;
 import com.example.Sahtech.Enum.ValeurNutriScore;
 import com.example.Sahtech.entities.Produit;
 import com.example.Sahtech.mappers.Mapper;
+import com.example.Sahtech.services.AuthorizationService;
 import com.example.Sahtech.services.ProduitService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,9 @@ public class ProduitController {
 
     private ProduitService produitService;
     private Mapper<Produit, ProduitDto> produitMapper;
+
+    @Autowired
+    private AuthorizationService authorizationService;
 
     public ProduitController(ProduitService produitService, 
                             Mapper<Produit, ProduitDto> produitMapper) {
@@ -42,7 +48,16 @@ public class ProduitController {
     }
 
     @GetMapping(path ="/{id}")
-    public ResponseEntity<ProduitDto> getProduit(@PathVariable("id") String id){
+    public ResponseEntity<ProduitDto> getProduit(@PathVariable("id") String id,
+                                                 HttpServletRequest request){
+
+        // Vérifier si l'utilisateur est autorisé à accéder à ce produit
+        // (soit admin, soit un utilisateur qui a déjà scanné ce produit)
+        boolean isAuthorized = authorizationService.hasUserScannedProduct(id, request);
+        if (!isAuthorized) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         Optional<Produit> foundproduit = produitService.findOnebyId(id);
         return foundproduit.map(produit-> {
             ProduitDto produitDto = produitMapper.mapTo(produit);
@@ -84,9 +99,9 @@ public class ProduitController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity deleteProduit(@PathVariable("id") String id){
+    public ResponseEntity<Void> deleteProduit(@PathVariable("id") String id){
         produitService.delete(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
     @GetMapping(path = "/{id}/nutriscore")

@@ -90,4 +90,15 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
                 .distinct() // Pour éviter les doublons (si un utilisateur a scanné plusieurs fois le même produit)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public boolean hasUserScannedProduct(String utilisateurId, String produitId) {
+
+        // Récupérer l'historique des scans de l'utilisateur
+        List<HistoriqueScan> scansUtilisateur = historiqueScanRepository.findByUtilisateurId(utilisateurId);
+
+        // Vérifier si l'un des scans correspond au produit demandé
+        return scansUtilisateur.stream()
+                .anyMatch(scan -> produitId.equals(scan.getProduit().getId()));
+    }
 } 

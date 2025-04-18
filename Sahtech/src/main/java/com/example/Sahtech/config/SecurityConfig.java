@@ -43,9 +43,19 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/API/Sahtech/auth/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/API/Sahtech").permitAll()
                 
                 // Admin a accès à tout
                 .requestMatchers("/API/Sahtech/Admins/**").hasRole("ADMIN")
+
+                    //nutritioniste
+                    .requestMatchers(HttpMethod.GET ,"/API/Sahtech/Nutrisionistes/All").hasAnyRole("ADMIN","USER")
+
+                    //Publicite
+                    .requestMatchers(HttpMethod.GET ,"/API/Sahtech/Publicites/All" ).hasAnyRole("ADMIN","USER")
+
+                    //HistoriqueScan
+                    .requestMatchers(HttpMethod.POST,"/API/Sahtech/HistoriqueScan").hasAnyRole("ADMIN","USER")
                 
                 // Pour GET All Utilisateurs - réservé aux admins
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/Utilisateurs/All").hasRole("ADMIN")

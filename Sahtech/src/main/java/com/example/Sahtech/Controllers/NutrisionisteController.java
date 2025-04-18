@@ -33,9 +33,10 @@ public class NutrisionisteController {
     // GET ALL - réservé à l'admin (déjà géré par SecurityConfig)
     @GetMapping("/All")
     public ResponseEntity<List<NutrisionisteDto>> getAllNutrisionistes() {
-        // Double vérification que l'utilisateur est bien un admin
+        // Double vérification que l'utilisateur est bien un admin ou user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+        if (!authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")) ||
+                !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")) ) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         
