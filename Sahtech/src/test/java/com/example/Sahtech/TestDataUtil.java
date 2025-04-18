@@ -14,7 +14,7 @@ public class TestDataUtil {
     // Produit test data
     public static Produit creatTestProduitA() {
         return Produit.builder()
-                .id(1L)
+                .id(String.valueOf(1L))
                 .nom("rouiba")
                 .typeProduit(TypeProduit.produitLate)
                 .codeBarre(12365877L)
@@ -23,7 +23,7 @@ public class TestDataUtil {
 
     public static Produit creatTestProduitB() {
         return Produit.builder()
-                .id(2L)
+                .id(String.valueOf(2L))
                 .nom("Gateau")
                 .typeProduit(TypeProduit.produitLate)
                 .codeBarre(12348796L)
@@ -32,7 +32,7 @@ public class TestDataUtil {
 
     public static Produit creatTestProduitC() {
         return Produit.builder()
-                .id(3L)
+                .id(String.valueOf(3L))
                 .nom("milka")
                 .typeProduit(TypeProduit.produitLate)
                 .codeBarre(1236987L)
@@ -42,7 +42,7 @@ public class TestDataUtil {
     // Ingrediants test data
     public static Ingrediants createTestIngrediantsA() {
         return Ingrediants.builder()
-                .idIngrediant(1L)
+                .idIngrediant(String.valueOf(1L))
                 .Quantite(5.0F)
                 .nomIngrediant("salt")
                 .build();
@@ -50,7 +50,7 @@ public class TestDataUtil {
 
     public static Ingrediants createTestIngrediantsB() {
         return Ingrediants.builder()
-                .idIngrediant(2L)
+                .idIngrediant(String.valueOf(2L))
                 .Quantite(4.0F)
                 .nomIngrediant("SUGAR")
                 .build();
@@ -58,7 +58,7 @@ public class TestDataUtil {
 
     public static Ingrediants createTestIngrediantsC() {
         return Ingrediants.builder()
-                .idIngrediant(3L)
+                .idIngrediant(String.valueOf(3L))
                 .Quantite(4.4F)
                 .nomIngrediant("SODIUM")
                 .build();
@@ -67,7 +67,7 @@ public class TestDataUtil {
     // Additifs test data
     public static Additifs createTestAdditifsA() {
        return Additifs.builder()
-               .idAdditif(1L)
+               .idAdditif(String.valueOf(1L))
                .maladieCause(Maladie.QLERGIAUE)
                .seuil(2F)
                .nomAdditif("sin1")
@@ -76,7 +76,7 @@ public class TestDataUtil {
     
     public static Additifs createTestAdditifsB() {
         return Additifs.builder()
-                .idAdditif(2L)
+                .idAdditif(String.valueOf(2L))
                 .maladieCause(Maladie.DIABATE)
                 .seuil(3F)
                 .nomAdditif("sin2")
@@ -85,7 +85,7 @@ public class TestDataUtil {
     
     public static Additifs createTestAdditifsC() {
         return Additifs.builder()
-                .idAdditif(3L)
+                .idAdditif(String.valueOf(3L))
                 .maladieCause(Maladie.DIABATE)
                 .seuil(4F)
                 .nomAdditif("sin3")
@@ -95,7 +95,7 @@ public class TestDataUtil {
     // Nutrisioniste test data
     public static Nutrisioniste createTestNutrisionisteA() {
         return Nutrisioniste.builder()
-                .id(1L)
+                .id(String.valueOf(1L))
                 .nom("Dupont")
                 .prenom("Jean")
                 .email("jean.dupont@example.com")
@@ -104,13 +104,13 @@ public class TestDataUtil {
                 .dateDeNaissance(new Date())
                 .password("password123")
                 .estVerifie(true)
-                .localisationId(1L)
+                .localisationId(String.valueOf(1L))
                 .build();
     }
     
     public static Nutrisioniste createTestNutrisionisteB() {
         return Nutrisioniste.builder()
-                .id(2L)
+                .id(String.valueOf(2L))
                 .nom("Martin")
                 .prenom("Marie")
                 .email("marie.martin@example.com")
@@ -119,13 +119,13 @@ public class TestDataUtil {
                 .dateDeNaissance(new Date())
                 .password("password456")
                 .estVerifie(true)
-                .localisationId(2L)
+                .localisationId(String.valueOf(2L))
                 .build();
     }
     
     public static Nutrisioniste createTestNutrisionisteC() {
         return Nutrisioniste.builder()
-                .id(3L)
+                .id(String.valueOf(3L))
                 .nom("Petit")
                 .prenom("Pierre")
                 .email("pierre.petit@example.com")
@@ -134,14 +134,14 @@ public class TestDataUtil {
                 .dateDeNaissance(new Date())
                 .password("password789")
                 .estVerifie(false)
-                .localisationId(3L)
+                .localisationId(String.valueOf(3L))
                 .build();
     }
 
     // Admin test data
     public static Admin createTestAdminA() {
         return Admin.builder()
-                .id(1L)
+                .id(String.valueOf(1L))
                 .nom("Admin")
                 .prenom("Super")
                 .email("admin@example.com")
@@ -152,7 +152,7 @@ public class TestDataUtil {
     
     public static Admin createTestAdminB() {
         return Admin.builder()
-                .id(2L)
+                .id(String.valueOf(2L))
                 .nom("Manager")
                 .prenom("System")
                 .email("manager@example.com")
@@ -164,7 +164,7 @@ public class TestDataUtil {
     // Utilisateurs test data
     public static Utilisateurs createTestUtilisateurA() {
         return Utilisateurs.builder()
-                .id(1L)
+                .id(String.valueOf(1L))
                 .nom("Client")
                 .prenom("Test")
                 .email("client@example.com")
@@ -181,7 +181,7 @@ public class TestDataUtil {
     
     public static Utilisateurs createTestUtilisateurB() {
         return Utilisateurs.builder()
-                .id(2L)
+                .id(String.valueOf(2L))
                 .nom("User")
                 .prenom("Regular")
                 .email("user@example.com")
@@ -199,7 +199,7 @@ public class TestDataUtil {
     // HistoriqueScan test data
     public static HistoriqueScan createTestHistoriqueScanA() {
         return HistoriqueScan.builder()
-                .id(1L)
+                .id(String.valueOf(1L))
                 .utilisateur(createTestUtilisateurA())
                 .produit(creatTestProduitA())
                 .dateScan(LocalDateTime.now())
@@ -216,7 +216,7 @@ public class TestDataUtil {
     
     public static HistoriqueScan createTestHistoriqueScanB() {
         return HistoriqueScan.builder()
-                .id(2L)
+                .id(String.valueOf(2L))
                 .utilisateur(createTestUtilisateurB())
                 .produit(creatTestProduitB())
                 .dateScan(LocalDateTime.now().minusDays(5))
@@ -234,7 +234,7 @@ public class TestDataUtil {
     // Localisation test data
     public static Localisation createTestLocalisationA() {
         return Localisation.builder()
-                .id(1L)
+                .id(String.valueOf(1L))
                 .pays("France")
                 .ville("Paris")
                 .adresse("123 Rue de la Paix")
@@ -246,7 +246,7 @@ public class TestDataUtil {
     
     public static Localisation createTestLocalisationB() {
         return Localisation.builder()
-                .id(2L)
+                .id(String.valueOf(2L))
                 .pays("France")
                 .ville("Lyon")
                 .adresse("456 Avenue Berthelot")
@@ -258,7 +258,7 @@ public class TestDataUtil {
     
     public static Localisation createTestLocalisationC() {
         return Localisation.builder()
-                .id(3L)
+                .id(String.valueOf(3L))
                 .pays("France")
                 .ville("Marseille")
                 .adresse("789 Boulevard Michelet")
@@ -271,7 +271,7 @@ public class TestDataUtil {
     // Partenaire test data
     public static Partenaire createTestPartenaireA() {
         return Partenaire.builder()
-                .id(1L)
+                .id(String.valueOf(1L))
                 .nom("Bio Market")
                 .description("Magasin de produits biologiques")
                 .email("contact@biomarket.com")
@@ -284,7 +284,7 @@ public class TestDataUtil {
     
     public static Partenaire createTestPartenaireB() {
         return Partenaire.builder()
-                .id(2L)
+                .id(String.valueOf(2L))
                 .nom("Health & Co")
                 .description("Chaîne de boutiques santé et bien-être")
                 .email("info@healthco.com")
@@ -298,25 +298,25 @@ public class TestDataUtil {
     // Publicite test data
     public static Publicite createTestPubliciteA() {
         return Publicite.builder()
-                .id(1L)
+                .id(String.valueOf(1L))
                 .titre("Offre spéciale Bio Market")
                 .description("Profitez de 20% de réduction sur tous les produits bio")
                 .typePub(TypePublicite.BANNIERE)
                 .etatPublicite(EtatPublicite.DESACTIVEE)
                 .statusPublicite(StatusPublicite.EN_ATTENTE)
-                .partenaire_id(1L)
+                .partenaire_id(String.valueOf(1L))
                 .build();
     }
     
     public static Publicite createTestPubliciteB() {
         return Publicite.builder()
-                .id(2L)
+                .id(String.valueOf(2L))
                 .titre("Nouveaux produits santé")
                 .description("Découvrez notre nouvelle gamme de produits santé")
                 .typePub(TypePublicite.BANNIERE)
                 .etatPublicite(EtatPublicite.PUBLIEE)
                 .statusPublicite(StatusPublicite.EN_ATTENTE)
-                .partenaire_id(2L)
+                .partenaire_id(String.valueOf(2L))
                 .build();
     }
 }

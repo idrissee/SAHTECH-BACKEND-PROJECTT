@@ -73,7 +73,7 @@ public class HistoriqueScanRepositoryIntegrationTests {
         HistoriqueScan historiqueScanA = createTestHistoriqueScan(savedUtilisateurA, savedProduitA);
         underTest.save(historiqueScanA);
         HistoriqueScan historiqueScanB = createTestHistoriqueScan(savedUtilisateurB, savedProduitB);
-        historiqueScanB.setId(2L);
+        historiqueScanB.setId(String.valueOf(2L));
         underTest.save(historiqueScanB);
 
         Iterable<HistoriqueScan> result = underTest.findAll();
@@ -112,10 +112,10 @@ public class HistoriqueScanRepositoryIntegrationTests {
         HistoriqueScan historiqueScanA = createTestHistoriqueScan(savedUtilisateurA, savedProduitA);
         underTest.save(historiqueScanA);
         HistoriqueScan historiqueScanB = createTestHistoriqueScan(savedUtilisateurA, savedProduitB);
-        historiqueScanB.setId(2L);
+        historiqueScanB.setId(String.valueOf(2L));
         underTest.save(historiqueScanB);
         HistoriqueScan historiqueScanC = createTestHistoriqueScan(savedUtilisateurB, savedProduitA);
-        historiqueScanC.setId(3L);
+        historiqueScanC.setId(String.valueOf(3L));
         underTest.save(historiqueScanC);
 
         List<HistoriqueScan> result = underTest.findByUtilisateurId(savedUtilisateurA.getId());
@@ -129,10 +129,10 @@ public class HistoriqueScanRepositoryIntegrationTests {
         HistoriqueScan historiqueScanA = createTestHistoriqueScan(savedUtilisateurA, savedProduitA);
         underTest.save(historiqueScanA);
         HistoriqueScan historiqueScanB = createTestHistoriqueScan(savedUtilisateurB, savedProduitA);
-        historiqueScanB.setId(2L);
+        historiqueScanB.setId(String.valueOf(2L));
         underTest.save(historiqueScanB);
         HistoriqueScan historiqueScanC = createTestHistoriqueScan(savedUtilisateurA, savedProduitB);
-        historiqueScanC.setId(3L);
+        historiqueScanC.setId(String.valueOf(3L));
         underTest.save(historiqueScanC);
 
         List<HistoriqueScan> result = underTest.findByProduitId(savedProduitA.getId());
@@ -147,11 +147,11 @@ public class HistoriqueScanRepositoryIntegrationTests {
         historiqueScanA.setNoteNutriScore("A");
         underTest.save(historiqueScanA);
         HistoriqueScan historiqueScanB = createTestHistoriqueScan(savedUtilisateurB, savedProduitB);
-        historiqueScanB.setId(2L);
+        historiqueScanB.setId(String.valueOf(2L));
         historiqueScanB.setNoteNutriScore("A");
         underTest.save(historiqueScanB);
         HistoriqueScan historiqueScanC = createTestHistoriqueScan(savedUtilisateurA, savedProduitB);
-        historiqueScanC.setId(3L);
+        historiqueScanC.setId(String.valueOf(3L));
         historiqueScanC.setNoteNutriScore("B");
         underTest.save(historiqueScanC);
 
@@ -170,12 +170,12 @@ public class HistoriqueScanRepositoryIntegrationTests {
         underTest.save(historiqueScanA);
         
         HistoriqueScan historiqueScanB = createTestHistoriqueScan(savedUtilisateurA, savedProduitB);
-        historiqueScanB.setId(2L);
+        historiqueScanB.setId(String.valueOf(2L));
         historiqueScanB.setDateScan(now.minusDays(10));
         underTest.save(historiqueScanB);
         
         HistoriqueScan historiqueScanC = createTestHistoriqueScan(savedUtilisateurB, savedProduitA);
-        historiqueScanC.setId(3L);
+        historiqueScanC.setId(String.valueOf(3L));
         historiqueScanC.setDateScan(now);
         underTest.save(historiqueScanC);
 
@@ -188,7 +188,7 @@ public class HistoriqueScanRepositoryIntegrationTests {
 
     private HistoriqueScan createTestHistoriqueScan(Utilisateurs utilisateur, Produit produit) {
         return HistoriqueScan.builder()
-                .id(1L)
+                .id(String.valueOf(1L))
                 .utilisateur(utilisateur)
                 .produit(produit)
                 .dateScan(LocalDateTime.now())
