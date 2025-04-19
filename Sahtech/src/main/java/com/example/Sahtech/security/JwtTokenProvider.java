@@ -122,4 +122,19 @@ public class JwtTokenProvider {
             return null;
         }
     }
+
+    /**
+     * Extract the expiration date from a JWT token
+     *
+     * @param token the JWT token
+     * @return the expiration date
+     */
+    public Date getExpirationDateFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
+    }
 } 

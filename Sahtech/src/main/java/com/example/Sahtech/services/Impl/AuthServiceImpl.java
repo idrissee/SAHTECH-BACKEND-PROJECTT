@@ -2,6 +2,8 @@ package com.example.Sahtech.services.Impl;
 
 import com.example.Sahtech.Dto.auth.AuthResponse;
 import com.example.Sahtech.Dto.auth.LoginRequest;
+import com.example.Sahtech.Dto.auth.LogoutRequest;
+import com.example.Sahtech.Dto.auth.LogoutResponse;
 import com.example.Sahtech.Dto.auth.RegisterRequest;
 import com.example.Sahtech.entities.Admin;
 import com.example.Sahtech.entities.Nutrisioniste;
@@ -11,6 +13,7 @@ import com.example.Sahtech.repositories.NutritionisteRepository;
 import com.example.Sahtech.repositories.UtilisateursRepository;
 import com.example.Sahtech.security.CustomUserDetailsService;
 import com.example.Sahtech.security.JwtTokenProvider;
+import com.example.Sahtech.security.TokenBlacklistService;
 import com.example.Sahtech.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,6 +49,9 @@ public class AuthServiceImpl implements AuthService {
     
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
+    
+    @Autowired
+    private TokenBlacklistService tokenBlacklistService;
 
     @Override
     public AuthResponse login(LoginRequest loginRequest) {
@@ -132,6 +138,38 @@ public class AuthServiceImpl implements AuthService {
         
         // Return login response
         return login(new LoginRequest(email, registerRequest.getPassword(), userType));
+    }
+    
+    @Override
+    public LogoutResponse logout(LogoutRequest logoutRequest) {
+        String token = logoutRequest.getToken();
+        
+        // Check if the token is valid
+        if (!tokenProvider.validateToken(token)) {
+            return LogoutResponse.builder()
+                    .success(false)
+                    .message("Invalid token")
+                    .build();
+        }
+        
+        try {
+            // Extract expiration time from token
+            Date expiryDate = tokenProvider.getExpirationDateFromToken(token);
+            long expiryTimeMillis = expiryDate.getTime();
+            
+            // Add the token to the blacklist
+            tokenBlacklistService.blacklistToken(token, expiryTimeMillis);
+            
+            return LogoutResponse.builder()
+                    .success(true)
+                    .message("Logged out successfully")
+                    .build();
+        } catch (Exception e) {
+            return LogoutResponse.builder()
+                    .success(false)
+                    .message("Error during logout: " + e.getMessage())
+                    .build();
+        }
     }
     
     private boolean emailExistsInAnyRepository(String email) {

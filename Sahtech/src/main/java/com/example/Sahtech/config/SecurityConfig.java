@@ -2,6 +2,7 @@ package com.example.Sahtech.config;
 
 import com.example.Sahtech.security.JwtTokenFilter;
 import com.example.Sahtech.security.JwtTokenProvider;
+import com.example.Sahtech.security.TokenBlacklistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +32,9 @@ public class SecurityConfig {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+    
+    @Autowired
+    private TokenBlacklistService tokenBlacklistService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -110,7 +114,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             );
 
-        http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider, tokenBlacklistService), UsernamePasswordAuthenticationFilter.class);
         
         return http.build();
     }
