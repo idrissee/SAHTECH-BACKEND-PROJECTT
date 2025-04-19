@@ -108,4 +108,18 @@ public class JwtTokenProvider {
                 .getBody()
                 .get("userId").toString();
     }
+
+    public String getUserIdFromToken(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+            
+            return claims.get("userId", String.class);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 } 

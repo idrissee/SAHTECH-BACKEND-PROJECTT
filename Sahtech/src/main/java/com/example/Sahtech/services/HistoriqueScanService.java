@@ -25,4 +25,7 @@ public interface HistoriqueScanService {
     
     // Opérations de mise à jour
     HistoriqueScan addCommentaire(String scanId, String commentaire);
+    
+    // Comptage des produits scannés par utilisateur
+    int countScannedProductsByUser(String userId);
 } 

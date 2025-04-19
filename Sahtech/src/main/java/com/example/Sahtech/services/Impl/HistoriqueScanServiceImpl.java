@@ -65,14 +65,10 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
         return historiqueScanRepository.findByUtilisateurIdAndDateScanAfter(utilisateurId, dateLimite);
     }
 
-
-
     @Override
     public List<HistoriqueScan> getScansByPeriode(LocalDateTime startDate, LocalDateTime endDate) {
         return historiqueScanRepository.findByDateScanBetween(startDate, endDate);
     }
-
-
 
     @Override
     public HistoriqueScan addCommentaire(String scanId, String commentaire) {
@@ -89,5 +85,15 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
                 .map(HistoriqueScan::getUtilisateur)
                 .distinct() // Pour éviter les doublons (si un utilisateur a scanné plusieurs fois le même produit)
                 .collect(Collectors.toList());
+    }
+    
+    @Override
+    public int countScannedProductsByUser(String userId) {
+        List<HistoriqueScan> scans = historiqueScanRepository.findByUtilisateurId(userId);
+        // Compter les produits distincts
+        return (int) scans.stream()
+                .map(scan -> scan.getProduit().getId())
+                .distinct()
+                .count();
     }
 } 

@@ -3,6 +3,7 @@ package com.example.Sahtech.Controllers;
 import com.example.Sahtech.Dto.NutrisionisteDto;
 import com.example.Sahtech.entities.Nutrisioniste;
 import com.example.Sahtech.mappers.Mapper;
+import com.example.Sahtech.security.JwtTokenProvider;
 import com.example.Sahtech.services.AuthorizationService;
 import com.example.Sahtech.services.NutrisionisteService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,6 +30,9 @@ public class NutrisionisteController {
     
     @Autowired
     private AuthorizationService authorizationService;
+    
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
     // GET ALL - réservé à l'admin (déjà géré par SecurityConfig)
     @GetMapping("/All")
@@ -110,5 +114,36 @@ public class NutrisionisteController {
         boolean deleted = nutrisionisteService.deleteNutrisioniste(id);
         return deleted ? new ResponseEntity<>(HttpStatus.NO_CONTENT) 
                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    // GET nutritionists that the authenticated user has contacted before
+    @GetMapping("/Contacts")
+    public ResponseEntity<List<NutrisionisteDto>> getNutrisionisteContacts(HttpServletRequest request) {
+        // Extraire l'ID de l'utilisateur du token JWT
+        String token = extractToken(request);
+        if (token == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        
+        String userId = jwtTokenProvider.getUserIdFromToken(token);
+        if (userId == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        
+        List<Nutrisioniste> contacts = nutrisionisteService.getNutrisionisteContactsByUserId(userId);
+        List<NutrisionisteDto> dtos = contacts.stream()
+                .map(nutrisionisteMapper::mapTo)
+                .collect(Collectors.toList());
+                
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+    
+    // Helper method to extract the JWT token from the request
+    private String extractToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 }

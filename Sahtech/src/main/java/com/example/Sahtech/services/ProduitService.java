@@ -22,4 +22,9 @@ public interface ProduitService {
     Produit partialUpdate(String id, Produit produit);
 
     void delete(String id);
+    
+    // Méthodes pour les recommandations
+    boolean saveRecommendation(String productId, String userId, String recommendation);
+    
+    String getRecommendation(String productId, String userId);
 }
