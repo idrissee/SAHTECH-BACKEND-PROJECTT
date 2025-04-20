@@ -2,7 +2,6 @@ package com.example.Sahtech.Controllers;
 
 import com.example.Sahtech.Dto.AdditifsDto;
 import com.example.Sahtech.entities.Additifs;
-import com.example.Sahtech.entities.Utilisateurs;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.AdditifsService;
 import org.springframework.http.HttpStatus;

@@ -28,4 +28,6 @@ public interface HistoriqueScanService {
 
     // Vérifier si un utilisateur a scanné un produit spécifique
     boolean hasUserScannedProduct(String utilisateurId, String produitId);
+
+    void incrementUserScanCount(String utilisateurId);
 } 

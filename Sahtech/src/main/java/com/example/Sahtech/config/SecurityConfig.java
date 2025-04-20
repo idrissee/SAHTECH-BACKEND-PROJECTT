@@ -48,6 +48,12 @@ public class SecurityConfig {
                 // Admin a accès à tout
                 .requestMatchers("/API/Sahtech/Admins/**").hasRole("ADMIN")
 
+                            // Pour accéder au compteur de scans d'un utilisateur (admin ou l'utilisateur lui-même)
+                            .requestMatchers(HttpMethod.GET, "/API/Sahtech/Utilisateurs/{id}/scan-count").hasAnyRole("ADMIN", "USER")
+
+                            // Pour accéder à tous les compteurs de scans (admin uniquement)
+                            .requestMatchers(HttpMethod.GET, "/API/Sahtech/Utilisateurs/scan-counts").hasRole("ADMIN")
+
                     //nutritioniste
                     .requestMatchers(HttpMethod.GET ,"/API/Sahtech/Nutrisionistes/All").hasAnyRole("ADMIN","USER")
 
@@ -57,7 +63,7 @@ public class SecurityConfig {
                     //HistoriqueScan
                     .requestMatchers(HttpMethod.POST,"/API/Sahtech/HistoriqueScan").hasAnyRole("ADMIN","USER")
                 
-                // Pour GET All Utilisateurs - réservé aux admins
+                // Pour GET All Utilisateurs réservés aux admins
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/Utilisateurs/All").hasRole("ADMIN")
                 
                 // Nutritionniste : accès uniquement au GET et PUT de son propre profil

@@ -41,12 +41,18 @@ public class HistoriqueScanController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")) ||
-                !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")) ) {
+                !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")) ||
+                !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_NUTRITIONIST")) ) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
         HistoriqueScan scan = historiqueScanMapper.mapFrom(scanDto);
         HistoriqueScan savedScan = historiqueScanService.saveScan(scan);
+
+        String utilisateurId = scan.getUtilisateur().getId();
+        if (utilisateurId != null) {
+            historiqueScanService.incrementUserScanCount(utilisateurId);
+        }
         return new ResponseEntity<>(historiqueScanMapper.mapTo(savedScan), HttpStatus.CREATED);
     }
 

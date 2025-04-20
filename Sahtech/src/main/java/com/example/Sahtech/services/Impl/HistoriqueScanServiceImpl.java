@@ -4,6 +4,7 @@ import com.example.Sahtech.entities.HistoriqueScan;
 import com.example.Sahtech.entities.Utilisateurs;
 import com.example.Sahtech.repositories.HistoriqueScanRepository;
 import com.example.Sahtech.services.HistoriqueScanService;
+import com.example.Sahtech.services.UtilisateursService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,8 @@ import java.util.stream.StreamSupport;
 public class HistoriqueScanServiceImpl implements HistoriqueScanService {
 
     private final HistoriqueScanRepository historiqueScanRepository;
+
+    private final UtilisateursService utilisateursService;
 
     @Override
     public HistoriqueScan saveScan(HistoriqueScan scan) {
@@ -100,5 +103,14 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
         // Vérifier si l'un des scans correspond au produit demandé
         return scansUtilisateur.stream()
                 .anyMatch(scan -> produitId.equals(scan.getProduit().getId()));
+    }
+
+    @Override
+    public void incrementUserScanCount(String utilisateurId) {
+        Utilisateurs utilisateur = utilisateursService.getUtilisateurById(utilisateurId);
+        if (utilisateur != null) {
+            utilisateur.setCountScans(utilisateur.getCountScans() + 1);
+            utilisateursService.updateUtilisateur(utilisateurId, utilisateur);
+        }
     }
 } 

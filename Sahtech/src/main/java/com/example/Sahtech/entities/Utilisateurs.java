@@ -31,5 +31,6 @@ public class Utilisateurs {
     private String sexe;
     private Maladie maladie;
     private Objectif objectif;
+    private Long countScans = 0L;
 
 }
