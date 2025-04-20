@@ -20,4 +20,9 @@ public class MainController {
         response.put("version", "1.0");
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/")
+    public String index() {
+        return "Sahtech API is running. Server is online.";
+    }
 } 
