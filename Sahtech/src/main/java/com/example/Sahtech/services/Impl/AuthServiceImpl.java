@@ -23,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
 
@@ -116,6 +117,15 @@ public class AuthServiceImpl implements AuthService {
                         .numTelephone(registerRequest.getTelephone())
                         .dateDeNaissance(new Date())
                         .estVerifie(false)
+                        .maladies(new ArrayList<>())
+                        .allergies(new ArrayList<>())
+                        .objectives(new ArrayList<>())
+                        .physicalActivities(new ArrayList<>())
+                        .dailyActivities(new ArrayList<>())
+                        .healthGoals(new ArrayList<>())
+                        .hasChronicDisease(registerRequest.getHasChronicDisease())
+                        .hasAllergies(registerRequest.getHasAllergies())
+                        .preferredLanguage(registerRequest.getPreferredLanguage())
                         .build();
                 nutritionist = nutrisionisteRepository.save(nutritionist);
                 break;
@@ -128,6 +138,15 @@ public class AuthServiceImpl implements AuthService {
                         .password(password)
                         .numTelephone(registerRequest.getTelephone())
                         .dateDeNaissance(new Date())
+                        .maladies(new ArrayList<>())
+                        .allergies(new ArrayList<>())
+                        .objectives(new ArrayList<>())
+                        .physicalActivities(new ArrayList<>())
+                        .dailyActivities(new ArrayList<>())
+                        .healthGoals(new ArrayList<>())
+                        .hasChronicDisease(registerRequest.getHasChronicDisease())
+                        .hasAllergies(registerRequest.getHasAllergies())
+                        .preferredLanguage(registerRequest.getPreferredLanguage())
                         .build();
                 user = utilisateursRepository.save(user);
                 break;

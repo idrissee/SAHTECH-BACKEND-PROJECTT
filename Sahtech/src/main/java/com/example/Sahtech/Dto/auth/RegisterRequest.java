@@ -10,6 +10,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -34,4 +37,17 @@ public class RegisterRequest {
     
     @NotBlank(message = "Le type d'utilisateur est obligatoire")
     private String userType; // USER, ADMIN, NUTRITIONIST
+    
+    // Added additional fields for health data
+    private Boolean hasChronicDisease;
+    private Boolean hasAllergies;
+    private String preferredLanguage;
+    private Boolean doesExercise;
+    private String activityLevel;
+    private List<String> maladies = new ArrayList<>();
+    private List<String> allergies = new ArrayList<>();
+    private List<String> objectives = new ArrayList<>();
+    private List<String> physicalActivities = new ArrayList<>();
+    private List<String> dailyActivities = new ArrayList<>();
+    private List<String> healthGoals = new ArrayList<>();
 } 

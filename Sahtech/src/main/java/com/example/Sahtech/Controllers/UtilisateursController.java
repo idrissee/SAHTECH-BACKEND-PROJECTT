@@ -18,10 +18,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/API/Sahtech/Utilisateurs")
 public class UtilisateursController {
+    
+    private static final Logger logger = LoggerFactory.getLogger(UtilisateursController.class);
 
     @Autowired
     private UtilisateursService utilisateurService;
@@ -51,15 +55,29 @@ public class UtilisateursController {
     // GET USER BY ID - accessible à l'admin et à l'utilisateur lui-même
     @GetMapping("/{id}")
     public ResponseEntity<UtilisateursDto> getUserById(@PathVariable String id, HttpServletRequest request) {
+        logger.info("GET request received for user with ID: {}", id);
+        
+        // Extract the JWT token for debugging
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            logger.error("No valid Authorization header found in request");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        
         // Vérifier si l'utilisateur est autorisé
         if (!authorizationService.isAuthorizedToAccessResource(id, request)) {
+            logger.error("User not authorized to access resource with ID: {}", id);
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         
         Utilisateurs user = utilisateurService.getUtilisateurById(id);
         if (user != null) {
-            return new ResponseEntity<>(utilisateursMapper.mapTo(user), HttpStatus.OK);
+            logger.info("User found: {}", user.getEmail());
+            UtilisateursDto userDto = utilisateursMapper.mapTo(user);
+            logger.info("User DTO created successfully with name: {} {}", userDto.getPrenom(), userDto.getNom());
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
         } else {
+            logger.error("User with ID {} not found", id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
