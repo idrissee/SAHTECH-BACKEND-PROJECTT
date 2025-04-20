@@ -32,5 +32,6 @@ public class Utilisateurs {
     private Maladie maladie;
     private Objectif objectif;
     private Long countScans = 0L;
+    private String provider; // LOCAL, GOOGLE
 
 }

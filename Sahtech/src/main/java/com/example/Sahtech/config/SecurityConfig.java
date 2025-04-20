@@ -43,7 +43,9 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/API/Sahtech/auth/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/API/Sahtech").permitAll()
+                .requestMatchers("/oauth2/**", "/login/**").permitAll()
+                .requestMatchers("/", "/index.html").permitAll()
+                .requestMatchers(HttpMethod.GET, "/API/Sahtech").permitAll()
                 
                 // Admin a accès à tout
                 .requestMatchers("/API/Sahtech/Admins/**").hasRole("ADMIN")
@@ -100,6 +102,9 @@ public class SecurityConfig {
                 .requestMatchers("/API/Sahtech/Publicites/**").hasRole("ADMIN")
                 .requestMatchers("/API/Sahtech/Produits/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
+            )
+            .oauth2Login(oauth2 -> oauth2
+                .defaultSuccessUrl("/API/Sahtech/auth/login/oauth2/code/google", true)
             );
 
         http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
