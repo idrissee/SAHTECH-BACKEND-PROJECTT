@@ -1,59 +1,66 @@
 package com.example.Sahtech.entities;
 
+import com.example.Sahtech.Enum.Maladie;
 import com.example.Sahtech.Enum.Objectif;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Data
 @Document(collection = "utilisateurs")
 public class Utilisateurs {
 
     @Id
     private String id;
+
     private String nom;
     private String prenom;
-    private String email;
     private Long numTelephone;
-    private String password;
+    private String email;
     private Date dateDeNaissance;
-    private Float taille;
+    private List<Maladie> maladies;
     private Float poids;
+    private Float taille;
+    private String niveauActivite;
+    private Boolean sport;
     private String sexe;
-    
-    // Updated: Changed from single enum to List of Strings to match Flutter frontend
-    private List<String> maladies = new ArrayList<>();
-    
-    // Added: Match Flutter's allergies field
-    private List<String> allergies = new ArrayList<>();
-    
-    // Keep for backward compatibility, but use objectives list for new data
+    private List<String> allergies;
+    private String password;
     private Objectif objectif;
-    
-    // Added: Match Flutter UserModel fields
-    private List<String> objectives = new ArrayList<>();
-    private Boolean hasChronicDisease;
-    private String preferredLanguage;
-    private Boolean doesExercise;
-    private String activityLevel;
-    private List<String> physicalActivities = new ArrayList<>();
-    private List<String> dailyActivities = new ArrayList<>();
-    private List<String> healthGoals = new ArrayList<>();
-    private Boolean hasAllergies;
-    private String allergyYear;
-    private String allergyMonth;
-    private String allergyDay;
-    private String weightUnit;
-    private String heightUnit;
-    private String profileImageUrl;
+    private String provider; // LOCAL, GOOGLE
+    private Long countScans = 0L;
+
+    // Champ pour distinguer le type d'utilisateur
+    private String type;
+
+    // Constructeur protégé pour les sous-classes
+    protected Utilisateurs(String type) {
+        this.type = type;
+    }
+    private List<String> historiqueScanIds;
+    private List<String> nutritionisteFavorisIds;
+    private String photoUrl; // lien Cloudinary
+
+
+    public int getAge() {
+        if (dateDeNaissance == null) return 0;
+        LocalDate birthDate = new java.sql.Date(dateDeNaissance.getTime()).toLocalDate();
+        return Period.between(birthDate, LocalDate.now()).getYears();
+    }
+
+    public Float getIMC() {
+        if (poids == null || taille == null || taille == 0) return null;
+        return poids / ((taille/100) * (taille/100));
+    }
 }
