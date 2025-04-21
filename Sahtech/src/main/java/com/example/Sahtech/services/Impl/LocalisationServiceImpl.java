@@ -72,28 +72,7 @@ public class LocalisationServiceImpl implements LocalisationService {
 
     @Override
     public List<Localisation> findByCodePostal(String codePostal) {
-        Optional<Localisation> localisation = localisationRepository.findByCodePostal(codePostal);
-        return localisation.map(List::of).orElse(List.of());
-    }
-    
-    @Override
-    public List<Localisation> findAllByCountry(String country) {
-        return localisationRepository.findByPays(country);
-    }
-    
-    @Override
-    public List<Localisation> findAllByRegion(String region) {
-        return localisationRepository.findByRegion(region);
-    }
-    
-    @Override
-    public List<Localisation> findAllByCity(String city) {
-        return localisationRepository.findByVille(city);
-    }
-    
-    @Override
-    public List<Localisation> findAllByPostalCode(String postalCode) {
-        return localisationRepository.findByCodePostal(postalCode).map(List::of).orElse(List.of());
+        return  localisationRepository.findByCodePostal(codePostal);
     }
 
 } 

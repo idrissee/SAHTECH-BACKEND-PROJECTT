@@ -31,4 +31,3 @@ public interface AuthorizationService {
      */
     boolean hasUserScannedProduct(String produitId, HttpServletRequest request);
 }
-}

@@ -27,7 +27,7 @@ public class Utilisateurs {
     private String nom;
     private String prenom;
     private Long numTelephone;
-    private String adresse;
+    private String email;
     private Date dateDeNaissance;
     private List<Maladie> maladies;
     private Float poids;
