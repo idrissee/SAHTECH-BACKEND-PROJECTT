@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.security.PrivateKey;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -34,4 +35,5 @@ public class Nutrisioniste {
     private String password;
     private String localisationId;
     private Boolean estVerifie;
+
 }

@@ -1,8 +1,10 @@
 package com.example.Sahtech.Dto;
 
+import com.example.Sahtech.Enum.Maladie;
+import com.example.Sahtech.Enum.Objectif;
 import lombok.*;
 
-import java.util.List;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -11,16 +13,21 @@ import java.util.List;
 public class NutrisionisteDto {
 
     private String id;
+
     private String specialite;
-    private String description;
-    private List<String> certifications;
-    private Float tarifConsultation;
-    private Boolean disponibiliteEnLigne;
-    private String heuresDisponibilite;
-    private Integer anneesExperience;
-    private String etablissement;
-    private Double noteEvaluation;
-    private Integer nombreEvaluations;
-    private List<String> patientsIds;
-    private List<String> languesParlees;
+    private String nom;
+    private String prenom;
+    private Long numTelephone;
+    private String email;
+    private Date dateDeNaissance;
+    private Float taille;
+    private String sexe;
+    private Float poids;
+    private Maladie maladie;
+    private Objectif objectif;
+    private String password;
+    private String localisationId;
+    private Boolean estVerifie;
+    private String photoProfilUrl;
+    private String photoAttestationFonctionUrl;
 }
