@@ -22,4 +22,3 @@ public interface AuthService {
      */
     LogoutResponse logout(LogoutRequest logoutRequest);
 }
-}
