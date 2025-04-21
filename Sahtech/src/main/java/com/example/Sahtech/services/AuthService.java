@@ -9,9 +9,9 @@ public interface AuthService {
      * Authenticates a user and returns a JWT token
      */
     AuthResponse login(LoginRequest loginRequest);
-    
+
     /**
      * Registers a new user and returns a JWT token
      */
     AuthResponse register(RegisterRequest registerRequest);
-} 
+}

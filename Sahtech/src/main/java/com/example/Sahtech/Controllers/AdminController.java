@@ -53,7 +53,7 @@ public class AdminController {
     }
 
     // GET ADMIN BY EMAIL
-    @GetMapping("/email")
+    @GetMapping("/email/{email}")
     public ResponseEntity<AdminDto> getAdminByEmail(@RequestParam String email) {
         Admin admin = adminService.getAdminByEmail(email);
         if (admin != null) {

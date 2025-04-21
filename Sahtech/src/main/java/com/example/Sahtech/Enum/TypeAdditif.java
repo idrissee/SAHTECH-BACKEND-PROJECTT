@@ -1,5 +1,13 @@
 package com.example.Sahtech.Enum;
 
 public enum TypeAdditif {
-    hhhhh
+    Colorant,
+    Conservateur,
+    Acidifiant, Antioxydant,
+    Régulateur_de_pH,
+    Émulsifiant,
+    Édulcorant,
+    Épaississant,
+    Stabilisant,
+    Humectant;
 }

@@ -38,10 +38,10 @@ public class JwtTokenProvider {
     public String generateToken(Authentication authentication, String userType, String userId) {
         User user = (User) authentication.getPrincipal();
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
-        
+
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
-        
+
         return Jwts.builder()
                 .setSubject(user.getUsername())
                 .claim("roles", authorities.stream()
@@ -70,15 +70,15 @@ public class JwtTokenProvider {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        
+
         @SuppressWarnings("unchecked")
         List<String> roles = (List<String>) claims.get("roles");
         List<SimpleGrantedAuthority> authorities = roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-        
+
         User principal = new User(claims.getSubject(), "", authorities);
-        
+
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 

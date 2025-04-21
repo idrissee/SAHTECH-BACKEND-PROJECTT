@@ -14,7 +14,7 @@ public class TestDataUtil {
     // Produit test data
     public static Produit creatTestProduitA() {
         return Produit.builder()
-                .id(1L)
+                .id("1L")
                 .nom("rouiba")
                 .typeProduit(TypeProduit.produitLate)
                 .codeBarre(12365877L)
@@ -23,7 +23,7 @@ public class TestDataUtil {
 
     public static Produit creatTestProduitB() {
         return Produit.builder()
-                .id(2L)
+                .id("2L")
                 .nom("Gateau")
                 .typeProduit(TypeProduit.produitLate)
                 .codeBarre(12348796L)
@@ -32,7 +32,7 @@ public class TestDataUtil {
 
     public static Produit creatTestProduitC() {
         return Produit.builder()
-                .id(3L)
+                .id("3L")
                 .nom("milka")
                 .typeProduit(TypeProduit.produitLate)
                 .codeBarre(1236987L)
@@ -42,7 +42,7 @@ public class TestDataUtil {
     // Ingrediants test data
     public static Ingrediants createTestIngrediantsA() {
         return Ingrediants.builder()
-                .idIngrediant(1L)
+                .idIngrediant("1L")
                 .Quantite(5.0F)
                 .nomIngrediant("salt")
                 .build();
@@ -50,7 +50,7 @@ public class TestDataUtil {
 
     public static Ingrediants createTestIngrediantsB() {
         return Ingrediants.builder()
-                .idIngrediant(2L)
+                .idIngrediant("2L")
                 .Quantite(4.0F)
                 .nomIngrediant("SUGAR")
                 .build();
@@ -58,7 +58,7 @@ public class TestDataUtil {
 
     public static Ingrediants createTestIngrediantsC() {
         return Ingrediants.builder()
-                .idIngrediant(3L)
+                .idIngrediant("3L")
                 .Quantite(4.4F)
                 .nomIngrediant("SODIUM")
                 .build();
@@ -67,8 +67,8 @@ public class TestDataUtil {
     // Additifs test data
     public static Additifs createTestAdditifsA() {
        return Additifs.builder()
-               .idAdditif(1L)
-               .maladieCause(Maladie.QLERGIAUE)
+               .idAdditif("1L")
+               .maladieCause(Maladie.MALADIE_RENALE)
                .seuil(2F)
                .nomAdditif("sin1")
                .build();
@@ -76,8 +76,8 @@ public class TestDataUtil {
     
     public static Additifs createTestAdditifsB() {
         return Additifs.builder()
-                .idAdditif(2L)
-                .maladieCause(Maladie.DIABATE)
+                .idAdditif("2L")
+                .maladieCause(Maladie.MALADIE_CARDIAQUE)
                 .seuil(3F)
                 .nomAdditif("sin2")
                 .build();
@@ -85,8 +85,8 @@ public class TestDataUtil {
     
     public static Additifs createTestAdditifsC() {
         return Additifs.builder()
-                .idAdditif(3L)
-                .maladieCause(Maladie.DIABATE)
+                .idAdditif("3L")
+                .maladieCause(Maladie.CELIAQUIE)
                 .seuil(4F)
                 .nomAdditif("sin3")
                 .build();
@@ -95,7 +95,7 @@ public class TestDataUtil {
     // Nutrisioniste test data
     public static Nutrisioniste createTestNutrisionisteA() {
         return Nutrisioniste.builder()
-                .id(1L)
+                .id("1L")
                 .nom("Dupont")
                 .prenom("Jean")
                 .email("jean.dupont@example.com")
@@ -104,13 +104,13 @@ public class TestDataUtil {
                 .dateDeNaissance(new Date())
                 .password("password123")
                 .estVerifie(true)
-                .localisationId(1L)
+                .localisationId("1L")
                 .build();
     }
     
     public static Nutrisioniste createTestNutrisionisteB() {
         return Nutrisioniste.builder()
-                .id(2L)
+                .id("2L")
                 .nom("Martin")
                 .prenom("Marie")
                 .email("marie.martin@example.com")
@@ -119,13 +119,13 @@ public class TestDataUtil {
                 .dateDeNaissance(new Date())
                 .password("password456")
                 .estVerifie(true)
-                .localisationId(2L)
+                .localisationId("2L")
                 .build();
     }
     
     public static Nutrisioniste createTestNutrisionisteC() {
         return Nutrisioniste.builder()
-                .id(3L)
+                .id("3L")
                 .nom("Petit")
                 .prenom("Pierre")
                 .email("pierre.petit@example.com")
@@ -134,14 +134,14 @@ public class TestDataUtil {
                 .dateDeNaissance(new Date())
                 .password("password789")
                 .estVerifie(false)
-                .localisationId(3L)
+                .localisationId("3L")
                 .build();
     }
 
     // Admin test data
     public static Admin createTestAdminA() {
         return Admin.builder()
-                .id(1L)
+                .id("1L")
                 .nom("Admin")
                 .prenom("Super")
                 .email("admin@example.com")
@@ -152,7 +152,7 @@ public class TestDataUtil {
     
     public static Admin createTestAdminB() {
         return Admin.builder()
-                .id(2L)
+                .id("2L")
                 .nom("Manager")
                 .prenom("System")
                 .email("manager@example.com")
@@ -164,7 +164,7 @@ public class TestDataUtil {
     // Utilisateurs test data
     public static Utilisateurs createTestUtilisateurA() {
         return Utilisateurs.builder()
-                .id(1L)
+                .id("1L")
                 .nom("Client")
                 .prenom("Test")
                 .email("client@example.com")
@@ -174,14 +174,14 @@ public class TestDataUtil {
                 .taille(180.0F)
                 .poids(75.0F)
                 .sexe("M")
-                .maladie(Maladie.DIABATE)
-                .objectif(Objectif.PERTE_DE_POIDS)
+                .maladie(Maladie.MALADIE_CARDIAQUE)
+                .objectif(Objectif.PERDRE_DU_POIDS)
                 .build();
     }
     
     public static Utilisateurs createTestUtilisateurB() {
         return Utilisateurs.builder()
-                .id(2L)
+                .id("2L")
                 .nom("User")
                 .prenom("Regular")
                 .email("user@example.com")
@@ -191,15 +191,15 @@ public class TestDataUtil {
                 .taille(165.0F)
                 .poids(60.0F)
                 .sexe("F")
-                .maladie(Maladie.QLERGIAUE)
-                .objectif(Objectif.PERTE_DE_POIDS)
+                .maladie(Maladie.ALLERGIE_ARACHIDES)
+                .objectif(Objectif.REDUIRE_LA_TENSION_ARTERIELLE)
                 .build();
     }
 
     // HistoriqueScan test data
     public static HistoriqueScan createTestHistoriqueScanA() {
         return HistoriqueScan.builder()
-                .id(1L)
+                .id("1")
                 .utilisateur(createTestUtilisateurA())
                 .produit(creatTestProduitA())
                 .dateScan(LocalDateTime.now())
@@ -216,7 +216,7 @@ public class TestDataUtil {
     
     public static HistoriqueScan createTestHistoriqueScanB() {
         return HistoriqueScan.builder()
-                .id(2L)
+                .id("L")
                 .utilisateur(createTestUtilisateurB())
                 .produit(creatTestProduitB())
                 .dateScan(LocalDateTime.now().minusDays(5))
@@ -234,7 +234,7 @@ public class TestDataUtil {
     // Localisation test data
     public static Localisation createTestLocalisationA() {
         return Localisation.builder()
-                .id(1L)
+                .id("1L")
                 .pays("France")
                 .ville("Paris")
                 .adresse("123 Rue de la Paix")
@@ -246,7 +246,7 @@ public class TestDataUtil {
     
     public static Localisation createTestLocalisationB() {
         return Localisation.builder()
-                .id(2L)
+                .id("2L")
                 .pays("France")
                 .ville("Lyon")
                 .adresse("456 Avenue Berthelot")
@@ -258,7 +258,7 @@ public class TestDataUtil {
     
     public static Localisation createTestLocalisationC() {
         return Localisation.builder()
-                .id(3L)
+                .id("3L")
                 .pays("France")
                 .ville("Marseille")
                 .adresse("789 Boulevard Michelet")
@@ -271,7 +271,7 @@ public class TestDataUtil {
     // Partenaire test data
     public static Partenaire createTestPartenaireA() {
         return Partenaire.builder()
-                .id(1L)
+                .id("1L")
                 .nom("Bio Market")
                 .description("Magasin de produits biologiques")
                 .email("contact@biomarket.com")
@@ -284,7 +284,7 @@ public class TestDataUtil {
     
     public static Partenaire createTestPartenaireB() {
         return Partenaire.builder()
-                .id(2L)
+                .id("2L")
                 .nom("Health & Co")
                 .description("Chaîne de boutiques santé et bien-être")
                 .email("info@healthco.com")
@@ -298,25 +298,25 @@ public class TestDataUtil {
     // Publicite test data
     public static Publicite createTestPubliciteA() {
         return Publicite.builder()
-                .id(1L)
+                .id("1LP")
                 .titre("Offre spéciale Bio Market")
                 .description("Profitez de 20% de réduction sur tous les produits bio")
                 .typePub(TypePublicite.BANNIERE)
                 .etatPublicite(EtatPublicite.DESACTIVEE)
                 .statusPublicite(StatusPublicite.EN_ATTENTE)
-                .partenaire_id(1L)
+                .partenaire_id("1L")
                 .build();
     }
     
     public static Publicite createTestPubliciteB() {
         return Publicite.builder()
-                .id(2L)
+                .id("2L")
                 .titre("Nouveaux produits santé")
                 .description("Découvrez notre nouvelle gamme de produits santé")
                 .typePub(TypePublicite.BANNIERE)
                 .etatPublicite(EtatPublicite.PUBLIEE)
                 .statusPublicite(StatusPublicite.EN_ATTENTE)
-                .partenaire_id(2L)
+                .partenaire_id("2L")
                 .build();
     }
 }
