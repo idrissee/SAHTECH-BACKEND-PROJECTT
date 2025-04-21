@@ -45,14 +45,17 @@ public class AuthServiceImpl implements AuthService {
 
     private final UtilisateursRepository utilisateursRepository;
 
+    private  final TokenBlacklistService tokenBlacklistService;
+
     public AuthServiceImpl(AuthenticationManager authenticationManager,JwtTokenProvider tokenProvider,PasswordEncoder passwordEncoder
-    ,AdminRepository adminRepository,NutritionisteRepository nutrisionisteRepository,UtilisateursRepository utilisateursRepository){
+    ,AdminRepository adminRepository,NutritionisteRepository nutrisionisteRepository,UtilisateursRepository utilisateursRepository ,TokenBlacklistService tokenBlacklistService) {
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
         this.passwordEncoder = passwordEncoder;
         this.adminRepository = adminRepository;
         this.nutrisionisteRepository = nutrisionisteRepository;
         this.utilisateursRepository = utilisateursRepository;
+        this.tokenBlacklistService = tokenBlacklistService;
     }
 
 

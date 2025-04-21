@@ -40,6 +40,13 @@ public class Utilisateurs {
     private Objectif objectif;
     private String provider; // LOCAL, GOOGLE
     private Long countScans = 0L;
+    private List<String> objectives;
+    private List<String> dailyActivities;
+    private List<String> physicalActivities;
+    private List<String> healthGoals;
+    private boolean hasChronicDisease;
+    private boolean hasAllergies;
+     private String preferredLanguage;
 
     // Champ pour distinguer le type d'utilisateur
     private String type;
