@@ -17,19 +17,12 @@ import java.util.List;
 @Data
 public class AdditifsDto {
 
-
-
     private String idAdditif;
 
     private String codeAdditif;
-
     private String nomAdditif;
-
-    private Float seuil;
-
-    private Maladie maladieCause;
-
     private TypeAdditif typeAdditif;
+    private Float seuil;
 
 
 }
