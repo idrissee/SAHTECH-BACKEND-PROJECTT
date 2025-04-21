@@ -46,10 +46,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (nutritionist.isPresent()) {
             return createUserDetailsFromUtilisateur(nutritionist.get());
         }
-        
+
         throw new UsernameNotFoundException("User not found with email: " + email);
     }
-    
+
     public UserDetails loadUserByEmailAndType(String email, String userType) throws UsernameNotFoundException {
         switch (userType.toUpperCase()) {
             case "ADMIN":
@@ -71,7 +71,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 }
                 break;
         }
-        
+
         throw new UsernameNotFoundException("User not found with email: " + email + " and type: " + userType);
     }
     
@@ -91,4 +91,4 @@ public class CustomUserDetailsService implements UserDetailsService {
             Collections.singletonList(new SimpleGrantedAuthority(role))
         );
     }
-} 
+}

@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * Service qui gère les autorisations d'accès aux ressources
  */
 public interface AuthorizationService {
-    
+
     /**
      * Vérifie si l'utilisateur courant est autorisé à accéder à une ressource utilisateur spécifique
      * @param resourceId ID de la ressource (utilisateur, nutritionniste, etc.)
@@ -30,4 +30,4 @@ public interface AuthorizationService {
      * @return true si l'utilisateur est un admin ou s'il a déjà scanné ce produit
      */
     boolean hasUserScannedProduct(String produitId, HttpServletRequest request);
-} 
+}

@@ -4,6 +4,8 @@ import com.example.Sahtech.Dto.UtilisateursDto;
 import com.example.Sahtech.entities.Utilisateurs;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.AuthorizationService;
+import com.example.Sahtech.services.ImageService;
+import com.example.Sahtech.services.Impl.ImageServiceImpl;
 import com.example.Sahtech.services.UtilisateursService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +33,9 @@ public class UtilisateursController {
     
     @Autowired
     private AuthorizationService authorizationService;
+
+    @Autowired
+    private ImageServiceImpl imageServiceImpl;
 
     // GET ALL USERS - réservé à l'admin (déjà géré par SecurityConfig)
     @GetMapping("/All")
@@ -121,5 +128,21 @@ public class UtilisateursController {
         }
 
         return new ResponseEntity<>(utilisateur.getCountScans(), HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/uploadPhoto")
+    public ResponseEntity<Utilisateurs> uploadPhoto(
+            @PathVariable String id,
+            @RequestParam("file") MultipartFile file,
+            HttpServletRequest request
+    ) throws IOException {
+        // Vérifier si l'utilisateur est autorisé
+        if (!authorizationService.isAuthorizedToAccessResource(id, request)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        String photoUrl = imageServiceImpl.uploadImage(file);
+        Utilisateurs updated = utilisateurService.setPhotoUrl(id, photoUrl);
+        return ResponseEntity.ok(updated);
     }
 }

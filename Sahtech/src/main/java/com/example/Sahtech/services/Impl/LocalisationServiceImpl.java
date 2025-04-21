@@ -69,10 +69,10 @@ public class LocalisationServiceImpl implements LocalisationService {
     public List<Localisation> findByVille(String ville) {
         return localisationRepository.findByVille(ville);
     }
-    
+
     @Override
     public List<Localisation> findByCodePostal(String codePostal) {
-        return localisationRepository.findByCodePostal(codePostal);
+        return  localisationRepository.findByCodePostal(codePostal);
     }
 
 } 

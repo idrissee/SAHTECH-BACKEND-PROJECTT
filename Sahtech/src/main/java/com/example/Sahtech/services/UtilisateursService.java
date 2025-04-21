@@ -1,6 +1,7 @@
 package com.example.Sahtech.services;
 
 import com.example.Sahtech.entities.Utilisateurs;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,4 +15,5 @@ public interface UtilisateursService {
     Utilisateurs getUtilisateursByEmail(String email);
 
     Utilisateurs addUtilisateur(Utilisateurs user);
+    Utilisateurs setPhotoUrl(String id, String photoUrl);
 }
