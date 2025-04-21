@@ -34,12 +34,15 @@ public class NutrisionisteController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    // GET ALL - réservé à l'admin (déjà géré par SecurityConfig)
+    // GET ALL - accessible aux admins et users
     @GetMapping("/All")
     public ResponseEntity<List<NutrisionisteDto>> getAllNutrisionistes() {
-        // Double vérification que l'utilisateur est bien un admin
+        // Vérification que l'utilisateur est bien un admin ou user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+        boolean isAdmin = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        boolean isUser = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"));
+        
+        if (!isAdmin && !isUser) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         

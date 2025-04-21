@@ -4,18 +4,15 @@ import com.example.Sahtech.Dto.ProduitDto;
 import com.example.Sahtech.Enum.ValeurNutriScore;
 import com.example.Sahtech.entities.Produit;
 import com.example.Sahtech.mappers.Mapper;
+import com.example.Sahtech.services.AuthorizationService;
 import com.example.Sahtech.services.ProduitService;
-import com.example.Sahtech.services.HistoriqueScanService;
-import com.example.Sahtech.security.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -25,12 +22,9 @@ public class ProduitController {
 
     private ProduitService produitService;
     private Mapper<Produit, ProduitDto> produitMapper;
-    
+
     @Autowired
-    private HistoriqueScanService historiqueScanService;
-    
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    private AuthorizationService authorizationService;
 
     public ProduitController(ProduitService produitService, 
                             Mapper<Produit, ProduitDto> produitMapper) {
@@ -53,30 +47,17 @@ public class ProduitController {
                    .collect(Collectors.toList());
     }
 
-    @GetMapping(path ="/scanned/count")
-    public ResponseEntity<Map<String, Integer>> getScannedProductsCount(HttpServletRequest request) {
-        // Extraire l'ID de l'utilisateur du token JWT
-        String token = extractToken(request);
-        if (token == null || !jwtTokenProvider.validateToken(token)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        
-        String userId = jwtTokenProvider.getUserIdFromToken(token);
-        if (userId == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        
-        // Obtenir le nombre de produits scannés par l'utilisateur
-        int count = historiqueScanService.countScannedProductsByUser(userId);
-        
-        Map<String, Integer> response = new HashMap<>();
-        response.put("count", count);
-        
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
     @GetMapping(path ="/{id}")
-    public ResponseEntity<ProduitDto> getProduit(@PathVariable("id") String id){
+    public ResponseEntity<ProduitDto> getProduit(@PathVariable("id") String id,
+                                                 HttpServletRequest request){
+
+        // Vérifier si l'utilisateur est autorisé à accéder à ce produit
+        // (soit admin, soit un utilisateur qui a déjà scanné ce produit)
+        boolean isAuthorized = authorizationService.hasUserScannedProduct(id, request);
+        if (!isAuthorized) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         Optional<Produit> foundproduit = produitService.findOnebyId(id);
         return foundproduit.map(produit-> {
             ProduitDto produitDto = produitMapper.mapTo(produit);
@@ -118,9 +99,9 @@ public class ProduitController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity deleteProduit(@PathVariable("id") String id){
+    public ResponseEntity<Void> deleteProduit(@PathVariable("id") String id){
         produitService.delete(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
     @GetMapping(path = "/{id}/nutriscore")
@@ -143,14 +124,22 @@ public class ProduitController {
         return new ResponseEntity<>(produit.getValeurNutriScore(), HttpStatus.OK);
     }
     
-    @PutMapping(path = "/{id}/nutriscore/{valeurNutriScore}")
+    @PutMapping(path = "/{id}/nutriscore")
     public ResponseEntity<ProduitDto> setNutriScoreForProduit(
             @PathVariable("id") String id,
-            @PathVariable("valeurNutriScore") ValeurNutriScore valeurNutriScore) {
+            @RequestParam("nutriscore") String scoreStr) {
         
         // Vérifier que le produit existe
         if (!produitService.isExists(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        
+        // Convertir la chaîne en ValeurNutriScore
+        ValeurNutriScore valeurNutriScore;
+        try {
+            valeurNutriScore = ValeurNutriScore.valueOf(scoreStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         
         // Récupérer le produit
@@ -168,87 +157,5 @@ public class ProduitController {
         Produit updatedProduit = produitService.save(produit);
         
         return new ResponseEntity<>(produitMapper.mapTo(updatedProduit), HttpStatus.OK);
-    }
-    
-    @PostMapping("/{id}/recommendation")
-    public ResponseEntity<Map<String, String>> saveRecommendation(
-            @PathVariable("id") String productId,
-            @RequestBody Map<String, String> recommendationRequest,
-            HttpServletRequest request) {
-        
-        // Extraire l'ID de l'utilisateur du token JWT
-        String token = extractToken(request);
-        if (token == null || !jwtTokenProvider.validateToken(token)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        
-        String userId = jwtTokenProvider.getUserIdFromToken(token);
-        if (userId == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        
-        // Vérifier que le produit existe
-        if (!produitService.isExists(productId)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        
-        String recommendation = recommendationRequest.get("recommendation");
-        if (recommendation == null || recommendation.trim().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        
-        // Enregistrer la recommandation
-        boolean saved = produitService.saveRecommendation(productId, userId, recommendation);
-        
-        if (saved) {
-            Map<String, String> response = new HashMap<>();
-            response.put("status", "success");
-            response.put("message", "Recommendation saved successfully");
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    
-    @GetMapping("/{id}/recommendation")
-    public ResponseEntity<Map<String, String>> getRecommendation(
-            @PathVariable("id") String productId,
-            HttpServletRequest request) {
-            
-        // Extraire l'ID de l'utilisateur du token JWT
-        String token = extractToken(request);
-        if (token == null || !jwtTokenProvider.validateToken(token)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        
-        String userId = jwtTokenProvider.getUserIdFromToken(token);
-        if (userId == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        
-        // Vérifier que le produit existe
-        if (!produitService.isExists(productId)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        
-        // Récupérer la recommandation
-        String recommendation = produitService.getRecommendation(productId, userId);
-        
-        if (recommendation != null) {
-            Map<String, String> response = new HashMap<>();
-            response.put("recommendation", recommendation);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-    
-    // Helper method to extract the JWT token from the request
-    private String extractToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
     }
 }

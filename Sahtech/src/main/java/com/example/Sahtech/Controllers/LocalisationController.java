@@ -1,8 +1,6 @@
 package com.example.Sahtech.Controllers;
 
-import com.example.Sahtech.Dto.HistoriqueScanDto;
 import com.example.Sahtech.Dto.LocalisationDto;
-import com.example.Sahtech.Dto.UtilisateursDto;
 import com.example.Sahtech.entities.Localisation;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.AuthorizationService;
@@ -61,7 +59,12 @@ public class LocalisationController {
     }
     
     @GetMapping(path = "/{id}")
-    public ResponseEntity<LocalisationDto> getLocalisation(@PathVariable("id") String id) {
+    public ResponseEntity<LocalisationDto> getLocalisation(@PathVariable("id") String id, HttpServletRequest request) {
+
+        // Vérifier si l'utilisateur est autorisé (admin ou nutritionniste associé à cette localisation)
+        if (!authorizationService.isNutritionisteAuthorizedForLocation(id, request)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
 
         Optional<Localisation> foundLocalisation = localisationService.findOneById(id);
@@ -74,11 +77,17 @@ public class LocalisationController {
     @PutMapping(path = "/{id}")
     public ResponseEntity<LocalisationDto> updateLocalisation(
             @PathVariable("id") String id,
-            @RequestBody LocalisationDto localisationDto) {
+            @RequestBody LocalisationDto localisationDto,
+            HttpServletRequest request) {
 
         
         if (!localisationService.isExists(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        // Vérifier si l'utilisateur est autorisé (admin ou nutritionniste associé à cette localisation)
+        if (!authorizationService.isNutritionisteAuthorizedForLocation(id, request)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         
         Localisation localisation = localisationMapper.mapFrom(localisationDto);

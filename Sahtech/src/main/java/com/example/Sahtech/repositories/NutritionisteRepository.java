@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface NutritionisteRepository extends MongoRepository<Nutrisioniste, String> {
 
-    List<Nutrisioniste> findByLocalisationId(Long localisationId);
+    List<Nutrisioniste> findByLocalisationId(String localisationId);
 
     List<Nutrisioniste> findBySpecialite(String specialite);
 

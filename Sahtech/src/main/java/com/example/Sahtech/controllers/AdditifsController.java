@@ -2,9 +2,9 @@ package com.example.Sahtech.Controllers;
 
 import com.example.Sahtech.Dto.AdditifsDto;
 import com.example.Sahtech.entities.Additifs;
-import com.example.Sahtech.entities.Utilisateurs;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.AdditifsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/API/Sahtech/Additifs")
 public class AdditifsController {
 
-
+    @Autowired
     private AdditifsService additifsService;
-
+    @Autowired
     private Mapper<Additifs, AdditifsDto> additifsMapper;
 
     public AdditifsController(AdditifsService additifsService, Mapper<Additifs ,AdditifsDto> additifsMapper) {

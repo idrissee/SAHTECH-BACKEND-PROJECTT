@@ -37,9 +37,23 @@ public class HistoriqueScanController {
 
     @PostMapping
     public ResponseEntity<HistoriqueScanDto> saveScan(@RequestBody HistoriqueScanDto scanDto) {
-        // Cette méthode est réservée aux admins (géré par SecurityConfig)
+        // Vérifier que l'utilisateur a le rôle ADMIN, USER ou NUTRITIONIST
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        boolean isUser = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"));
+        boolean isNutritionist = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_NUTRITIONIST"));
+        
+        if (!isAdmin && !isUser && !isNutritionist) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         HistoriqueScan scan = historiqueScanMapper.mapFrom(scanDto);
         HistoriqueScan savedScan = historiqueScanService.saveScan(scan);
+
+        String utilisateurId = scan.getUtilisateur().getId();
+        if (utilisateurId != null) {
+            historiqueScanService.incrementUserScanCount(utilisateurId);
+        }
         return new ResponseEntity<>(historiqueScanMapper.mapTo(savedScan), HttpStatus.CREATED);
     }
 

@@ -20,10 +20,10 @@ import java.util.List;
 public class RegisterRequest {
     @NotBlank(message = "Le nom est obligatoire")
     private String nom;
-    
+
     @NotBlank(message = "Le prénom est obligatoire")
     private String prenom;
-    
+
     @NotBlank(message = "L'email est obligatoire")
     @Email(message = "Format d'email invalide")
     private String email;
@@ -50,4 +50,7 @@ public class RegisterRequest {
     private List<String> physicalActivities = new ArrayList<>();
     private List<String> dailyActivities = new ArrayList<>();
     private List<String> healthGoals = new ArrayList<>();
-} 
+}
+
+
+}

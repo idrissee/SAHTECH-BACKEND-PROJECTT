@@ -4,6 +4,7 @@ import com.example.Sahtech.entities.HistoriqueScan;
 import com.example.Sahtech.entities.Utilisateurs;
 import com.example.Sahtech.repositories.HistoriqueScanRepository;
 import com.example.Sahtech.services.HistoriqueScanService;
+import com.example.Sahtech.services.UtilisateursService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,8 @@ import java.util.stream.StreamSupport;
 public class HistoriqueScanServiceImpl implements HistoriqueScanService {
 
     private final HistoriqueScanRepository historiqueScanRepository;
+
+    private final UtilisateursService utilisateursService;
 
     @Override
     public HistoriqueScan saveScan(HistoriqueScan scan) {
@@ -65,10 +68,14 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
         return historiqueScanRepository.findByUtilisateurIdAndDateScanAfter(utilisateurId, dateLimite);
     }
 
+
+
     @Override
     public List<HistoriqueScan> getScansByPeriode(LocalDateTime startDate, LocalDateTime endDate) {
         return historiqueScanRepository.findByDateScanBetween(startDate, endDate);
     }
+
+
 
     @Override
     public HistoriqueScan addCommentaire(String scanId, String commentaire) {
@@ -86,14 +93,24 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
                 .distinct() // Pour éviter les doublons (si un utilisateur a scanné plusieurs fois le même produit)
                 .collect(Collectors.toList());
     }
-    
+
     @Override
-    public int countScannedProductsByUser(String userId) {
-        List<HistoriqueScan> scans = historiqueScanRepository.findByUtilisateurId(userId);
-        // Compter les produits distincts
-        return (int) scans.stream()
-                .map(scan -> scan.getProduit().getId())
-                .distinct()
-                .count();
+    public boolean hasUserScannedProduct(String utilisateurId, String produitId) {
+
+        // Récupérer l'historique des scans de l'utilisateur
+        List<HistoriqueScan> scansUtilisateur = historiqueScanRepository.findByUtilisateurId(utilisateurId);
+
+        // Vérifier si l'un des scans correspond au produit demandé
+        return scansUtilisateur.stream()
+                .anyMatch(scan -> produitId.equals(scan.getProduit().getId()));
     }
-} 
+
+    @Override
+    public void incrementUserScanCount(String utilisateurId) {
+        Utilisateurs utilisateur = utilisateursService.getUtilisateurById(utilisateurId);
+        if (utilisateur != null) {
+            utilisateur.setCountScans(utilisateur.getCountScans() + 1);
+            utilisateursService.updateUtilisateur(utilisateurId, utilisateur);
+        }
+    }
+}

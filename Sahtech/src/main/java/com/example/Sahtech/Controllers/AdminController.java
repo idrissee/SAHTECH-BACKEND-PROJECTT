@@ -1,17 +1,22 @@
 package com.example.Sahtech.Controllers;
 
-import com.example.Sahtech.Dto.AdditifsDto;
 import com.example.Sahtech.Dto.AdminDto;
-import com.example.Sahtech.entities.Additifs;
 import com.example.Sahtech.entities.Admin;
+import com.example.Sahtech.entities.Utilisateurs;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.AdminService;
+import com.example.Sahtech.services.UtilisateursService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,6 +28,9 @@ public class AdminController {
 
     @Autowired
     private Mapper<Admin, AdminDto> adminMapper;
+
+    @Autowired
+    private UtilisateursService utilisateursService;
 
     // GET ALL ADMINS
     @GetMapping("/All")
@@ -45,7 +53,7 @@ public class AdminController {
     }
 
     // GET ADMIN BY EMAIL
-    @GetMapping("/email")
+    @GetMapping("/email/{email}")
     public ResponseEntity<AdminDto> getAdminByEmail(@RequestParam String email) {
         Admin admin = adminService.getAdminByEmail(email);
         if (admin != null) {
@@ -87,5 +95,23 @@ public class AdminController {
         boolean deleted = adminService.deleteAdmin(id);
         return deleted ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/scancCounts")
+    public ResponseEntity<Map<String, Long>> getAllUserScanCounts() {
+        // Vérifier que l'utilisateur est admin
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        List<Utilisateurs> utilisateurs = utilisateursService.getAllUtilisateurs();
+        Map<String, Long> scanCounts = new HashMap<>();
+
+        for (Utilisateurs utilisateur : utilisateurs) {
+            scanCounts.put(utilisateur.getId(), utilisateur.getCountScans());
+        }
+
+        return new ResponseEntity<>(scanCounts, HttpStatus.OK);
     }
 }

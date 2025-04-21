@@ -11,7 +11,7 @@ public interface AuthService {
      * Authenticates a user and returns a JWT token
      */
     AuthResponse login(LoginRequest loginRequest);
-    
+
     /**
      * Registers a new user and returns a JWT token
      */
@@ -21,4 +21,5 @@ public interface AuthService {
      * Logs out a user by invalidating their JWT token
      */
     LogoutResponse logout(LogoutRequest logoutRequest);
-} 
+}
+}

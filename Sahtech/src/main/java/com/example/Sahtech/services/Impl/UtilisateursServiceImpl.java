@@ -5,6 +5,7 @@ import com.example.Sahtech.repositories.UtilisateursRepository;
 import com.example.Sahtech.services.UtilisateursService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,10 +37,6 @@ public class UtilisateursServiceImpl implements UtilisateursService {
         return utilisateur.orElse(null);
     }
 
-    @Override
-    public Utilisateurs createUtilisateurs(Utilisateurs utilisateur) {
-        return utilisateursRepository.save(utilisateur);
-    }
 
     @Override
     public Utilisateurs updateUtilisateur(String id, Utilisateurs updatedUser) {
@@ -110,4 +107,12 @@ public class UtilisateursServiceImpl implements UtilisateursService {
     public Utilisateurs addUtilisateur(Utilisateurs user) {
         return utilisateursRepository.save(user);
     }
-} 
+
+
+    @Override
+    public Utilisateurs setPhotoUrl(String id, String photoUrl) {
+        Utilisateurs utilisateur = getUtilisateurById(id);
+        utilisateur.setPhotoUrl(photoUrl);
+        return utilisateursRepository.save(utilisateur);
+    }
+}
