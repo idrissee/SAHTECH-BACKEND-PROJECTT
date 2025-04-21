@@ -1,5 +1,6 @@
 package com.example.Sahtech.Dto;
 
+import com.example.Sahtech.Enum.NomIngrediants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,19 +14,9 @@ import org.springframework.data.annotation.Id;
 @Data
 public class IngrediantsDto {
 
-
-
     private String idIngrediant;
 
-    private String nomIngrediant;
-    private Double energie100g; // en kcal
-    private Double proteines100g;
-    private Double glucides100g;
-    private Double lipides100g;
-    private Double fibres100g;
-    private Double sel100g;
-    private Double sucre100g;
-
+    private NomIngrediants nomIngrediant;
     private Float Quantite;
 
     private String produitId;// Référence à l'ID du produit

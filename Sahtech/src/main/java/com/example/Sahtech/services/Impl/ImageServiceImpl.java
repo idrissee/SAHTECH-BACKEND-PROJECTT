@@ -48,15 +48,15 @@ public class ImageServiceImpl implements ImageService {
             Map<?, ?> result = cloudinary.uploader().upload(file.getBytes(), options);
             
             // Afficher les détails pour le débogage
-            System.out.println("✅ Image téléchargée avec succès");
+            System.out.println("Image téléchargée avec succès");
             System.out.println("URL: " + result.get("secure_url"));
             System.out.println("Public ID: " + result.get("public_id"));
             
             // Retourner l'URL sécurisée de l'image
             return (String) result.get("secure_url");
         } catch (IOException e) {
-            System.err.println("❌ Erreur lors du téléchargement de l'image: " + e.getMessage());
-            
+            System.err.println(" Erreur lors du téléchargement de l'image: " + e.getMessage());
+
             // Messages d'erreur spécifiques
             if (e.getMessage().contains("Invalid Signature")) {
                 System.err.println("Erreur d'authentification: vérifiez vos identifiants API dans application.properties");
@@ -66,7 +66,7 @@ public class ImageServiceImpl implements ImageService {
             } else if (e.getMessage().contains("resource_not_found")) {
                 System.err.println("Ressource non trouvée: vérifiez que votre cloud_name est correct");
             }
-            
+
             e.printStackTrace();
             throw new IOException("Échec du téléchargement de l'image: " + e.getMessage(), e);
         }

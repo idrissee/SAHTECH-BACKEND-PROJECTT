@@ -19,9 +19,10 @@ import java.util.List;
 public class Produit {
     @Id
     private String id;
-    
-    private String nom;
+
     private Long codeBarre;
+
+    private String nom;
     private String marque;
     private String categorie;
     private String description;
@@ -37,7 +38,7 @@ public class Produit {
 
     
     // Composition
-    private List<String> ingredients;
+    private List<Ingrediants> ingredients;
     private List<String> nomAdditif;
     
 

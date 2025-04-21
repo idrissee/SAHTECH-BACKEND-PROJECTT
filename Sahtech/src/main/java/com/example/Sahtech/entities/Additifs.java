@@ -20,18 +20,9 @@ public class Additifs {
     private String idAdditif;
 
     private String codeAdditif;
-
     private String nomAdditif;
-
-    private Float seuil;
-
-    private Maladie maladieCause;
-
     private TypeAdditif typeAdditif;
-
-
-
-
+    private Float seuil;
 
 
 }
