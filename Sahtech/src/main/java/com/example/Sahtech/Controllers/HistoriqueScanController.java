@@ -37,12 +37,13 @@ public class HistoriqueScanController {
 
     @PostMapping
     public ResponseEntity<HistoriqueScanDto> saveScan(@RequestBody HistoriqueScanDto scanDto) {
-
-
+        // Vérifier que l'utilisateur a le rôle ADMIN, USER ou NUTRITIONIST
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")) ||
-                !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")) ||
-                !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_NUTRITIONIST")) ) {
+        boolean isAdmin = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        boolean isUser = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"));
+        boolean isNutritionist = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_NUTRITIONIST"));
+        
+        if (!isAdmin && !isUser && !isNutritionist) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 

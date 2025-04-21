@@ -124,14 +124,22 @@ public class ProduitController {
         return new ResponseEntity<>(produit.getValeurNutriScore(), HttpStatus.OK);
     }
     
-    @PutMapping(path = "/{id}/nutriscore/{valeurNutriScore}")
+    @PutMapping(path = "/{id}/nutriscore")
     public ResponseEntity<ProduitDto> setNutriScoreForProduit(
             @PathVariable("id") String id,
-            @PathVariable("valeurNutriScore") ValeurNutriScore valeurNutriScore) {
+            @RequestParam("nutriscore") String scoreStr) {
         
         // Vérifier que le produit existe
         if (!produitService.isExists(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        
+        // Convertir la chaîne en ValeurNutriScore
+        ValeurNutriScore valeurNutriScore;
+        try {
+            valeurNutriScore = ValeurNutriScore.valueOf(scoreStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         
         // Récupérer le produit
@@ -145,8 +153,6 @@ public class ProduitController {
         
         // Mettre à jour le NutriScore du produit
         produit.setValeurNutriScore(valeurNutriScore);
-        
-
         
         Produit updatedProduit = produitService.save(produit);
         

@@ -1,33 +1,20 @@
 package com.example.Sahtech.entities;
 
-import com.example.Sahtech.Enum.Maladie;
-import com.example.Sahtech.Enum.Objectif;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@EqualsAndHashCode(callSuper = true)
 @Data
+@SuperBuilder
 @Document(collection = "admin")
-public class Admin {
-    @Id
-    private String id;
-    private String nom;
-    private String prenom;
-    private Long numTelephone;
-    private String email;
-    private Date dateDeNaissance;
-    private Float taille;
-    private String sexe;
-    private Float poids;
-    private Maladie maladie;
-    private Objectif objectif;
-    private String password;
-}
+public class Admin extends Utilisateurs {
+    
+    // Champs spécifiques à Admin peuvent être ajoutés ici
+    
+    public Admin() {
+        super("ADMIN");
+    }
+} 

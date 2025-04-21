@@ -100,6 +100,8 @@ public class AuthServiceImpl implements AuthService {
                         .password(password)
                         .numTelephone(registerRequest.getTelephone())
                         .dateDeNaissance(new Date())
+                        .provider("LOCAL")
+                        .type("ADMIN")
                         .build();
                  adminRepository.save(admin);
                 break;
@@ -113,6 +115,8 @@ public class AuthServiceImpl implements AuthService {
                         .numTelephone(registerRequest.getTelephone())
                         .dateDeNaissance(new Date())
                         .estVerifie(false)
+                        .provider("LOCAL")
+                        .type("NUTRITIONIST")
                         .build();
                  nutrisionisteRepository.save(nutritionist);
                 break;
@@ -126,6 +130,7 @@ public class AuthServiceImpl implements AuthService {
                         .numTelephone(registerRequest.getTelephone())
                         .dateDeNaissance(new Date())
                         .provider("LOCAL")
+                        .type("USER")
                         .build();
                  utilisateursRepository.save(user);
                 break;

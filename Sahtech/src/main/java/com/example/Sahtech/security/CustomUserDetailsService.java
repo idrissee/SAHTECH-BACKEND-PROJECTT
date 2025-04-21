@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,37 +31,20 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        // First check admin
-        Optional<Admin> adminOpt = adminRepository.findByEmail(email);
-        if (adminOpt.isPresent()) {
-            Admin admin = adminOpt.get();
-            return new User(
-                admin.getEmail(),
-                admin.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"))
-            );
+        // First try to find by email in any repository
+        Optional<Utilisateurs> utilisateur = utilisateursRepository.findByEmail(email);
+        if (utilisateur.isPresent()) {
+            return createUserDetailsFromUtilisateur(utilisateur.get());
         }
         
-        // Then check nutritionist
-        Optional<Nutrisioniste> nutrisionisteOpt = nutrisionisteRepository.findByEmail(email);
-        if (nutrisionisteOpt.isPresent()) {
-            Nutrisioniste nutritionist = nutrisionisteOpt.get();
-            return new User(
-                nutritionist.getEmail(),
-                nutritionist.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_NUTRITIONIST"))
-            );
+        Optional<Admin> admin = adminRepository.findByEmail(email);
+        if (admin.isPresent()) {
+            return createUserDetailsFromUtilisateur(admin.get());
         }
         
-        // Finally check regular user
-        Optional<Utilisateurs> userOpt = utilisateursRepository.findByEmail(email);
-        if (userOpt.isPresent()) {
-            Utilisateurs user = userOpt.get();
-            return new User(
-                user.getEmail(),
-                user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
-            );
+        Optional<Nutrisioniste> nutritionist = nutrisionisteRepository.findByEmail(email);
+        if (nutritionist.isPresent()) {
+            return createUserDetailsFromUtilisateur(nutritionist.get());
         }
         
         throw new UsernameNotFoundException("User not found with email: " + email);
@@ -73,38 +55,40 @@ public class CustomUserDetailsService implements UserDetailsService {
             case "ADMIN":
                 Optional<Admin> adminOpt = adminRepository.findByEmail(email);
                 if (adminOpt.isPresent()) {
-                    Admin admin = adminOpt.get();
-                    return new User(
-                        admin.getEmail(),
-                        admin.getPassword(),
-                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"))
-                    );
+                    return createUserDetailsFromUtilisateur(adminOpt.get());
                 }
                 break;
             case "NUTRITIONIST":
                 Optional<Nutrisioniste> nutrisionisteOpt = nutrisionisteRepository.findByEmail(email);
                 if (nutrisionisteOpt.isPresent()) {
-                    Nutrisioniste nutritionist = nutrisionisteOpt.get();
-                    return new User(
-                        nutritionist.getEmail(),
-                        nutritionist.getPassword(),
-                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_NUTRITIONIST"))
-                    );
+                    return createUserDetailsFromUtilisateur(nutrisionisteOpt.get());
                 }
                 break;
             case "USER":
                 Optional<Utilisateurs> userOpt = utilisateursRepository.findByEmail(email);
                 if (userOpt.isPresent()) {
-                    Utilisateurs user = userOpt.get();
-                    return new User(
-                        user.getEmail(),
-                        user.getPassword(),
-                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
-                    );
+                    return createUserDetailsFromUtilisateur(userOpt.get());
                 }
                 break;
         }
         
         throw new UsernameNotFoundException("User not found with email: " + email + " and type: " + userType);
+    }
+    
+    private UserDetails createUserDetailsFromUtilisateur(Utilisateurs utilisateur) {
+        String role;
+        if (utilisateur instanceof Admin) {
+            role = "ROLE_ADMIN";
+        } else if (utilisateur instanceof Nutrisioniste) {
+            role = "ROLE_NUTRITIONIST";
+        } else {
+            role = "ROLE_USER";
+        }
+        
+        return new User(
+            utilisateur.getEmail(),
+            utilisateur.getPassword(),
+            Collections.singletonList(new SimpleGrantedAuthority(role))
+        );
     }
 } 
