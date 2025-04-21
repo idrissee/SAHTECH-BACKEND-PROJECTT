@@ -33,10 +33,6 @@ public class UtilisateursServiceImpl implements UtilisateursService {
         return utilisateur.orElse(null);
     }
 
-    @Override
-    public Utilisateurs createUtilisateurs(Utilisateurs utilisateur) {
-        return utilisateursRepository.save(utilisateur);
-    }
 
     @Override
     public Utilisateurs updateUtilisateur(String id, Utilisateurs utilisateur) {

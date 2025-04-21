@@ -1,10 +1,10 @@
 package com.example.Sahtech.Dto;
 
+import com.example.Sahtech.entities.Nutrisioniste;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 @AllArgsConstructor
 @NoArgsConstructor

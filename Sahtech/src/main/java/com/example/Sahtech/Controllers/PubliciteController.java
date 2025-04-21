@@ -10,6 +10,9 @@ import com.example.Sahtech.services.PubliciteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,10 +51,18 @@ public class PubliciteController {
     }
 
     @GetMapping
-    public List<PubliciteDto> getAllPublicites() {
-        return publiciteService.findAll().stream()
+    public ResponseEntity<List<PubliciteDto>> getAllPublicites() {
+
+        // Double vérification que l'utilisateur est bien un admin ou user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")) ||
+                !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")) ) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        List<PubliciteDto> publiciteDto = publiciteService.findAll().stream()
                 .map(publiciteMapper::mapTo)
                 .collect(Collectors.toList());
+        return new ResponseEntity<>(publiciteDto, HttpStatus.OK);
     }
 
     @GetMapping("/status/{status}")

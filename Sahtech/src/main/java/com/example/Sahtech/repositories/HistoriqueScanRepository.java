@@ -21,12 +21,7 @@ public interface HistoriqueScanRepository extends MongoRepository<HistoriqueScan
     
     // Trouver les scans récents d'un utilisateur (des 30 derniers jours)
     List<HistoriqueScan> findByUtilisateurIdAndDateScanAfter(String utilisateurId, LocalDateTime date);
-    
-    // Trouver les scans par impact sur la santé
-    List<HistoriqueScan> findByImpactSante(String impactSante);
-    
-    // Trouver les scans contenant un additif spécifique
-    List<HistoriqueScan> findByAdditifsDetectesContaining(String additif);
+
     
     // Trouver les scans par période
     List<HistoriqueScan> findByDateScanBetween(LocalDateTime startDate, LocalDateTime endDate);

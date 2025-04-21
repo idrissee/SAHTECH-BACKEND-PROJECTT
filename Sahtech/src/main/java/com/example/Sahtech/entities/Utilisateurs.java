@@ -2,7 +2,9 @@ package com.example.Sahtech.entities;
 
 import com.example.Sahtech.Enum.Maladie;
 import com.example.Sahtech.Enum.Objectif;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,11 +14,11 @@ import java.time.Period;
 import java.util.Date;
 import java.util.List;
 
-@Document(collection = "utilisateurs")
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@NoArgsConstructor
+@SuperBuilder
+@Data
+@Document(collection = "utilisateurs")
 public class Utilisateurs {
 
     @Id
@@ -26,7 +28,6 @@ public class Utilisateurs {
     private String prenom;
     private Long numTelephone;
     private String email;
-    private String adresse;
     private Date dateDeNaissance;
     private List<Maladie> maladies;
     private Float poids;
@@ -37,7 +38,16 @@ public class Utilisateurs {
     private List<String> allergies;
     private String password;
     private Objectif objectif;
-    private Maladie maladie;
+    private String provider; // LOCAL, GOOGLE
+    private Long countScans = 0L;
+
+    // Champ pour distinguer le type d'utilisateur
+    private String type;
+
+    // Constructeur protégé pour les sous-classes
+    protected Utilisateurs(String type) {
+        this.type = type;
+    }
     private List<String> historiqueScanIds;
     private List<String> nutritionisteFavorisIds;
     private String photoUrl; // lien Cloudinary
@@ -48,7 +58,7 @@ public class Utilisateurs {
         LocalDate birthDate = new java.sql.Date(dateDeNaissance.getTime()).toLocalDate();
         return Period.between(birthDate, LocalDate.now()).getYears();
     }
-    
+
     public Float getIMC() {
         if (poids == null || taille == null || taille == 0) return null;
         return poids / ((taille/100) * (taille/100));

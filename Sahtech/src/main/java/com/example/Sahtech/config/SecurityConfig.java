@@ -44,15 +44,40 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/API/Sahtech/auth/**").permitAll()
 
+                .requestMatchers("/oauth2/**", "/login/**").permitAll()
+                .requestMatchers("/", "/index.html").permitAll()
+                .requestMatchers(HttpMethod.GET, "/API/Sahtech").permitAll()
+
                 // Admin a accès à tout
                 .requestMatchers("/API/Sahtech/Admins/**").hasRole("ADMIN")
 
-                // Pour GET All Utilisateurs - réservé aux admins
+                            // Pour accéder au compteur de scans d'un utilisateur (admin ou l'utilisateur lui-même)
+                            .requestMatchers(HttpMethod.GET, "/API/Sahtech/Utilisateurs/{id}/scan-count").hasAnyRole("ADMIN", "USER")
+
+                            // Pour accéder à tous les compteurs de scans (admin uniquement)
+                            .requestMatchers(HttpMethod.GET, "/API/Sahtech/Utilisateurs/scan-counts").hasRole("ADMIN")
+
+                    //nutritioniste
+                    .requestMatchers(HttpMethod.GET ,"/API/Sahtech/Nutrisionistes/All").hasAnyRole("ADMIN","USER")
+
+                    //Publicite
+                    .requestMatchers(HttpMethod.GET ,"/API/Sahtech/Publicites/All" ).hasAnyRole("ADMIN","USER")
+
+                    //HistoriqueScan
+                    .requestMatchers(HttpMethod.POST,"/API/Sahtech/HistoriqueScan").hasAnyRole("ADMIN","USER")
+
+                // Pour GET All Utilisateurs réservés aux admins
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/Utilisateurs/All").hasRole("ADMIN")
 
                 // Nutritionniste : accès uniquement au GET et PUT de son propre profil
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/Nutrisionistes/{id}").hasAnyRole("ADMIN", "NUTRITIONIST")
                 .requestMatchers(HttpMethod.PUT, "/API/Sahtech/Nutrisionistes/{id}").hasAnyRole("ADMIN", "NUTRITIONIST")
+
+
+                // Accès pour Nutritionnistes aux APIs de localisation spécifiques
+                .requestMatchers(HttpMethod.POST, "/API/Sahtech/localisations").hasAnyRole("ADMIN", "NUTRITIONIST")
+                .requestMatchers(HttpMethod.GET, "/API/Sahtech/localisations/{id}").hasAnyRole("ADMIN", "NUTRITIONIST")
+                .requestMatchers(HttpMethod.PUT, "/API/Sahtech/localisations/{id}").hasAnyRole("ADMIN", "NUTRITIONIST")
 
                 // Pour toutes les autres opérations sur Nutritionnistes, seul Admin a accès
                 .requestMatchers("/API/Sahtech/Nutrisionistes/**").hasRole("ADMIN")
@@ -64,12 +89,8 @@ public class SecurityConfig {
 
                 // Historique de scan : utilisateur peut uniquement consulter son propre historique et statistiques
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/utilisateur/{id}").hasAnyRole("ADMIN", "USER")
-                .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/recents/{id}").hasAnyRole("ADMIN", "USER")
-                .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/statistiques/nutriscore/{id}").hasAnyRole("ADMIN", "USER")
-                .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/statistiques/impact/{id}").hasAnyRole("ADMIN", "USER")
-                .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/additifs-frequents/{id}").hasAnyRole("ADMIN", "USER")
-                .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/evolution/{id}").hasAnyRole("ADMIN", "USER")
 
+                
                 // Pour toutes les autres opérations sur Utilisateurs, seul Admin a accès
                 .requestMatchers("/API/Sahtech/Utilisateurs/**").hasRole("ADMIN")
 
@@ -84,6 +105,9 @@ public class SecurityConfig {
                 .requestMatchers("/API/Sahtech/Publicites/**").hasRole("ADMIN")
                 .requestMatchers("/API/Sahtech/Produits/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
+            )
+            .oauth2Login(oauth2 -> oauth2
+                .defaultSuccessUrl("/API/Sahtech/auth/login/oauth2/code/google", true)
             );
 
         http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);

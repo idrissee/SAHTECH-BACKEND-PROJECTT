@@ -59,6 +59,12 @@ public class IngrediantsServiceImpl implements IngrediantsService {
     public void delete(String id) {
         ingrediantsRepository.deleteById(id);
     }
+
+    @Override
+    public Ingrediants getByNomIngrediant(String nom) {
+       return ingrediantsRepository.findByNomIngrediant(nom);
+
+    }
 }
 
 

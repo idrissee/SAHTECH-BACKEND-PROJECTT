@@ -9,14 +9,11 @@ import com.example.Sahtech.entities.Utilisateurs;
 import com.example.Sahtech.repositories.AdminRepository;
 import com.example.Sahtech.repositories.NutritionisteRepository;
 import com.example.Sahtech.repositories.UtilisateursRepository;
-import com.example.Sahtech.security.CustomUserDetailsService;
 import com.example.Sahtech.security.JwtTokenProvider;
 import com.example.Sahtech.services.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,26 +23,34 @@ import java.util.Optional;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private JwtTokenProvider tokenProvider;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private AdminRepository adminRepository;
+    private final JwtTokenProvider tokenProvider;
 
-    @Autowired
-    private NutritionisteRepository nutrisionisteRepository;
 
-    @Autowired
-    private UtilisateursRepository utilisateursRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+
+    private final AdminRepository adminRepository;
+
+
+    private final NutritionisteRepository nutrisionisteRepository;
+
+
+    private final UtilisateursRepository utilisateursRepository;
+
+    public AuthServiceImpl(AuthenticationManager authenticationManager,JwtTokenProvider tokenProvider,PasswordEncoder passwordEncoder
+    ,AdminRepository adminRepository,NutritionisteRepository nutrisionisteRepository,UtilisateursRepository utilisateursRepository){
+        this.authenticationManager = authenticationManager;
+        this.tokenProvider = tokenProvider;
+        this.passwordEncoder = passwordEncoder;
+        this.adminRepository = adminRepository;
+        this.nutrisionisteRepository = nutrisionisteRepository;
+        this.utilisateursRepository = utilisateursRepository;
+    }
+
 
     @Override
     public AuthResponse login(LoginRequest loginRequest) {
@@ -58,8 +63,6 @@ public class AuthServiceImpl implements AuthService {
             new UsernamePasswordAuthenticationToken(email, password)
         );
 
-        // Get user details
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
 
         // Get user ID based on type
         String userId = getUserIdByEmailAndType(email, userType);
@@ -97,8 +100,10 @@ public class AuthServiceImpl implements AuthService {
                         .password(password)
                         .numTelephone(registerRequest.getTelephone())
                         .dateDeNaissance(new Date())
+                        .provider("LOCAL")
+                        .type("ADMIN")
                         .build();
-                admin = adminRepository.save(admin);
+                 adminRepository.save(admin);
                 break;
 
             case "NUTRITIONIST":
@@ -110,8 +115,10 @@ public class AuthServiceImpl implements AuthService {
                         .numTelephone(registerRequest.getTelephone())
                         .dateDeNaissance(new Date())
                         .estVerifie(false)
+                        .provider("LOCAL")
+                        .type("NUTRITIONIST")
                         .build();
-                nutritionist = nutrisionisteRepository.save(nutritionist);
+                 nutrisionisteRepository.save(nutritionist);
                 break;
 
             case "USER":
@@ -122,8 +129,10 @@ public class AuthServiceImpl implements AuthService {
                         .password(password)
                         .numTelephone(registerRequest.getTelephone())
                         .dateDeNaissance(new Date())
+                        .provider("LOCAL")
+                        .type("USER")
                         .build();
-                user = utilisateursRepository.save(user);
+                 utilisateursRepository.save(user);
                 break;
 
             default:

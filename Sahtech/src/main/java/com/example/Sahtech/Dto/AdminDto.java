@@ -1,32 +1,14 @@
 package com.example.Sahtech.Dto;
 
-import com.example.Sahtech.Enum.Maladie;
-import com.example.Sahtech.Enum.Objectif;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-@Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class AdminDto {
-
-    private String id;
-    private String role;
-    private List<String> permissions;
-    private String nom;
-    private String prenom;
-    private Long numTelephone;
-    private String email;
-    private Date dateDeNaissance;
-    private Float taille;
-    private String sexe;
-    private Float poids;
-    private Maladie maladie;
-    private Objectif objectif;
-    private String password;
+@SuperBuilder
+@Data
+public class AdminDto extends UtilisateursDto {
+    // Admin-specific fields can be added here
 }
-

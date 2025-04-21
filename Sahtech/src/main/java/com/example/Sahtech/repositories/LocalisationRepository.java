@@ -10,19 +10,12 @@ import java.util.Optional;
 @Repository
 public interface LocalisationRepository extends MongoRepository<Localisation, String> {
     
-    // Trouver par ville
+    // Trouver les localisations par région
+    List<Localisation> findByRegion(String region);
+    
+    // Trouver les localisations par ville
     List<Localisation> findByVille(String ville);
     
-    // Trouver par pays
-    List<Localisation> findByPays(String pays);
-    
-    // Trouver par région
-    List<Localisation> findByRegion(String region);
-
-    // Trouver par code postal
-    Optional<Localisation> findByCodePostal(String codePostal);
-
-    // Trouver par coordonnées proches (approximatives)
-    List<Localisation> findByLatitudeBetweenAndLongitudeBetween(Double latMin, Double latMax, Double longMin, Double longMax);
-
-}
+    // Trouver les localisations par code postal
+    List<Localisation> findByCodePostal(String codePostal);
+} 

@@ -3,9 +3,15 @@ package com.example.Sahtech.Controllers;
 import com.example.Sahtech.Dto.LocalisationDto;
 import com.example.Sahtech.entities.Localisation;
 import com.example.Sahtech.mappers.Mapper;
+import com.example.Sahtech.services.AuthorizationService;
 import com.example.Sahtech.services.LocalisationService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,7 +21,11 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/API/Sahtech/Localisations")
 public class LocalisationController {
-    
+
+    @Autowired
+    private AuthorizationService authorizationService;
+
+
     private final LocalisationService localisationService;
     private final Mapper<Localisation, LocalisationDto> localisationMapper;
     
@@ -26,21 +36,37 @@ public class LocalisationController {
     
     @PostMapping()
     public ResponseEntity<LocalisationDto> createLocalisation(@RequestBody LocalisationDto localisationDto) {
+
+
         Localisation localisation = localisationMapper.mapFrom(localisationDto);
         Localisation savedLocalisation = localisationService.save(localisation);
         return new ResponseEntity<>(localisationMapper.mapTo(savedLocalisation), HttpStatus.CREATED);
     }
     
     @GetMapping(path = "/All")
-    public List<LocalisationDto> listLocalisations() {
+    public ResponseEntity<List<LocalisationDto>> listLocalisations() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         List<Localisation> localisations = localisationService.findAll();
-        return localisations.stream()
+        List<LocalisationDto> localisationDtos = localisations.stream()
                 .map(localisationMapper::mapTo)
                 .collect(Collectors.toList());
+             return new ResponseEntity<>(localisationDtos, HttpStatus.OK);
     }
     
     @GetMapping(path = "/{id}")
-    public ResponseEntity<LocalisationDto> getLocalisation(@PathVariable("id") String id) {
+    public ResponseEntity<LocalisationDto> getLocalisation(@PathVariable("id") String id, HttpServletRequest request) {
+
+        // Vérifier si l'utilisateur est autorisé (admin ou nutritionniste associé à cette localisation)
+        if (!authorizationService.isNutritionisteAuthorizedForLocation(id, request)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+
         Optional<Localisation> foundLocalisation = localisationService.findOneById(id);
         return foundLocalisation.map(localisation -> {
             LocalisationDto localisationDto = localisationMapper.mapTo(localisation);
@@ -51,10 +77,17 @@ public class LocalisationController {
     @PutMapping(path = "/{id}")
     public ResponseEntity<LocalisationDto> updateLocalisation(
             @PathVariable("id") String id,
-            @RequestBody LocalisationDto localisationDto) {
+            @RequestBody LocalisationDto localisationDto,
+            HttpServletRequest request) {
+
         
         if (!localisationService.isExists(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        // Vérifier si l'utilisateur est autorisé (admin ou nutritionniste associé à cette localisation)
+        if (!authorizationService.isNutritionisteAuthorizedForLocation(id, request)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         
         Localisation localisation = localisationMapper.mapFrom(localisationDto);
@@ -70,35 +103,35 @@ public class LocalisationController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
-    @GetMapping(path = "/pays/{pays}")
-    public List<LocalisationDto> getLocalisationsByPays(@PathVariable("pays") String pays) {
-        List<Localisation> localisations = localisationService.findByPays(pays);
-        return localisations.stream()
-                .map(localisationMapper::mapTo)
-                .collect(Collectors.toList());
-    }
+
     
-    @GetMapping(path = "/region/{region}")
-    public List<LocalisationDto> getLocalisationsByRegion(@PathVariable("region") String region) {
+    @GetMapping(path = "/region")
+    public ResponseEntity<List<LocalisationDto>> getLocalisationsByRegion(@RequestParam("region") String region) {
         List<Localisation> localisations = localisationService.findByRegion(region);
-        return localisations.stream()
+        List<LocalisationDto> localisationDto =  localisations.stream()
                 .map(localisationMapper::mapTo)
                 .collect(Collectors.toList());
+        return new ResponseEntity<>(localisationDto, HttpStatus.OK);
     }
     
-    @GetMapping(path = "/ville/{ville}")
-    public List<LocalisationDto> getLocalisationsByVille(@PathVariable("ville") String ville) {
+    @GetMapping(path = "/ville")
+    public ResponseEntity<List<LocalisationDto>> getLocalisationsByVille(@RequestParam("ville") String ville) {
         List<Localisation> localisations = localisationService.findByVille(ville);
-        return localisations.stream()
+        List<LocalisationDto> localisationDtos =  localisations.stream()
                 .map(localisationMapper::mapTo)
                 .collect(Collectors.toList());
+
+        return new ResponseEntity<>(localisationDtos, HttpStatus.OK);
     }
     
-    @GetMapping(path = "/codePostal/{codePostal}")
-    public List<LocalisationDto> getLocalisationsByCodePostal(@PathVariable("codePostal") String codePostal) {
+    @GetMapping(path = "/codePostal")
+    public ResponseEntity<List<LocalisationDto>> getLocalisationsByCodePostal(@RequestParam("codePostal") String codePostal) {
         List<Localisation> localisations = localisationService.findByCodePostal(codePostal);
-        return localisations.stream()
+        List<LocalisationDto> localisationDtos = localisations.stream()
                 .map(localisationMapper::mapTo)
                 .collect(Collectors.toList());
+
+        return new ResponseEntity<>(localisationDtos, HttpStatus.OK);
     }
+
 } 

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LocalisationService {
-    
+
     // Trouver toutes les localisations
     List<Localisation> findAll();
     
@@ -24,10 +24,7 @@ public interface LocalisationService {
     
     // Supprimer une localisation
     void delete(String id);
-    
-    // Trouver des localisations par pays
-    List<Localisation> findByPays(String pays);
-    
+
     // Trouver des localisations par région
     List<Localisation> findByRegion(String region);
     
@@ -37,15 +34,4 @@ public interface LocalisationService {
     // Trouver des localisations par code postal
     List<Localisation> findByCodePostal(String codePostal);
 
-    // Trouver des localisations par pays
-    List<Localisation> findAllByCountry(String country);
-    
-    // Trouver des localisations par région
-    List<Localisation> findAllByRegion(String region);
-    
-    // Trouver des localisations par ville
-    List<Localisation> findAllByCity(String city);
-    
-    // Trouver des localisations par code postal
-    List<Localisation> findAllByPostalCode(String postalCode);
-} 
+}
