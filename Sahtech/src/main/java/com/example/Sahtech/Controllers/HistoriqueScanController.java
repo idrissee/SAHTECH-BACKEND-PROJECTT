@@ -106,33 +106,6 @@ public class HistoriqueScanController {
     }
 
 
-    @GetMapping("/additifs-frequents/{utilisateurId}")
-    public ResponseEntity<List<String>> getAdditifsFrequents(
-            @PathVariable String utilisateurId,
-            HttpServletRequest request) {
-        
-        // Vérifier si l'utilisateur est autorisé (admin ou lui-même)
-        if (!authorizationService.isAuthorizedToAccessResource(utilisateurId, request)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-        
-        List<String> additifs = historiqueScanService.getAdditifsFrequents(utilisateurId);
-        return new ResponseEntity<>(additifs, HttpStatus.OK);
-    }
-
-    @GetMapping("/evolution/{utilisateurId}")
-    public ResponseEntity<String> getEvolutionSante(
-            @PathVariable String utilisateurId,
-            HttpServletRequest request) {
-        
-        // Vérifier si l'utilisateur est autorisé (admin ou lui-même)
-        if (!authorizationService.isAuthorizedToAccessResource(utilisateurId, request)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-        
-        String evolution = historiqueScanService.getEvolutionSante(utilisateurId);
-        return new ResponseEntity<>(evolution, HttpStatus.OK);
-    }
 
     // Les méthodes suivantes sont réservées aux admins (géré par SecurityConfig)
     
@@ -152,21 +125,6 @@ public class HistoriqueScanController {
         return new ResponseEntity<>(scanDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/impact/{impact}")
-    public ResponseEntity<List<HistoriqueScanDto>> getScansByImpactSante(@PathVariable String impact) {
-        List<HistoriqueScanDto> scanDtos = historiqueScanService.getScansByImpactSante(impact).stream()
-                .map(historiqueScanMapper::mapTo)
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(scanDtos, HttpStatus.OK);
-    }
-
-    @GetMapping("/additif/{additif}")
-    public ResponseEntity<List<HistoriqueScanDto>> getScansByAdditif(@PathVariable String additif) {
-        List<HistoriqueScanDto> scanDtos = historiqueScanService.getScansByAdditif(additif).stream()
-                .map(historiqueScanMapper::mapTo)
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(scanDtos, HttpStatus.OK);
-    }
 
     @GetMapping("/periode")
     public ResponseEntity<List<HistoriqueScanDto>> getScansByPeriode(

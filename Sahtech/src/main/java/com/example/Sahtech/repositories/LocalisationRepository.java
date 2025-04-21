@@ -9,9 +9,6 @@ import java.util.List;
 @Repository
 public interface LocalisationRepository extends MongoRepository<Localisation, String> {
     
-    // Trouver les localisations par pays
-    List<Localisation> findByPays(String pays);
-    
     // Trouver les localisations par région
     List<Localisation> findByRegion(String region);
     
@@ -20,4 +17,7 @@ public interface LocalisationRepository extends MongoRepository<Localisation, St
     
     // Trouver les localisations par code postal
     List<Localisation> findByCodePostal(String codePostal);
+    
+    // Trouver les localisations par pays
+    List<Localisation> findByPays(String pays);
 } 

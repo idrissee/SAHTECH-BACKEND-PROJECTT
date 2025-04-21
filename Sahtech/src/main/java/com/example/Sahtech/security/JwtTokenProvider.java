@@ -108,4 +108,33 @@ public class JwtTokenProvider {
                 .getBody()
                 .get("userId").toString();
     }
+
+    public String getUserIdFromToken(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+            
+            return claims.get("userId", String.class);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Extract the expiration date from a JWT token
+     *
+     * @param token the JWT token
+     * @return the expiration date
+     */
+    public Date getExpirationDateFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
+    }
 } 

@@ -2,6 +2,7 @@ package com.example.Sahtech.Controllers;
 
 import com.example.Sahtech.Dto.AdditifsDto;
 import com.example.Sahtech.entities.Additifs;
+import com.example.Sahtech.entities.Utilisateurs;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.AdditifsService;
 import org.springframework.http.HttpStatus;
@@ -87,6 +88,16 @@ public class AdditifsController {
     public ResponseEntity deleteAdditif(@PathVariable("id") String id){
         additifsService.delete(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping(path = "/codeAdditif")
+    public ResponseEntity<AdditifsDto> getByCodeAdditif(@RequestParam("codeAdditif") String codeAdditif){
+        Additifs additifs = additifsService.getBycodeAdditif(codeAdditif);
+        if (!(additifs==null)) {
+            return new ResponseEntity<>(additifsMapper.mapTo(additifs), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 

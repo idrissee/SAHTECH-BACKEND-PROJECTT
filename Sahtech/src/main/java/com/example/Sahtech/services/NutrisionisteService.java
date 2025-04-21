@@ -21,4 +21,11 @@ public interface NutrisionisteService {
     Nutrisioniste updateNutrisioniste(String id, Nutrisioniste nutrisioniste);
 
     boolean deleteNutrisioniste(String id);
+    
+    /**
+     * Retrieves the list of nutritionists that a user has contacted before
+     * @param userId The ID of the user
+     * @return A list of nutritionists that the user has contacted
+     */
+    List<Nutrisioniste> getNutrisionisteContactsByUserId(String userId);
 }

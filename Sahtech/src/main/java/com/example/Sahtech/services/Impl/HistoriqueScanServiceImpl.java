@@ -66,57 +66,9 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
     }
 
     @Override
-    public List<HistoriqueScan> getScansByImpactSante(String impact) {
-        return historiqueScanRepository.findByImpactSante(impact);
-    }
-
-    @Override
-    public List<HistoriqueScan> getScansByAdditif(String additif) {
-        return historiqueScanRepository.findByAdditifsDetectesContaining(additif);
-    }
-
-    @Override
     public List<HistoriqueScan> getScansByPeriode(LocalDateTime startDate, LocalDateTime endDate) {
         return historiqueScanRepository.findByDateScanBetween(startDate, endDate);
     }
-
-
-
-
-
-    @Override
-    public List<String> getAdditifsFrequents(String utilisateurId) {
-        return historiqueScanRepository.findByUtilisateurId(utilisateurId)
-                .stream()
-                .flatMap(scan -> scan.getAdditifsDetectes().stream())
-                .collect(Collectors.groupingBy(
-                        additif -> additif,
-                        Collectors.counting()
-                ))
-                .entrySet()
-                .stream()
-                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public String getEvolutionSante(String utilisateurId) {
-        List<HistoriqueScan> scans = historiqueScanRepository.findByUtilisateurId(utilisateurId);
-        if (scans.isEmpty()) {
-            return "Pas assez de données pour analyser l'évolution";
-        }
-
-        long bonsScans = scans.stream()
-                .filter(scan -> "Bonne".equals(scan.getImpactSante()))
-                .count();
-        
-        double pourcentageBons = (double) bonsScans / scans.size() * 100;
-        
-        return String.format("Sur %d scans, %.2f%% ont un impact positif sur la santé", 
-                scans.size(), pourcentageBons);
-    }
-
 
     @Override
     public HistoriqueScan addCommentaire(String scanId, String commentaire) {
@@ -133,5 +85,15 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
                 .map(HistoriqueScan::getUtilisateur)
                 .distinct() // Pour éviter les doublons (si un utilisateur a scanné plusieurs fois le même produit)
                 .collect(Collectors.toList());
+    }
+    
+    @Override
+    public int countScannedProductsByUser(String userId) {
+        List<HistoriqueScan> scans = historiqueScanRepository.findByUtilisateurId(userId);
+        // Compter les produits distincts
+        return (int) scans.stream()
+                .map(scan -> scan.getProduit().getId())
+                .distinct()
+                .count();
     }
 } 

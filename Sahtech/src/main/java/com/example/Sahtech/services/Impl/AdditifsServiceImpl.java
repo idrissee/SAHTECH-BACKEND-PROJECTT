@@ -59,5 +59,10 @@ public class AdditifsServiceImpl implements AdditifsService {
         additifsRepository.deleteById(id);
     }
 
+    @Override
+    public  Additifs getBycodeAdditif(String nom) {
+        return additifsRepository.findByCodeAdditif(nom);
+    }
+
 
 }

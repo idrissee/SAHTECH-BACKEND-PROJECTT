@@ -18,18 +18,14 @@ public interface HistoriqueScanService {
     List<HistoriqueScan> getScansProduit(String produitId);
     List<HistoriqueScan> getScansByNutriScore(String note);
     List<HistoriqueScan> getScansRecents(String utilisateurId, int jours);
-    List<HistoriqueScan> getScansByImpactSante(String impact);
-    List<HistoriqueScan> getScansByAdditif(String additif);
     List<HistoriqueScan> getScansByPeriode(LocalDateTime startDate, LocalDateTime endDate);
     
     // Nouvel ajout - Récupérer les utilisateurs qui ont scanné un produit spécifique
     List<Utilisateurs> getUtilisateursByProduit(String produitId);
-
-    // Opérations d'analyse
-
-    List<String> getAdditifsFrequents(String utilisateurId);
-    String getEvolutionSante(String utilisateurId);
     
     // Opérations de mise à jour
     HistoriqueScan addCommentaire(String scanId, String commentaire);
+    
+    // Comptage des produits scannés par utilisateur
+    int countScannedProductsByUser(String userId);
 } 

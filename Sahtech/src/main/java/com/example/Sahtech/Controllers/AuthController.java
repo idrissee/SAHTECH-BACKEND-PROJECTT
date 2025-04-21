@@ -2,6 +2,8 @@ package com.example.Sahtech.Controllers;
 
 import com.example.Sahtech.Dto.auth.AuthResponse;
 import com.example.Sahtech.Dto.auth.LoginRequest;
+import com.example.Sahtech.Dto.auth.LogoutRequest;
+import com.example.Sahtech.Dto.auth.LogoutResponse;
 import com.example.Sahtech.Dto.auth.RegisterRequest;
 import com.example.Sahtech.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +29,10 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
         return ResponseEntity.ok(authService.register(registerRequest));
+    }
+    
+    @PostMapping("/logout")
+    public ResponseEntity<LogoutResponse> logout(@Valid @RequestBody LogoutRequest logoutRequest) {
+        return ResponseEntity.ok(authService.logout(logoutRequest));
     }
 } 
