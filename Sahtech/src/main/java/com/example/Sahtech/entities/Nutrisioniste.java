@@ -1,36 +1,22 @@
 package com.example.Sahtech.entities;
 
-import com.example.Sahtech.Enum.Maladie;
-import com.example.Sahtech.Enum.Objectif;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@EqualsAndHashCode(callSuper = true)
 @Data
+@SuperBuilder
 @Document(collection = "nutrisioniste")
-public class Nutrisioniste {
-    @Id
-    private String id;
+public class Nutrisioniste extends Utilisateurs {
+    
+    // Champs spécifiques au nutritionniste
     private String specialite;
-    private String nom;
-    private String prenom;
-    private Long numTelephone;
-    private String email;
-    private Date dateDeNaissance;
-    private Float taille;
-    private String sexe;
-    private Float poids;
-    private Maladie maladie;
-    private Objectif objectif;
-    private String password;
     private String localisationId;
     private Boolean estVerifie;
-}
+    
+    public Nutrisioniste() {
+        super("NUTRITIONIST");
+    }
+} 

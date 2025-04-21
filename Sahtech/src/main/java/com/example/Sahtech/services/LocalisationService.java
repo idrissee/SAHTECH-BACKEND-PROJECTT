@@ -27,9 +27,6 @@ public interface LocalisationService {
     // Supprimer une localisation
     void delete(String id);
     
-    // Trouver des localisations par pays
-    List<Localisation> findByPays(String pays);
-    
     // Trouver des localisations par région
     List<Localisation> findByRegion(String region);
     
@@ -38,4 +35,5 @@ public interface LocalisationService {
     
     // Trouver des localisations par code postal
     List<Localisation> findByCodePostal(String codePostal);
+
 } 

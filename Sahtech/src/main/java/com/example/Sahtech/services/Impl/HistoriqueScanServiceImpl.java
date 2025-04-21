@@ -4,6 +4,7 @@ import com.example.Sahtech.entities.HistoriqueScan;
 import com.example.Sahtech.entities.Utilisateurs;
 import com.example.Sahtech.repositories.HistoriqueScanRepository;
 import com.example.Sahtech.services.HistoriqueScanService;
+import com.example.Sahtech.services.UtilisateursService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,8 @@ import java.util.stream.StreamSupport;
 public class HistoriqueScanServiceImpl implements HistoriqueScanService {
 
     private final HistoriqueScanRepository historiqueScanRepository;
+
+    private final UtilisateursService utilisateursService;
 
     @Override
     public HistoriqueScan saveScan(HistoriqueScan scan) {
@@ -65,57 +68,13 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
         return historiqueScanRepository.findByUtilisateurIdAndDateScanAfter(utilisateurId, dateLimite);
     }
 
-    @Override
-    public List<HistoriqueScan> getScansByImpactSante(String impact) {
-        return historiqueScanRepository.findByImpactSante(impact);
-    }
 
-    @Override
-    public List<HistoriqueScan> getScansByAdditif(String additif) {
-        return historiqueScanRepository.findByAdditifsDetectesContaining(additif);
-    }
 
     @Override
     public List<HistoriqueScan> getScansByPeriode(LocalDateTime startDate, LocalDateTime endDate) {
         return historiqueScanRepository.findByDateScanBetween(startDate, endDate);
     }
 
-
-
-
-
-    @Override
-    public List<String> getAdditifsFrequents(String utilisateurId) {
-        return historiqueScanRepository.findByUtilisateurId(utilisateurId)
-                .stream()
-                .flatMap(scan -> scan.getAdditifsDetectes().stream())
-                .collect(Collectors.groupingBy(
-                        additif -> additif,
-                        Collectors.counting()
-                ))
-                .entrySet()
-                .stream()
-                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public String getEvolutionSante(String utilisateurId) {
-        List<HistoriqueScan> scans = historiqueScanRepository.findByUtilisateurId(utilisateurId);
-        if (scans.isEmpty()) {
-            return "Pas assez de données pour analyser l'évolution";
-        }
-
-        long bonsScans = scans.stream()
-                .filter(scan -> "Bonne".equals(scan.getImpactSante()))
-                .count();
-        
-        double pourcentageBons = (double) bonsScans / scans.size() * 100;
-        
-        return String.format("Sur %d scans, %.2f%% ont un impact positif sur la santé", 
-                scans.size(), pourcentageBons);
-    }
 
 
     @Override
@@ -133,5 +92,25 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
                 .map(HistoriqueScan::getUtilisateur)
                 .distinct() // Pour éviter les doublons (si un utilisateur a scanné plusieurs fois le même produit)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean hasUserScannedProduct(String utilisateurId, String produitId) {
+
+        // Récupérer l'historique des scans de l'utilisateur
+        List<HistoriqueScan> scansUtilisateur = historiqueScanRepository.findByUtilisateurId(utilisateurId);
+
+        // Vérifier si l'un des scans correspond au produit demandé
+        return scansUtilisateur.stream()
+                .anyMatch(scan -> produitId.equals(scan.getProduit().getId()));
+    }
+
+    @Override
+    public void incrementUserScanCount(String utilisateurId) {
+        Utilisateurs utilisateur = utilisateursService.getUtilisateurById(utilisateurId);
+        if (utilisateur != null) {
+            utilisateur.setCountScans(utilisateur.getCountScans() + 1);
+            utilisateursService.updateUtilisateur(utilisateurId, utilisateur);
+        }
     }
 } 

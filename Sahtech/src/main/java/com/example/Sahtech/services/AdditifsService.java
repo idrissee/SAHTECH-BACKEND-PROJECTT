@@ -17,4 +17,6 @@ public interface AdditifsService {
     Additifs partialUpdate(String id, Additifs additif);
 
     void delete(String id);
+
+    Additifs getBycodeAdditif(String nom);
 }

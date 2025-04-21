@@ -8,7 +8,6 @@ import java.util.Optional;
 public interface UtilisateursService {
     List<Utilisateurs> getAllUtilisateurs();
     Utilisateurs getUtilisateurById(String id);
-    Utilisateurs createUtilisateurs(Utilisateurs utilisateur);
     Utilisateurs updateUtilisateur(String id, Utilisateurs utilisateur);
     boolean deleteUtilisateur(String id);
 

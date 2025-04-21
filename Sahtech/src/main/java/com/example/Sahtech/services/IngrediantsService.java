@@ -18,4 +18,6 @@ public interface IngrediantsService {
     Ingrediants partialUpdate(String id ,Ingrediants ingredient);
 
     void delete(String id);
+
+    Ingrediants getByNomIngrediant(String nom);
 }

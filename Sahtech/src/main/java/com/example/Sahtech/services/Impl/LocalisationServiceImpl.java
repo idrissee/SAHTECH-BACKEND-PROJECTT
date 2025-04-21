@@ -58,11 +58,7 @@ public class LocalisationServiceImpl implements LocalisationService {
     public void delete(String id) {
         localisationRepository.deleteById(id);
     }
-    
-    @Override
-    public List<Localisation> findByPays(String pays) {
-        return localisationRepository.findByPays(pays);
-    }
+
     
     @Override
     public List<Localisation> findByRegion(String region) {
@@ -78,4 +74,5 @@ public class LocalisationServiceImpl implements LocalisationService {
     public List<Localisation> findByCodePostal(String codePostal) {
         return localisationRepository.findByCodePostal(codePostal);
     }
+
 } 

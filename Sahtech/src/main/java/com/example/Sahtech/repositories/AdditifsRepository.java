@@ -9,5 +9,6 @@ import java.util.Optional;
 @Repository
 public interface AdditifsRepository extends MongoRepository<Additifs,String> {
 
-    Optional<Additifs> findByNomAdditif(String name);
+    Additifs findByCodeAdditif(String codeAdditif);
 }
+

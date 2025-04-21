@@ -1,6 +1,5 @@
 package com.example.Sahtech.Controllers;
 
-
 import com.example.Sahtech.Dto.IngrediantsDto;
 import com.example.Sahtech.entities.Ingrediants;
 import com.example.Sahtech.mappers.Mapper;
@@ -85,8 +84,20 @@ public class IngrediantsController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity deleteIngredient(@PathVariable("id") String id) {
+    public ResponseEntity<Void> deleteIngredient(@PathVariable("id") String id) {
         ingrediantsService.delete(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping(path = "/nomIngredient")
+    public ResponseEntity<IngrediantsDto> findIngredientByNom(@RequestParam("nomIngredient") String nom){
+        Ingrediants ingrediants=ingrediantsService.getByNomIngrediant(nom);
+        if (!(ingrediants==null)) {
+            return new ResponseEntity<>(ingrediantsMapper.mapTo(ingrediants), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+    }
+
 }

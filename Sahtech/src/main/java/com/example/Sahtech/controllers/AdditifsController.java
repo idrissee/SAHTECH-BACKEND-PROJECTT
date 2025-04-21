@@ -89,5 +89,15 @@ public class AdditifsController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping(path = "/codeAdditif")
+    public ResponseEntity<AdditifsDto> getByCodeAdditif(@RequestParam("codeAdditif") String codeAdditif){
+        Additifs additifs = additifsService.getBycodeAdditif(codeAdditif);
+        if (!(additifs==null)) {
+            return new ResponseEntity<>(additifsMapper.mapTo(additifs), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 }

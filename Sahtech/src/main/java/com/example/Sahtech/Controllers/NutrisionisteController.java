@@ -30,12 +30,15 @@ public class NutrisionisteController {
     @Autowired
     private AuthorizationService authorizationService;
 
-    // GET ALL - réservé à l'admin (déjà géré par SecurityConfig)
+    // GET ALL - accessible aux admins et users
     @GetMapping("/All")
     public ResponseEntity<List<NutrisionisteDto>> getAllNutrisionistes() {
-        // Double vérification que l'utilisateur est bien un admin
+        // Vérification que l'utilisateur est bien un admin ou user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+        boolean isAdmin = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        boolean isUser = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"));
+        
+        if (!isAdmin && !isUser) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         
@@ -62,8 +65,8 @@ public class NutrisionisteController {
     }
 
     // GET BY EMAIL - réservé à l'admin (déjà géré par SecurityConfig)
-    @GetMapping("/email/{email}")
-    public NutrisionisteDto getNutrisionisteByEmail(@PathVariable String email) {
+    @GetMapping("/email")
+    public NutrisionisteDto getNutrisionisteByEmail(@RequestParam String email) {
         return nutrisionisteMapper.mapTo(nutrisionisteService.getNutrisionisteByEmail(email));
     }
 
@@ -89,7 +92,7 @@ public class NutrisionisteController {
     }
 
     // UPDATE - accessible à l'admin et au nutritionniste lui-même
-    @PutMapping("/Update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<NutrisionisteDto> updateNutrisioniste(@PathVariable String id, @RequestBody NutrisionisteDto nutrisionisteDto, HttpServletRequest request) {
         // Vérifier si l'utilisateur est autorisé
         if (!authorizationService.isAuthorizedToAccessResource(id, request)) {

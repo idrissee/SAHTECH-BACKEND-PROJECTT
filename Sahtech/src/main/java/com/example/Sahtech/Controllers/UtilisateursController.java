@@ -1,7 +1,6 @@
 package com.example.Sahtech.Controllers;
 
 import com.example.Sahtech.Dto.UtilisateursDto;
-import com.example.Sahtech.entities.Produit;
 import com.example.Sahtech.entities.Utilisateurs;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.AuthorizationService;
@@ -16,7 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -108,5 +106,20 @@ public class UtilisateursController {
         boolean deleted = utilisateurService.deleteUtilisateur(id);
         return deleted ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/{id}/scanCount")
+    public ResponseEntity<Long> getUserScanCount(@PathVariable String id, HttpServletRequest request) {
+        // Vérifier si l'utilisateur est autorisé (admin ou lui-même)
+        if (!authorizationService.isAuthorizedToAccessResource(id, request)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        Utilisateurs utilisateur = utilisateurService.getUtilisateurById(id);
+        if (utilisateur == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(utilisateur.getCountScans(), HttpStatus.OK);
     }
 }

@@ -1,38 +1,16 @@
 package com.example.Sahtech.Dto;
 
-
-import com.example.Sahtech.Enum.Maladie;
-import com.example.Sahtech.Enum.Objectif;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
+import lombok.experimental.SuperBuilder;
 
-import java.util.Date;
-
-@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Data
-public class NutrisionisteDto {
-
-
-    private String id;
-
+public class NutrisionisteDto extends UtilisateursDto {
     private String specialite;
-    private String nom;
-    private String prenom;
-    private Long numTelephone;
-    private String email;
-    private Date dateDeNaissance;
-    private Float taille;
-    private String sexe;
-    private Float poids;
-    private Maladie maladie;
-    private Objectif objectif;
-    private String password;
-    private Long localisationId;
+    private String localisationId;
     private Boolean estVerifie;
-
 }
