@@ -39,10 +39,10 @@ public class RegisterRequest {
     private String userType; // USER, ADMIN, NUTRITIONIST
     
     // Added additional fields for health data
-    private Boolean hasChronicDisease;
-    private Boolean hasAllergies;
+    private Boolean hasChronicDisease = false;
+    private Boolean hasAllergies = false;
     private String preferredLanguage;
-    private Boolean doesExercise;
+    private Boolean doesExercise = false;
     private String activityLevel;
     private List<String> maladies = new ArrayList<>();
     private List<String> allergies = new ArrayList<>();

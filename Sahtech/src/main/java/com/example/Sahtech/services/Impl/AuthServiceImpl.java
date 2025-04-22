@@ -130,8 +130,8 @@ public class AuthServiceImpl implements AuthService {
                         .physicalActivities(new ArrayList<>())
                         .dailyActivities(new ArrayList<>())
                         .healthGoals(new ArrayList<>())
-                        .hasChronicDisease(registerRequest.getHasChronicDisease())
-                        .hasAllergies(registerRequest.getHasAllergies())
+                        .hasChronicDisease(registerRequest.getHasChronicDisease() != null ? registerRequest.getHasChronicDisease() : false)
+                        .hasAllergies(registerRequest.getHasAllergies() != null ? registerRequest.getHasAllergies() : false)
                         .preferredLanguage(registerRequest.getPreferredLanguage())
                         .build();
                  nutrisionisteRepository.save(nutritionist);
@@ -153,8 +153,8 @@ public class AuthServiceImpl implements AuthService {
                         .physicalActivities(new ArrayList<>())
                         .dailyActivities(new ArrayList<>())
                         .healthGoals(new ArrayList<>())
-                        .hasChronicDisease(registerRequest.getHasChronicDisease())
-                        .hasAllergies(registerRequest.getHasAllergies())
+                        .hasChronicDisease(registerRequest.getHasChronicDisease() != null ? registerRequest.getHasChronicDisease() : false)
+                        .hasAllergies(registerRequest.getHasAllergies() != null ? registerRequest.getHasAllergies() : false)
                         .preferredLanguage(registerRequest.getPreferredLanguage())
                         .build();
                  utilisateursRepository.save(user);
