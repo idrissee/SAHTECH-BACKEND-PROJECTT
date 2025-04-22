@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 import java.util.List;
 
@@ -23,6 +22,7 @@ public class ProduitDto {
     private String marque;
     private String categorie;
     private String description;
+    private String quantite;
     private String imageUrl;
     private TypeProduit typeProduit;
 
@@ -35,6 +35,6 @@ public class ProduitDto {
 
 
     // Composition
-    private List<String> ingredients;
+    private List<IngredientInfoDto> ingredients;
     private List<String> nomAdditif;
 }

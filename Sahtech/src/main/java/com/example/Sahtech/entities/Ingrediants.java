@@ -21,7 +21,7 @@ public class Ingrediants {
     private String idIngrediant;
 
     private NomIngrediants nomIngrediant;
-    private Float Quantite;
+    private String quantite;
 
     private String produitId;// Référence à l'ID du produit
 }

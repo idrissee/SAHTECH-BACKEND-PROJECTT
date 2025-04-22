@@ -1,5 +1,7 @@
 package com.example.Sahtech.entities;
 
+
+import com.example.Sahtech.Dto.IngredientInfoDto;
 import com.example.Sahtech.Enum.TypeProduit;
 import com.example.Sahtech.Enum.ValeurNutriScore;
 import lombok.AllArgsConstructor;
@@ -26,6 +28,7 @@ public class Produit {
     private String marque;
     private String categorie;
     private String description;
+    private String quantite;
     private String imageUrl;
     private TypeProduit typeProduit;
     
@@ -33,15 +36,9 @@ public class Produit {
     private ValeurNutriScore valeurNutriScore; // A, B, C, D, E
     private String descriptionNutriScore;
 
-    
-
-
-    
     // Composition
-    private List<Ingrediants> ingredients;
+    private List<IngredientInfoDto> ingredients;
     private List<String> nomAdditif;
-    
-
     
 
 }
