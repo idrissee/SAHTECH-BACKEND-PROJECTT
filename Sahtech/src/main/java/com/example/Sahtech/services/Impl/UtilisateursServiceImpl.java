@@ -111,8 +111,58 @@ public class UtilisateursServiceImpl implements UtilisateursService {
 
     @Override
     public Utilisateurs setPhotoUrl(String id, String photoUrl) {
+        logger.info("Setting photoUrl for user with ID: {}", id);
+        logger.info("New photoUrl: {}", photoUrl);
+        
         Utilisateurs utilisateur = getUtilisateurById(id);
+        if (utilisateur == null) {
+            logger.error("User with ID {} not found when setting photoUrl", id);
+            return null;
+        }
+        
+        logger.info("Current photoUrl: {}", utilisateur.getPhotoUrl());
         utilisateur.setPhotoUrl(photoUrl);
-        return utilisateursRepository.save(utilisateur);
+        logger.info("Updated user object with new photoUrl: {}", utilisateur.getPhotoUrl());
+        
+        Utilisateurs savedUser = utilisateursRepository.save(utilisateur);
+        logger.info("User saved with photoUrl: {}", savedUser.getPhotoUrl());
+        
+        return savedUser;
+    }
+
+    @Override
+    public Utilisateurs setPhysicalActivities(String id, List<String> physicalActivities) {
+        logger.info("Setting physical activities for user with ID: {}", id);
+        Utilisateurs utilisateur = getUtilisateurById(id);
+        if (utilisateur != null) {
+            utilisateur.setPhysicalActivities(physicalActivities);
+            return utilisateursRepository.save(utilisateur);
+        }
+        logger.warn("User with ID {} not found when setting physical activities", id);
+        return null;
+    }
+
+    @Override
+    public Utilisateurs setDailyActivities(String id, List<String> dailyActivities) {
+        logger.info("Setting daily activities for user with ID: {}", id);
+        Utilisateurs utilisateur = getUtilisateurById(id);
+        if (utilisateur != null) {
+            utilisateur.setDailyActivities(dailyActivities);
+            return utilisateursRepository.save(utilisateur);
+        }
+        logger.warn("User with ID {} not found when setting daily activities", id);
+        return null;
+    }
+
+    @Override
+    public Utilisateurs setHealthGoals(String id, List<String> healthGoals) {
+        logger.info("Setting health goals for user with ID: {}", id);
+        Utilisateurs utilisateur = getUtilisateurById(id);
+        if (utilisateur != null) {
+            utilisateur.setHealthGoals(healthGoals);
+            return utilisateursRepository.save(utilisateur);
+        }
+        logger.warn("User with ID {} not found when setting health goals", id);
+        return null;
     }
 }

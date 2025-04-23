@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -52,10 +53,15 @@ public class Utilisateurs {
     protected Utilisateurs(String type) {
         this.type = type;
     }
+    private List<String> physicalActivities; // User's physical activities
+    private List<String> dailyActivities; // User's daily activities 
+    private List<String> healthGoals; // Additional health goals/objectives
     private List<String> historiqueScanIds;
     private List<String> nutritionisteFavorisIds;
-    private String photoUrl; // lien Cloudinary
 
+    // Explicitly annotate for MongoDB to ensure it's not ignored
+    @Field("photoUrl")
+    private String photoUrl; // lien Cloudinary
 
     public int getAge() {
         if (dateDeNaissance == null) return 0;

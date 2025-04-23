@@ -95,8 +95,10 @@ public class AuthServiceImpl implements AuthService {
         String password = passwordEncoder.encode(registerRequest.getPassword());
         String userType = registerRequest.getUserType();
 
+        // Print the complete request object to see all fields
+        System.out.println("DEBUG: Complete RegisterRequest object: " + registerRequest.toString());
+
         // Print debug info about received registration data
-        System.out.println("DEBUG: Received registration data:");
         System.out.println("DEBUG: Email: " + email);
         System.out.println("DEBUG: User Type: " + userType);
         System.out.println("DEBUG: Date of Birth: " + registerRequest.getDateDeNaissance());
@@ -105,6 +107,7 @@ public class AuthServiceImpl implements AuthService {
         System.out.println("DEBUG: Has Allergies: " + registerRequest.getHasAllergies());
         System.out.println("DEBUG: Allergies: " + registerRequest.getAllergies());
         System.out.println("DEBUG: Objectives: " + registerRequest.getObjectives());
+        System.out.println("DEBUG: Photo URL: " + registerRequest.getPhotoUrl());
 
         // Check if email already exists
         if (emailExistsInAnyRepository(email)) {
@@ -159,6 +162,7 @@ public class AuthServiceImpl implements AuthService {
                         .preferredLanguage(registerRequest.getPreferredLanguage())
                         .poids(registerRequest.getPoids())
                         .taille(registerRequest.getTaille())
+                        .photoUrl(registerRequest.getPhotoUrl())
                         .build();
                  nutrisionisteRepository.save(nutritionist);
                 break;
@@ -182,6 +186,7 @@ public class AuthServiceImpl implements AuthService {
                         .poids(registerRequest.getPoids())
                         .taille(registerRequest.getTaille())
                         .sport(registerRequest.getDoesExercise())
+                        .photoUrl(registerRequest.getPhotoUrl())
                         .build();
                  utilisateursRepository.save(user);
                 break;
