@@ -2,6 +2,8 @@ package com.example.Sahtech.services;
 
 import com.example.Sahtech.Dto.auth.AuthResponse;
 import com.example.Sahtech.Dto.auth.LoginRequest;
+import com.example.Sahtech.Dto.auth.LogoutRequest;
+import com.example.Sahtech.Dto.auth.LogoutResponse;
 import com.example.Sahtech.Dto.auth.RegisterRequest;
 
 public interface AuthService {
@@ -14,4 +16,9 @@ public interface AuthService {
      * Registers a new user and returns a JWT token
      */
     AuthResponse register(RegisterRequest registerRequest);
+    
+    /**
+     * Logs out a user by invalidating their JWT token
+     */
+    LogoutResponse logout(LogoutRequest logoutRequest);
 }

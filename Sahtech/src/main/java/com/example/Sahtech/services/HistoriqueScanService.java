@@ -30,4 +30,4 @@ public interface HistoriqueScanService {
     boolean hasUserScannedProduct(String utilisateurId, String produitId);
 
     void incrementUserScanCount(String utilisateurId);
-} 
+}

@@ -29,4 +29,6 @@ public class UtilisateursDto {
     private String provider;
     private String type;
     private Long countScans = 0L;
+    private String photoUrl;
 }
+

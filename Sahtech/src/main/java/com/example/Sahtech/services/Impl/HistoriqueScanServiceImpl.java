@@ -113,4 +113,4 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
             utilisateursService.updateUtilisateur(utilisateurId, utilisateur);
         }
     }
-} 
+}

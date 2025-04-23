@@ -6,6 +6,8 @@ import com.example.Sahtech.services.AuthorizationService;
 import com.example.Sahtech.services.HistoriqueScanService;
 import com.example.Sahtech.services.NutrisionisteService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthorizationServiceImpl implements AuthorizationService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthorizationServiceImpl.class);
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -32,17 +36,27 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      */
     @Override
     public boolean isAuthorizedToAccessResource(String resourceId, HttpServletRequest request) {
+        logger.debug("Checking authorization for resource ID: {}", resourceId);
+
         // Récupérer l'authentification courante
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // Vérifier si l'utilisateur est un admin (ils peuvent tout faire)
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            logger.debug("User has ROLE_ADMIN, access granted");
             return true;
         }
 
         // Extraire le token JWT
         String token = extractTokenFromRequest(request);
         if (token == null) {
+            logger.error("No token found in request");
+            return false;
+        }
+
+        // Vérifier si le token est valide
+        if (!jwtTokenProvider.validateToken(token)) {
+            logger.error("Invalid JWT token");
             return false;
         }
 
@@ -50,8 +64,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         String userType = jwtTokenProvider.getUserType(token);
         String userId = jwtTokenProvider.getUserId(token);
 
+        logger.debug("Token userID: {}, requested resourceID: {}, userType: {}", userId, resourceId, userType);
+
         // Vérifier si l'utilisateur accède à ses propres données
-        return userId.equals(resourceId);
+        boolean isAuthorized = userId.equals(resourceId);
+        logger.debug("Authorization result: {}", isAuthorized);
+        return isAuthorized;
     }
 
     /**
@@ -62,6 +80,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
+        logger.warn("No Bearer token found in Authorization header");
         return null;
     }
 

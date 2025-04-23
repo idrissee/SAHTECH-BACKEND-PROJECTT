@@ -174,7 +174,7 @@ public class TestDataUtil {
                 .taille(180.0F)
                 .poids(75.0F)
                 .sexe("M")
-                .maladie(Maladie.MALADIE_CARDIAQUE)
+                .maladies(List.of(Maladie.MALADIE_CARDIAQUE))
                 .objectif(Objectif.PERDRE_DU_POIDS)
                 .build();
     }
@@ -191,7 +191,7 @@ public class TestDataUtil {
                 .taille(165.0F)
                 .poids(60.0F)
                 .sexe("F")
-                .maladie(Maladie.ALLERGIE_ARACHIDES)
+                .maladies(List.of(Maladie.ALLERGIE_ARACHIDES))
                 .objectif(Objectif.REDUIRE_LA_TENSION_ARTERIELLE)
                 .build();
     }

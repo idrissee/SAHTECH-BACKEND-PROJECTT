@@ -17,11 +17,17 @@ public class UtilisateurMapperImpl implements Mapper<Utilisateurs, UtilisateursD
 
     @Override
     public UtilisateursDto mapTo(Utilisateurs utilisateur) {
-        return modelMapper.map(utilisateur, UtilisateursDto.class);
+        UtilisateursDto dto = modelMapper.map(utilisateur, UtilisateursDto.class);
+        // Explicitly set photoUrl to ensure it's included in the response
+        dto.setPhotoUrl(utilisateur.getPhotoUrl());
+        return dto;
     }
 
     @Override
     public Utilisateurs mapFrom(UtilisateursDto utilisateurDto) {
-        return modelMapper.map(utilisateurDto, Utilisateurs.class);
+        Utilisateurs utilisateur = modelMapper.map(utilisateurDto, Utilisateurs.class);
+        // Ensure photoUrl is set when mapping from DTO to entity
+        utilisateur.setPhotoUrl(utilisateurDto.getPhotoUrl());
+        return utilisateur;
     }
 } 
