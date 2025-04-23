@@ -5,6 +5,7 @@ import com.example.Sahtech.Dto.auth.LoginRequest;
 import com.example.Sahtech.Dto.auth.LogoutRequest;
 import com.example.Sahtech.Dto.auth.LogoutResponse;
 import com.example.Sahtech.Dto.auth.RegisterRequest;
+import com.example.Sahtech.Enum.Maladie;
 import com.example.Sahtech.entities.Admin;
 import com.example.Sahtech.entities.Nutrisioniste;
 import com.example.Sahtech.entities.Utilisateurs;
@@ -22,7 +23,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -92,9 +95,33 @@ public class AuthServiceImpl implements AuthService {
         String password = passwordEncoder.encode(registerRequest.getPassword());
         String userType = registerRequest.getUserType();
 
+        // Print debug info about received registration data
+        System.out.println("DEBUG: Received registration data:");
+        System.out.println("DEBUG: Email: " + email);
+        System.out.println("DEBUG: User Type: " + userType);
+        System.out.println("DEBUG: Date of Birth: " + registerRequest.getDateDeNaissance());
+        System.out.println("DEBUG: Has Chronic Disease: " + registerRequest.getHasChronicDisease());
+        System.out.println("DEBUG: Maladies: " + registerRequest.getMaladies());
+        System.out.println("DEBUG: Has Allergies: " + registerRequest.getHasAllergies());
+        System.out.println("DEBUG: Allergies: " + registerRequest.getAllergies());
+        System.out.println("DEBUG: Objectives: " + registerRequest.getObjectives());
+
         // Check if email already exists
         if (emailExistsInAnyRepository(email)) {
             throw new RuntimeException("Email already in use");
+        }
+
+        // Parse date of birth if provided
+        Date dateDeNaissance = new Date(); // Default to current date
+        if (registerRequest.getDateDeNaissance() != null && !registerRequest.getDateDeNaissance().isEmpty()) {
+            try {
+                // Assuming date format like "yyyy-MM-dd"
+                dateDeNaissance = java.sql.Date.valueOf(registerRequest.getDateDeNaissance());
+                System.out.println("DEBUG: Parsed date of birth: " + dateDeNaissance);
+            } catch (Exception e) {
+                System.out.println("ERROR: Failed to parse date of birth: " + e.getMessage());
+                // Continue with default date if parsing fails
+            }
         }
 
         // Create appropriate user based on type
@@ -106,7 +133,7 @@ public class AuthServiceImpl implements AuthService {
                         .email(email)
                         .password(password)
                         .numTelephone(registerRequest.getTelephone())
-                        .dateDeNaissance(new Date())
+                        .dateDeNaissance(dateDeNaissance)
                         .provider("LOCAL")
                         .type("ADMIN")
                         .build();
@@ -120,19 +147,18 @@ public class AuthServiceImpl implements AuthService {
                         .email(email)
                         .password(password)
                         .numTelephone(registerRequest.getTelephone())
-                        .dateDeNaissance(new Date())
+                        .dateDeNaissance(dateDeNaissance)
                         .estVerifie(false)
                         .provider("LOCAL")
                         .type("NUTRITIONIST")
-                        .maladies(new ArrayList<>())
-                        .allergies(new ArrayList<>())
-                        .objectives(new ArrayList<>())
-                        .physicalActivities(new ArrayList<>())
-                        .dailyActivities(new ArrayList<>())
-                        .healthGoals(new ArrayList<>())
+                        .maladies(convertToMaladies(registerRequest.getMaladies()))
+                        .allergies(registerRequest.getAllergies() != null ? registerRequest.getAllergies() : new ArrayList<>())
+                        .objectives(registerRequest.getObjectives() != null ? registerRequest.getObjectives() : new ArrayList<>())
                         .hasChronicDisease(registerRequest.getHasChronicDisease() != null ? registerRequest.getHasChronicDisease() : false)
                         .hasAllergies(registerRequest.getHasAllergies() != null ? registerRequest.getHasAllergies() : false)
                         .preferredLanguage(registerRequest.getPreferredLanguage())
+                        .poids(registerRequest.getPoids())
+                        .taille(registerRequest.getTaille())
                         .build();
                  nutrisionisteRepository.save(nutritionist);
                 break;
@@ -144,18 +170,18 @@ public class AuthServiceImpl implements AuthService {
                         .email(email)
                         .password(password)
                         .numTelephone(registerRequest.getTelephone())
-                        .dateDeNaissance(new Date())
+                        .dateDeNaissance(dateDeNaissance)
                         .provider("LOCAL")
                         .type("USER")
-                        .maladies(new ArrayList<>())
-                        .allergies(new ArrayList<>())
-                        .objectives(new ArrayList<>())
-                        .physicalActivities(new ArrayList<>())
-                        .dailyActivities(new ArrayList<>())
-                        .healthGoals(new ArrayList<>())
+                        .maladies(convertToMaladies(registerRequest.getMaladies()))
+                        .allergies(registerRequest.getAllergies() != null ? registerRequest.getAllergies() : new ArrayList<>())
+                        .objectives(registerRequest.getObjectives() != null ? registerRequest.getObjectives() : new ArrayList<>())
                         .hasChronicDisease(registerRequest.getHasChronicDisease() != null ? registerRequest.getHasChronicDisease() : false)
                         .hasAllergies(registerRequest.getHasAllergies() != null ? registerRequest.getHasAllergies() : false)
                         .preferredLanguage(registerRequest.getPreferredLanguage())
+                        .poids(registerRequest.getPoids())
+                        .taille(registerRequest.getTaille())
+                        .sport(registerRequest.getDoesExercise())
                         .build();
                  utilisateursRepository.save(user);
                 break;
@@ -168,6 +194,75 @@ public class AuthServiceImpl implements AuthService {
         return login(new LoginRequest(email, registerRequest.getPassword(), userType));
     }
 
+    // Helper method to convert string list to Maladie enum list
+    private List<Maladie> convertToMaladies(List<String> maladiesString) {
+        if (maladiesString == null || maladiesString.isEmpty()) {
+            System.out.println("DEBUG: No chronic diseases to convert");
+            return new ArrayList<>();
+        }
+        
+        System.out.println("DEBUG: Converting chronic diseases: " + maladiesString);
+        
+        List<Maladie> result = new ArrayList<>();
+        for (String maladieStr : maladiesString) {
+            try {
+                // Try to match by enum name (normalized)
+                String normalized = maladieStr.toUpperCase()
+                    .replace(" ", "_")
+                    .replace("É", "E")
+                    .replace("È", "E")
+                    .replace("Ê", "E")
+                    .replace("À", "A")
+                    .replace("Â", "A")
+                    .replace("'", "_")
+                    .replace("-", "_");
+                
+                System.out.println("DEBUG: Normalized '" + maladieStr + "' to '" + normalized + "'");
+                
+                // For hypertension artérielle, map it directly to HYPERTENSION
+                if (normalized.contains("HYPERTENSION")) {
+                    result.add(Maladie.HYPERTENSION);
+                    System.out.println("DEBUG: Mapped to HYPERTENSION enum");
+                    continue;
+                }
+                
+                // For asthme, map it directly to ASTHME
+                if (normalized.equals("ASTHME")) {
+                    result.add(Maladie.ASTHME);
+                    System.out.println("DEBUG: Mapped to ASTHME enum");
+                    continue;
+                }
+                
+                try {
+                    Maladie maladie = Maladie.valueOf(normalized);
+                    result.add(maladie);
+                    System.out.println("DEBUG: Successfully mapped to enum: " + maladie);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("DEBUG: Failed to map normalized string to enum: " + normalized);
+                    
+                    // Try a more flexible approach - find enum that contains part of the string
+                    boolean found = false;
+                    for (Maladie m : Maladie.values()) {
+                        if (normalized.contains(m.name()) || m.name().contains(normalized)) {
+                            result.add(m);
+                            System.out.println("DEBUG: Found partial match with enum: " + m);
+                            found = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!found) {
+                        System.out.println("WARNING: Could not map disease: " + maladieStr + " to any enum value");
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("ERROR processing disease: " + maladieStr + " - " + e.getMessage());
+            }
+        }
+        
+        System.out.println("DEBUG: Final converted diseases: " + result);
+        return result;
+    }
 
     @Override
     public LogoutResponse logout(LogoutRequest logoutRequest) {

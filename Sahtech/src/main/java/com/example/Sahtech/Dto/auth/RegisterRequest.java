@@ -38,18 +38,22 @@ public class RegisterRequest {
     @NotBlank(message = "Le type d'utilisateur est obligatoire")
     private String userType; // USER, ADMIN, NUTRITIONIST
     
-    // Added additional fields for health data
+    // Health profile data
+    private String dateDeNaissance; // Format: yyyy-MM-dd
+    private Float poids;
+    private Float taille;
+    
+    // Health flags
     private Boolean hasChronicDisease = false;
     private Boolean hasAllergies = false;
     private String preferredLanguage;
     private Boolean doesExercise = false;
     private String activityLevel;
+    
+    // Health data lists
     private List<String> maladies = new ArrayList<>();
     private List<String> allergies = new ArrayList<>();
-    private List<String> objectives = new ArrayList<>();
-    private List<String> physicalActivities = new ArrayList<>();
-    private List<String> dailyActivities = new ArrayList<>();
-    private List<String> healthGoals = new ArrayList<>();
+    private List<String> objectives = new ArrayList<>(); // Main list for all health objectives/goals
 }
 
 
