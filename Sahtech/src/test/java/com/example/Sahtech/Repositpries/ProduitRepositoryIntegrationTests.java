@@ -2,15 +2,13 @@ package com.example.Sahtech.Repositpries;
 
 import com.example.Sahtech.TestDataUtil;
 import com.example.Sahtech.config.MongoTestConfig;
-import com.example.Sahtech.entities.Produit;
-import com.example.Sahtech.repositories.ProduitRepository;
+import com.example.Sahtech.entities.ProduitDetaille.Produit;
+import com.example.Sahtech.repositories.ProduitDetaille.ProduitRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 

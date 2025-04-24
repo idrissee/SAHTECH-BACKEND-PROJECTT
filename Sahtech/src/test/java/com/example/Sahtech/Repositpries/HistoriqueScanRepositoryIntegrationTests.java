@@ -2,12 +2,12 @@ package com.example.Sahtech.Repositpries;
 
 import com.example.Sahtech.TestDataUtil;
 import com.example.Sahtech.config.MongoTestConfig;
-import com.example.Sahtech.entities.HistoriqueScan;
-import com.example.Sahtech.entities.Produit;
-import com.example.Sahtech.entities.Utilisateurs;
-import com.example.Sahtech.repositories.HistoriqueScanRepository;
-import com.example.Sahtech.repositories.ProduitRepository;
-import com.example.Sahtech.repositories.UtilisateursRepository;
+import com.example.Sahtech.entities.Scan.HistoriqueScan;
+import com.example.Sahtech.entities.ProduitDetaille.Produit;
+import com.example.Sahtech.entities.Users.Utilisateurs;
+import com.example.Sahtech.repositories.Scan.HistoriqueScanRepository;
+import com.example.Sahtech.repositories.ProduitDetaille.ProduitRepository;
+import com.example.Sahtech.repositories.Users.UtilisateursRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

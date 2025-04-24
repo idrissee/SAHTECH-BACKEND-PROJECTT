@@ -1,7 +1,7 @@
 package com.example.Sahtech.mappers.Impl;
 
-import com.example.Sahtech.Dto.AdminDto;
-import com.example.Sahtech.entities.Admin;
+import com.example.Sahtech.Dto.Users.AdminDto;
+import com.example.Sahtech.entities.Users.Admin;
 import com.example.Sahtech.mappers.Mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

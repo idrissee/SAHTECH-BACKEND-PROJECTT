@@ -2,8 +2,8 @@ package com.example.Sahtech.Repositpries;
 
 import com.example.Sahtech.TestDataUtil;
 import com.example.Sahtech.config.MongoTestConfig;
-import com.example.Sahtech.entities.Admin;
-import com.example.Sahtech.repositories.AdminRepository;
+import com.example.Sahtech.entities.Users.Admin;
+import com.example.Sahtech.repositories.Users.AdminRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

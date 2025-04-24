@@ -1,7 +1,7 @@
 package com.example.Sahtech.mappers.Impl;
 
-import com.example.Sahtech.Dto.HistoriqueScanDto;
-import com.example.Sahtech.entities.HistoriqueScan;
+import com.example.Sahtech.Dto.Scan.HistoriqueScanDto;
+import com.example.Sahtech.entities.Scan.HistoriqueScan;
 import com.example.Sahtech.mappers.Mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

@@ -1,7 +1,16 @@
 package com.example.Sahtech;
 
 import com.example.Sahtech.Enum.*;
-import com.example.Sahtech.entities.*;
+import com.example.Sahtech.entities.ProduitDetaille.Additifs;
+import com.example.Sahtech.entities.ProduitDetaille.Ingrediants;
+import com.example.Sahtech.entities.ProduitDetaille.Produit;
+import com.example.Sahtech.entities.Pub.Partenaire;
+import com.example.Sahtech.entities.Pub.Publicite;
+import com.example.Sahtech.entities.Scan.HistoriqueScan;
+import com.example.Sahtech.entities.Users.Admin;
+import com.example.Sahtech.entities.Users.NutritionisteDetaille.Localisation;
+import com.example.Sahtech.entities.Users.NutritionisteDetaille.Nutrisioniste;
+import com.example.Sahtech.entities.Users.Utilisateurs;
 
 import java.time.LocalDateTime;
 import java.util.Date;
