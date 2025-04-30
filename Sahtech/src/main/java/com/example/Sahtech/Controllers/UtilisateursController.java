@@ -273,4 +273,39 @@ public class UtilisateursController {
                     .body(Map.of("error", "Failed to set photoUrl: " + e.getMessage()));
         }
     }
+
+    @PutMapping("/{id}/changePassword")
+    public ResponseEntity<?> changePassword(
+            @PathVariable String id,
+            @RequestBody Map<String, String> requestBody,
+            HttpServletRequest request
+    ) {
+        // Check if user is authorized
+        if (!authorizationService.isAuthorizedToAccessResource(id, request)) {
+            logger.error("User not authorized to change password for user ID: {}", id);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        String currentPassword = requestBody.get("currentPassword");
+        String newPassword = requestBody.get("newPassword");
+
+        if (currentPassword == null || newPassword == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Current password and new password are required"));
+        }
+
+        try {
+            boolean passwordChanged = utilisateurService.changePassword(id, currentPassword, newPassword);
+            
+            if (passwordChanged) {
+                return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Current password is incorrect"));
+            }
+        } catch (Exception e) {
+            logger.error("Error changing password: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Error changing password: " + e.getMessage()));
+        }
+    }
 }

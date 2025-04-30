@@ -110,6 +110,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/Utilisateurs/{id}").hasAnyRole("ADMIN", "USER")
                 .requestMatchers(HttpMethod.PUT, "/API/Sahtech/Utilisateurs/{id}").hasAnyRole("ADMIN", "USER")
                 .requestMatchers(HttpMethod.POST, "/API/Sahtech/Utilisateurs/{id}/uploadPhoto").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.PUT, "/API/Sahtech/Utilisateurs/{id}/changePassword").hasAnyRole("ADMIN", "USER")
 
                 // Historique de scan : utilisateur peut uniquement consulter son propre historique et statistiques
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/utilisateur/{id}").hasAnyRole("ADMIN", "USER")
