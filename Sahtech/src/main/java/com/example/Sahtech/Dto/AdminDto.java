@@ -10,5 +10,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Data
 public class AdminDto extends UtilisateursDto {
+
     // Admin-specific fields can be added here
 }

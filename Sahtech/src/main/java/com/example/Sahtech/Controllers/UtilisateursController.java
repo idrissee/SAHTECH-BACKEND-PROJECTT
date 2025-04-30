@@ -141,7 +141,7 @@ public class UtilisateursController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        String photoUrl = imageServiceImpl.uploadImage(file);
+        String photoUrl = imageServiceImpl.uploadImage(file, "utilisateurs/photos");
         Utilisateurs updated = utilisateurService.setPhotoUrl(id, photoUrl);
         return ResponseEntity.ok(updated);
     }

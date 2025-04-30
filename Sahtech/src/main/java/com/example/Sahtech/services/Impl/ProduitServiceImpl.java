@@ -76,4 +76,15 @@ public class ProduitServiceImpl implements ProduitService {
     public Produit save(Produit produit) {
        return  produitRepository.save(produit);
     }
+
+    @Override
+    public Produit setPhotoUrl(String id, String photoUrl) {
+        Optional<Produit> produitOpt = produitRepository.findById(id);
+        if (produitOpt.isPresent()) {
+            Produit produit = produitOpt.get();
+            produit.setImageUrl(photoUrl);
+            return produitRepository.save(produit);
+        }
+        return null;
+    }
 }

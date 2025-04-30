@@ -14,13 +14,15 @@ public class TestImageUploadController {
 
     @Autowired
     public TestImageUploadController(ImageService imageService) {
-        this.imageService = imageService; // 👈 on utilise ce qui est injecté
+        this.imageService = imageService;
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadTestImage(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadTestImage(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "folder", defaultValue = "test") String folder) {
         try {
-            String imageUrl = imageService.uploadImage(file);
+            String imageUrl = imageService.uploadImage(file, folder);
             return ResponseEntity.ok(imageUrl);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Erreur lors de l'upload : " + e.getMessage());

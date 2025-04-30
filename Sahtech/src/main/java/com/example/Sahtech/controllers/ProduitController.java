@@ -6,12 +6,16 @@ import com.example.Sahtech.entities.Produit;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.AuthorizationService;
 import com.example.Sahtech.services.ProduitService;
+import com.example.Sahtech.services.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +29,9 @@ public class ProduitController {
 
     @Autowired
     private AuthorizationService authorizationService;
+
+    @Autowired
+    private ImageService imageService;
 
     public ProduitController(ProduitService produitService, 
                             Mapper<Produit, ProduitDto> produitMapper) {
@@ -157,5 +164,19 @@ public class ProduitController {
         Produit updatedProduit = produitService.save(produit);
         
         return new ResponseEntity<>(produitMapper.mapTo(updatedProduit), HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/uploadPhoto")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Produit> uploadPhoto(
+            @PathVariable String id,
+            @RequestParam("file") MultipartFile file
+    ) throws IOException {
+        String photoUrl = imageService.uploadImage(file, "produits/photos");
+        Produit updated = produitService.setPhotoUrl(id, photoUrl);
+        if (updated == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(updated);
     }
 }

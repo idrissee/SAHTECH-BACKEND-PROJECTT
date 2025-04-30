@@ -32,7 +32,6 @@ public class Utilisateurs {
     private List<Maladie> maladies;
     private Float poids;
     private Float taille;
-    private String niveauActivite;
     private Boolean sport;
     private String sexe;
     private List<String> allergies;

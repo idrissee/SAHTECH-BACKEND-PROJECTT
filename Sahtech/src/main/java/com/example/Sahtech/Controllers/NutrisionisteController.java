@@ -2,8 +2,10 @@ package com.example.Sahtech.Controllers;
 
 import com.example.Sahtech.Dto.NutrisionisteDto;
 import com.example.Sahtech.entities.Nutrisioniste;
+import com.example.Sahtech.entities.Utilisateurs;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.AuthorizationService;
+import com.example.Sahtech.services.Impl.ImageServiceImpl;
 import com.example.Sahtech.services.NutrisionisteService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +33,9 @@ public class NutrisionisteController {
     
     @Autowired
     private AuthorizationService authorizationService;
+
+    @Autowired
+    private ImageServiceImpl imageServiceImpl;
 
     // GET ALL - accessible aux admins et users
     @GetMapping("/All")
@@ -113,5 +120,37 @@ public class NutrisionisteController {
         boolean deleted = nutrisionisteService.deleteNutrisioniste(id);
         return deleted ? new ResponseEntity<>(HttpStatus.NO_CONTENT) 
                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/{id}/uploadPhoto")
+    public ResponseEntity<Nutrisioniste> uploadPhoto(
+            @PathVariable String id,
+            @RequestParam("file") MultipartFile file,
+            HttpServletRequest request
+    ) throws IOException {
+        // Vérifier si le nutrisioniste est autorisé
+        if (!authorizationService.isAuthorizedToAccessResource(id, request)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        String photoUrl = imageServiceImpl.uploadImage(file, "nutritionnistes/photos");
+        Nutrisioniste updated = nutrisionisteService.setPhotoUrl(id, photoUrl);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PostMapping("/{id}/uploadPhotoDiplome")
+    public ResponseEntity<Nutrisioniste> uploadPhotoDiplome(
+            @PathVariable String id,
+            @RequestParam("file") MultipartFile file,
+            HttpServletRequest request
+    ) throws IOException {
+        // Vérifier si le nutrisioniste est autorisé
+        if (!authorizationService.isAuthorizedToAccessResource(id, request)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        String photoUrl = imageServiceImpl.uploadImage(file, "nutritionnistes/diplomes");
+        Nutrisioniste updated = nutrisionisteService.setPhotoDiplome(id, photoUrl);
+        return ResponseEntity.ok(updated);
     }
 }

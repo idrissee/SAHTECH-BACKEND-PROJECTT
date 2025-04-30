@@ -1,6 +1,7 @@
 package com.example.Sahtech.services.Impl;
 
 import com.example.Sahtech.entities.Nutrisioniste;
+import com.example.Sahtech.entities.Utilisateurs;
 import com.example.Sahtech.exceptions.ResourceNotFoundException;
 import com.example.Sahtech.repositories.NutritionisteRepository;
 import com.example.Sahtech.services.NutrisionisteService;
@@ -23,7 +24,7 @@ public class NutrisionisteServiceImpl implements NutrisionisteService {
 
     @Override
     public Nutrisioniste getNutrisionisteById(String id) {
-        Optional<Nutrisioniste> nutrisioniste = nutrisionisteRepository.findById(id);
+        Optional<Nutrisioniste>  nutrisioniste = nutrisionisteRepository.findById(id);
         return nutrisioniste.orElse(null);
     }
 
@@ -68,5 +69,16 @@ public class NutrisionisteServiceImpl implements NutrisionisteService {
     @Override
     public List<Nutrisioniste> getNutrisionistesBySpecialite(String specialite) {
         return nutrisionisteRepository.findBySpecialite(specialite);
+    }
+
+    @Override
+    public Nutrisioniste setPhotoUrl(String id, String photoUrl){
+        Nutrisioniste nutrisioniste = getNutrisionisteById(id);
+        nutrisioniste.setPhotoUrl(photoUrl);
+        return nutrisionisteRepository.save(nutrisioniste);
+    }
+
+    public  Nutrisioniste setPhotoDiplome(String id, String photoUrl){
+        return getNutrisionisteById(id);
     }
 }

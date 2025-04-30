@@ -22,4 +22,6 @@ public interface ProduitService {
     Produit partialUpdate(String id, Produit produit);
 
     void delete(String id);
+
+    Produit setPhotoUrl(String id, String photoUrl);
 }

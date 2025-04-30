@@ -15,6 +15,7 @@ public class Nutrisioniste extends Utilisateurs {
     private String specialite;
     private String localisationId;
     private Boolean estVerifie;
+    private String photoUrlDiplome;
     
     public Nutrisioniste() {
         super("NUTRITIONIST");

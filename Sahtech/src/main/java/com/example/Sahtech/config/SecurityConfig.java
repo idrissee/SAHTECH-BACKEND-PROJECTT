@@ -72,6 +72,7 @@ public class SecurityConfig {
                 // Nutritionniste : accès uniquement au GET et PUT de son propre profil
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/Nutrisionistes/{id}").hasAnyRole("ADMIN", "NUTRITIONIST")
                 .requestMatchers(HttpMethod.PUT, "/API/Sahtech/Nutrisionistes/{id}").hasAnyRole("ADMIN", "NUTRITIONIST")
+                .requestMatchers(HttpMethod.POST, "/API/Sahtech/Nutrisionistes/{id}/uploadPhoto").hasAnyRole("ADMIN", "NUTRITIONIST")
 
 
                 // Accès pour Nutritionnistes aux APIs de localisation spécifiques

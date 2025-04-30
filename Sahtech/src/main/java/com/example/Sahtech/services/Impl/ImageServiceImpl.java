@@ -22,7 +22,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public String uploadImage(MultipartFile file) throws IOException {
+    public String uploadImage(MultipartFile file, String folder) throws IOException {
         try {
             // Valider le fichier
             if (file == null || file.isEmpty()) {
@@ -36,15 +36,19 @@ public class ImageServiceImpl implements ImageService {
             // Générer un nom de fichier unique pour éviter les conflits
             String uniqueFilename = UUID.randomUUID().toString();
             
-            // Options simplifiées pour Cloudinary
+            // Options complètes pour Cloudinary avec création de dossiers
             Map<String, Object> options = ObjectUtils.asMap(
-                "public_id", "sahtech/" + uniqueFilename,
-                "overwrite", true
+                "public_id", "sahtech/" + folder + "/" + uniqueFilename,
+                "overwrite", true,
+                "use_filename", true,
+                "unique_filename", true,
+                "folder", "sahtech/" + folder, // Force la création du dossier
+                "resource_type", "auto"
             );
             
             System.out.println("Envoi vers Cloudinary avec options: " + options);
             
-            // Télécharger l'image avec moins d'options pour minimiser les erreurs
+            // Télécharger l'image avec les nouvelles options
             Map<?, ?> result = cloudinary.uploader().upload(file.getBytes(), options);
             
             // Afficher les détails pour le débogage

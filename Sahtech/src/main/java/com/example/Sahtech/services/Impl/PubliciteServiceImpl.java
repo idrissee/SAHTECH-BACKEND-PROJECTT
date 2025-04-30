@@ -170,9 +170,19 @@ public class PubliciteServiceImpl implements PubliciteService {
         return null;
     }
 
-
     @Override
     public void delete(String id) {
         publiciteRepository.deleteById(id);
+    }
+
+    @Override
+    public Publicite setPhotoUrl(String id, String photoUrl) {
+        Optional<Publicite> publiciteOpt = publiciteRepository.findById(id);
+        if (publiciteOpt.isPresent()) {
+            Publicite publicite = publiciteOpt.get();
+            publicite.setImageUrl(photoUrl);
+            return publiciteRepository.save(publicite);
+        }
+        return null;
     }
 } 

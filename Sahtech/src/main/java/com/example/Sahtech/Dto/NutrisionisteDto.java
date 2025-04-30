@@ -13,4 +13,5 @@ public class NutrisionisteDto extends UtilisateursDto {
     private String specialite;
     private String localisationId;
     private Boolean estVerifie;
+    private String photoUrlDiplome;
 }
