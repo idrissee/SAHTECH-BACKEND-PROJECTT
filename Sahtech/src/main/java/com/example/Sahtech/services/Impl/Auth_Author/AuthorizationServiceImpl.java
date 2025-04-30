@@ -36,40 +36,46 @@ public class AuthorizationServiceImpl implements AuthorizationService {
      */
     @Override
     public boolean isAuthorizedToAccessResource(String resourceId, HttpServletRequest request) {
-        logger.debug("Checking authorization for resource ID: {}", resourceId);
-
-        // Récupérer l'authentification courante
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        // Vérifier si l'utilisateur est un admin (ils peuvent tout faire)
-        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            logger.debug("User has ROLE_ADMIN, access granted");
-            return true;
-        }
-
-        // Extraire le token JWT
-        String token = extractTokenFromRequest(request);
-        if (token == null) {
-            logger.error("No token found in request");
+        logger.info("Checking authorization for resource: {}", resourceId);
+        
+        // Extract token from request
+        String token = jwtTokenProvider.resolveToken(request);
+        logger.info("Token extracted: {}", token != null ? "present" : "missing");
+        
+        if (token == null || !jwtTokenProvider.validateToken(token)) {
+            logger.error("Token is null or invalid");
             return false;
         }
-
-        // Vérifier si le token est valide
-        if (!jwtTokenProvider.validateToken(token)) {
-            logger.error("Invalid JWT token");
+        
+        // Get user details from token
+        try {
+            Authentication auth = jwtTokenProvider.getAuthentication(token);
+            logger.info("Authentication principal: {}", auth.getPrincipal());
+            
+            String userType = jwtTokenProvider.getUserType(token);
+            logger.info("User type from token: {}", userType);
+            
+            String userIdFromToken = jwtTokenProvider.getUserIdAsStringFromToken(token);
+            logger.info("User ID from token: {}", userIdFromToken);
+            
+            // Admin has access to all resources
+            if ("ADMIN".equals(userType)) {
+                logger.info("User is ADMIN, granting access to resource: {}", resourceId);
+                return true;
+            }
+            
+            // For user type, check if the resource ID matches their user ID
+            if ("USER".equals(userType) && resourceId.equals(userIdFromToken)) {
+                logger.info("User ID matches resource ID, granting access");
+                return true;
+            }
+            
+            logger.warn("Authorization denied: userType={}, resourceId={}, userIdFromToken={}", userType, resourceId, userIdFromToken);
+            return false;
+        } catch (Exception e) {
+            logger.error("Error during authorization check: {}", e.getMessage(), e);
             return false;
         }
-
-        // Récupérer le type d'utilisateur et son ID à partir du token
-        String userType = jwtTokenProvider.getUserType(token);
-        String userId = jwtTokenProvider.getUserId(token);
-
-        logger.debug("Token userID: {}, requested resourceID: {}, userType: {}", userId, resourceId, userType);
-
-        // Vérifier si l'utilisateur accède à ses propres données
-        boolean isAuthorized = userId.equals(resourceId);
-        logger.debug("Authorization result: {}", isAuthorized);
-        return isAuthorized;
     }
 
     /**
@@ -103,7 +109,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                 // Extraire l'ID du nutritionniste du token JWT
                 String token = extractTokenFromRequest(request);
                 if (token != null) {
-                    String userId = jwtTokenProvider.getUserId(token);
+                    String userId = jwtTokenProvider.getUserIdAsStringFromToken(token);
 
                     // Récupérer le nutritionniste
                     Nutrisioniste nutritionniste = nutrisionisteService.getNutrisionisteById(userId);
@@ -137,7 +143,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
             // Extraire l'ID de l'utilisateur du token JWT
             String token = extractTokenFromRequest(request);
             if (token != null) {
-                String userId = jwtTokenProvider.getUserId(token);
+                String userId = jwtTokenProvider.getUserIdAsStringFromToken(token);
 
                 // Vérifier si l'utilisateur a scanné ce produit
                 return historiqueScanService.hasUserScannedProduct(userId, produitId);

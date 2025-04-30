@@ -4,6 +4,7 @@ import com.example.Sahtech.entities.Users.Utilisateurs;
 import com.example.Sahtech.repositories.Users.UtilisateursRepository;
 import com.example.Sahtech.services.Interfaces.Users.UtilisateursService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,9 @@ public class UtilisateursServiceImpl implements UtilisateursService {
 
     @Autowired
     private UtilisateursRepository utilisateursRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public List<Utilisateurs> getAllUtilisateurs() {
@@ -163,5 +167,31 @@ public class UtilisateursServiceImpl implements UtilisateursService {
         }
         logger.warn("User with ID {} not found when setting health goals", id);
         return null;
+    }
+
+    @Override
+    public boolean changePassword(String id, String currentPassword, String newPassword) {
+        logger.info("Changing password for user with ID: {}", id);
+        
+        Optional<Utilisateurs> userOpt = utilisateursRepository.findById(id);
+        if (userOpt.isEmpty()) {
+            logger.error("User with ID {} not found when changing password", id);
+            return false;
+        }
+        
+        Utilisateurs user = userOpt.get();
+        
+        // Check if the current password matches
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            logger.warn("Current password doesn't match for user ID: {}", id);
+            return false;
+        }
+        
+        // Encode and save the new password
+        user.setPassword(passwordEncoder.encode(newPassword));
+        utilisateursRepository.save(user);
+        
+        logger.info("Password changed successfully for user with ID: {}", id);
+        return true;
     }
 }

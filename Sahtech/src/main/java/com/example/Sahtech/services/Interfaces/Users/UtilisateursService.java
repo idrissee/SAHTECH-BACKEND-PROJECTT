@@ -18,4 +18,6 @@ public interface UtilisateursService {
     Utilisateurs setPhysicalActivities(String id, List<String> physicalActivities);
     Utilisateurs setDailyActivities(String id, List<String> dailyActivities);
     Utilisateurs setHealthGoals(String id, List<String> healthGoals);
+    
+    boolean changePassword(String id, String currentPassword, String newPassword);
 }
