@@ -128,7 +128,7 @@ public class NutrisionisteController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         
-        String userId = jwtTokenProvider.getUserIdFromToken(token);
+        String userId = jwtTokenProvider.getUserIdAsStringFromToken(token);
         if (userId == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
