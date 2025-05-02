@@ -70,12 +70,14 @@ public class ProduitServiceImpl implements ProduitService {
 
     @Override
     public void delete(String id) {
+
         produitRepository.deleteById(id);
     }
 
     @Override
     public Produit save(Produit produit) {
-       return  produitRepository.save(produit);
+
+        return  produitRepository.save(produit);
     }
 
     @Override
