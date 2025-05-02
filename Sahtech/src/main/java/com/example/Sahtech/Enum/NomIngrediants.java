@@ -1,5 +1,8 @@
 package com.example.Sahtech.Enum;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum NomIngrediants {
 
     CALCIUM,
@@ -7,11 +10,11 @@ public enum NomIngrediants {
     SODIUM,
     MAGNÉSIUM,
     NITRATES,
-    NITRITES,
     CHLORURE,
     PH,
     BICARBONATES,
     SULFATES,
+    NITRITES,
 
     SUCRES,
     PROTÉINES,
@@ -29,6 +32,7 @@ public enum NomIngrediants {
     VITAMINE_B12,
     VITAMINE_B6,
     ÉNERGIE_KCAL,
-    CHOLESTÉROL
+    CHOLESTÉROL,
+    RS_A_180_C
 
     }

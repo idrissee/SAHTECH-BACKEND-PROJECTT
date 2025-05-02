@@ -1,7 +1,16 @@
 package com.example.Sahtech;
 
 import com.example.Sahtech.Enum.*;
-import com.example.Sahtech.entities.*;
+import com.example.Sahtech.entities.ProduitDetaille.Additifs;
+import com.example.Sahtech.entities.ProduitDetaille.Ingrediants;
+import com.example.Sahtech.entities.ProduitDetaille.Produit;
+import com.example.Sahtech.entities.Pub.Partenaire;
+import com.example.Sahtech.entities.Pub.Publicite;
+import com.example.Sahtech.entities.Scan.HistoriqueScan;
+import com.example.Sahtech.entities.Users.Admin;
+import com.example.Sahtech.entities.Users.NutritionisteDetaille.Localisation;
+import com.example.Sahtech.entities.Users.NutritionisteDetaille.Nutrisioniste;
+import com.example.Sahtech.entities.Users.Utilisateurs;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -174,7 +183,7 @@ public class TestDataUtil {
                 .taille(180.0F)
                 .poids(75.0F)
                 .sexe("M")
-                .maladie(Maladie.MALADIE_CARDIAQUE)
+                .maladies(List.of(Maladie.MALADIE_CARDIAQUE))
                 .objectif(Objectif.PERDRE_DU_POIDS)
                 .build();
     }
@@ -191,7 +200,7 @@ public class TestDataUtil {
                 .taille(165.0F)
                 .poids(60.0F)
                 .sexe("F")
-                .maladie(Maladie.ALLERGIE_ARACHIDES)
+                .maladies(List.of(Maladie.ALLERGIE_ARACHIDES))
                 .objectif(Objectif.REDUIRE_LA_TENSION_ARTERIELLE)
                 .build();
     }

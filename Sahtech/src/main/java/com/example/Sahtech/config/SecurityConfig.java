@@ -2,6 +2,7 @@ package com.example.Sahtech.config;
 
 import com.example.Sahtech.security.JwtTokenFilter;
 import com.example.Sahtech.security.JwtTokenProvider;
+import com.example.Sahtech.security.TokenBlacklistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -25,6 +32,9 @@ public class SecurityConfig {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+    
+    @Autowired
+    private TokenBlacklistService tokenBlacklistService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -37,15 +47,30 @@ public class SecurityConfig {
     }
 
     @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Collections.singletonList("*")); // Allow all origins
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")); // Allow all standard methods
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type")); // Allow standard headers
+        configuration.setAllowCredentials(false); // No credentials for '*' origins
+        configuration.setMaxAge(3600L); // 1 hour
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                // Make main endpoint public
+                .requestMatchers(HttpMethod.GET, "/API/Sahtech").permitAll()
+                .requestMatchers(HttpMethod.GET, "/API/Sahtech/Publicites/**").permitAll()
                 .requestMatchers("/API/Sahtech/auth/**").permitAll()
-
-                .requestMatchers("/oauth2/**", "/login/**").permitAll()
-                .requestMatchers("/", "/index.html").permitAll()
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech").permitAll()
 
                 // Admin a accès à tout
@@ -68,13 +93,11 @@ public class SecurityConfig {
 
                 // Pour GET All Utilisateurs réservés aux admins
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/Utilisateurs/All").hasRole("ADMIN")
-
+                
                 // Nutritionniste : accès uniquement au GET et PUT de son propre profil
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/Nutrisionistes/{id}").hasAnyRole("ADMIN", "NUTRITIONIST")
                 .requestMatchers(HttpMethod.PUT, "/API/Sahtech/Nutrisionistes/{id}").hasAnyRole("ADMIN", "NUTRITIONIST")
-                .requestMatchers(HttpMethod.POST, "/API/Sahtech/Nutrisionistes/{id}/uploadPhoto").hasAnyRole("ADMIN", "NUTRITIONIST")
-
-
+                
                 // Accès pour Nutritionnistes aux APIs de localisation spécifiques
                 .requestMatchers(HttpMethod.POST, "/API/Sahtech/localisations").hasAnyRole("ADMIN", "NUTRITIONIST")
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/localisations/{id}").hasAnyRole("ADMIN", "NUTRITIONIST")
@@ -82,11 +105,12 @@ public class SecurityConfig {
 
                 // Pour toutes les autres opérations sur Nutritionnistes, seul Admin a accès
                 .requestMatchers("/API/Sahtech/Nutrisionistes/**").hasRole("ADMIN")
-
+                
                 // Utilisateur : accès uniquement au GET et PUT de son propre profil
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/Utilisateurs/{id}").hasAnyRole("ADMIN", "USER")
                 .requestMatchers(HttpMethod.PUT, "/API/Sahtech/Utilisateurs/{id}").hasAnyRole("ADMIN", "USER")
                 .requestMatchers(HttpMethod.POST, "/API/Sahtech/Utilisateurs/{id}/uploadPhoto").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.PUT, "/API/Sahtech/Utilisateurs/{id}/changePassword").hasAnyRole("ADMIN", "USER")
 
                 // Historique de scan : utilisateur peut uniquement consulter son propre historique et statistiques
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/utilisateur/{id}").hasAnyRole("ADMIN", "USER")
@@ -94,11 +118,11 @@ public class SecurityConfig {
                 
                 // Pour toutes les autres opérations sur Utilisateurs, seul Admin a accès
                 .requestMatchers("/API/Sahtech/Utilisateurs/**").hasRole("ADMIN")
-
+                
                 // Pour toutes les autres opérations sur HistoriqueScan, seul Admin a accès
                 .requestMatchers("/API/Sahtech/HistoriqueScan/**").hasRole("ADMIN")
-
-                // Toutes les autres APIs uniquement pour Admin
+                
+                // Toutes les autres APIs uniquement pour Admin (sauf celles spécifiées pour les nutritionnistes)
                 .requestMatchers("/API/Sahtech/Ingredients/**").hasRole("ADMIN")
                 .requestMatchers("/API/Sahtech/Additifs/**").hasRole("ADMIN")
                 .requestMatchers("/API/Sahtech/Localisations/**").hasRole("ADMIN")
@@ -106,13 +130,10 @@ public class SecurityConfig {
                 .requestMatchers("/API/Sahtech/Publicites/**").hasRole("ADMIN")
                 .requestMatchers("/API/Sahtech/Produits/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
-            )
-            .oauth2Login(oauth2 -> oauth2
-                .defaultSuccessUrl("/API/Sahtech/auth/login/oauth2/code/google", true)
             );
 
-        http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-
+        http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider, tokenBlacklistService), UsernamePasswordAuthenticationFilter.class);
+        
         return http.build();
     }
-}
+} 
