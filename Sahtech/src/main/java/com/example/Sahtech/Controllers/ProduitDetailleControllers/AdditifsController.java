@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,6 +33,17 @@ public class AdditifsController {
         Additifs additifs = additifsMapper.mapFrom(additifsDto);
         Additifs additifsaved = additifsService.save(additifs);
         return new ResponseEntity<>(additifsMapper.mapTo(additifsaved), HttpStatus.CREATED);
+    }
+
+    // API pour charger et enregistrer les additifs depuis le fichier JSON
+    @PostMapping("/load-additifs")
+    public ResponseEntity<String> loadAndSaveAdditifs() {
+        try {
+            additifsService.loadAndSaveAdditifs(); // Charge et enregistre les additifs dans la BD
+            return new ResponseEntity<>("Additifs insérés avec succès depuis le fichier JSON!", HttpStatus.CREATED);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Erreur lors de l'insertion des additifs: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(path ="/All")
