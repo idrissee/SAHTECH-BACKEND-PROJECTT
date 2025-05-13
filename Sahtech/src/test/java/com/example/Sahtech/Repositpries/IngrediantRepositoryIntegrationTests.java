@@ -1,5 +1,6 @@
 package com.example.Sahtech.Repositpries;
 
+import com.example.Sahtech.Enum.NomIngrediants;
 import com.example.Sahtech.TestDataUtil;
 import com.example.Sahtech.config.MongoTestConfig;
 import com.example.Sahtech.entities.ProduitDetaille.Ingrediants;
@@ -58,7 +59,7 @@ public class IngrediantRepositoryIntegrationTests {
     public void TestThatIngrediantsCanBeUpdated(){
         Ingrediants ingrediantA = TestDataUtil.createTestIngrediantsA();
         underTest.save(ingrediantA);
-        ingrediantA.setNomIngrediant("UPDATED");
+        ingrediantA.setNomIngrediant(NomIngrediants.CALCIUM);
         underTest.save(ingrediantA);
         Optional<Ingrediants> result = underTest.findById(ingrediantA.getIdIngrediant());
         assertThat(result).isPresent();
