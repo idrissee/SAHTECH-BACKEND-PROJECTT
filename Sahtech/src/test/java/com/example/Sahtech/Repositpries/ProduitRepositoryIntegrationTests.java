@@ -1,23 +1,25 @@
 package com.example.Sahtech.Repositpries;
 
-
 import com.example.Sahtech.TestDataUtil;
-import com.example.Sahtech.entities.Produit;
-import com.example.Sahtech.repositories.ProduitRepository;
+import com.example.Sahtech.config.MongoTestConfig;
+import com.example.Sahtech.entities.ProduitDetaille.Produit;
+import com.example.Sahtech.repositories.ProduitDetaille.ProduitRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@DataMongoTest
 @ExtendWith(SpringExtension.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@Import(MongoTestConfig.class)
+@ActiveProfiles("test")
 public class ProduitRepositoryIntegrationTests {
 
   private final ProduitRepository undertest;
@@ -33,7 +35,7 @@ public class ProduitRepositoryIntegrationTests {
     public void testThatProditCanBeCreatedAndRecalled() {
       Produit produit = TestDataUtil.creatTestProduitA();
       undertest.save(produit);
-      Optional<Produit> result = undertest.findById(produit.getIdProduit());
+      Optional<Produit> result = undertest.findById(produit.getId());
       assertThat(result).isPresent();
       assertThat(result.get()).isEqualTo(produit);
     }
@@ -57,9 +59,9 @@ public class ProduitRepositoryIntegrationTests {
   public void testThatProduitCanBeUpdated(){
     Produit produitA = TestDataUtil.creatTestProduitA();
     undertest.save(produitA);
-    produitA.setNomProduit("bimoo");
+    produitA.setNom("bimoo");
     undertest.save(produitA);
-    Optional<Produit> result = undertest.findById(produitA.getIdProduit());
+    Optional<Produit> result = undertest.findById(produitA.getId());
     assertThat(result).isPresent();
     assertThat(result.get()).isEqualTo(produitA);
   }
@@ -69,8 +71,8 @@ public class ProduitRepositoryIntegrationTests {
   public void TestThatProduitCanBeDeleted(){
     Produit produitA = TestDataUtil.creatTestProduitA();
     undertest.save(produitA);
-    undertest.deleteById(produitA.getIdProduit());
-    Optional<Produit> result = undertest.findById(produitA.getIdProduit());
+    undertest.deleteById(produitA.getId());
+    Optional<Produit> result = undertest.findById(produitA.getId());
     assertThat(result).isEmpty();
   }
 

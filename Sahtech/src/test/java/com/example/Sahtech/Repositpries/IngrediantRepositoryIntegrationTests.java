@@ -1,23 +1,25 @@
 package com.example.Sahtech.Repositpries;
 
-
 import com.example.Sahtech.TestDataUtil;
-import com.example.Sahtech.entities.Ingrediants;
-import com.example.Sahtech.repositories.IngrediantsRepository;
+import com.example.Sahtech.config.MongoTestConfig;
+import com.example.Sahtech.entities.ProduitDetaille.Ingrediants;
+import com.example.Sahtech.repositories.ProduitDetaille.IngrediantsRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@DataMongoTest
 @ExtendWith(SpringExtension.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@Import(MongoTestConfig.class)
+@ActiveProfiles("test")
 public class IngrediantRepositoryIntegrationTests {
 
     private final IngrediantsRepository underTest;

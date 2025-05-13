@@ -1,7 +1,7 @@
 package com.example.Sahtech.mappers.Impl;
 
-import com.example.Sahtech.Dto.UtilisateursDto;
-import com.example.Sahtech.entities.Utilisateurs;
+import com.example.Sahtech.Dto.Users.UtilisateursDto;
+import com.example.Sahtech.entities.Users.Utilisateurs;
 import com.example.Sahtech.mappers.Mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -17,11 +17,17 @@ public class UtilisateurMapperImpl implements Mapper<Utilisateurs, UtilisateursD
 
     @Override
     public UtilisateursDto mapTo(Utilisateurs utilisateur) {
-        return modelMapper.map(utilisateur, UtilisateursDto.class);
+        UtilisateursDto dto = modelMapper.map(utilisateur, UtilisateursDto.class);
+        // Explicitly set photoUrl to ensure it's included in the response
+        dto.setPhotoUrl(utilisateur.getPhotoUrl());
+        return dto;
     }
 
     @Override
     public Utilisateurs mapFrom(UtilisateursDto utilisateurDto) {
-        return modelMapper.map(utilisateurDto, Utilisateurs.class);
+        Utilisateurs utilisateur = modelMapper.map(utilisateurDto, Utilisateurs.class);
+        // Ensure photoUrl is set when mapping from DTO to entity
+        utilisateur.setPhotoUrl(utilisateurDto.getPhotoUrl());
+        return utilisateur;
     }
 } 
