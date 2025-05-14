@@ -23,6 +23,7 @@ public enum NomIngrediants {
     ACIDES_GRAS_SATURÉS,
     GLUCIDES,
     FIBRES_ALIMENTAIRES,
+    ÉNERGIE,
 
     FER,
     ZINC,
