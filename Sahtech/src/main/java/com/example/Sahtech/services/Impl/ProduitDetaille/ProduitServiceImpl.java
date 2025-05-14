@@ -46,7 +46,42 @@ public class ProduitServiceImpl implements ProduitService {
 
     @Override
     public Optional<Produit> findByCodeBarre(String codeBarre) {
-        return produitRepository.findByCodeBarre(codeBarre);
+        System.out.println("Service findByCodeBarre received: " + codeBarre + " (Type: " + codeBarre.getClass().getSimpleName() + ")");
+        try {
+            // Try to find with string barcode directly first
+            Optional<Produit> result = produitRepository.findByCodeBarre(codeBarre);
+            
+            // If not found, try parsing as Long
+            if (result.isEmpty()) {
+                try {
+                    // Convert string to Long for numeric lookup
+                    Long numericBarcode = Long.parseLong(codeBarre);
+                    System.out.println("Converting barcode to Long: " + numericBarcode);
+                    
+                    // Use the dedicated numeric lookup method
+                    result = produitRepository.findByCodeBarreNumeric(numericBarcode);
+                    System.out.println("Result after numeric conversion: " + (result.isPresent() ? "Found" : "Not found"));
+                    
+                    // If still not found, try again with a different query approach
+                    if (result.isEmpty()) {
+                        System.out.println("Trying alternative query approaches...");
+                        // Try with toString to ensure format matching
+                        String numericString = numericBarcode.toString();
+                        result = produitRepository.findByCodeBarre(numericString);
+                        System.out.println("Result after string conversion: " + (result.isPresent() ? "Found" : "Not found"));
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Failed to parse barcode as Long: " + e.getMessage());
+                }
+            } else {
+                System.out.println("Found product with string barcode directly");
+            }
+            
+            return result;
+        } catch (Exception e) {
+            System.out.println("Error in findByCodeBarre service: " + e.getMessage());
+            return Optional.empty();
+        }
     }
 
     @Override

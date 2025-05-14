@@ -53,22 +53,24 @@ public class RecommendationController {
             if (existingRecommendation.isPresent()) {
                 // Return the existing recommendation
                 Map<String, Object> response = new HashMap<>();
-                response.put("product", produit.get());
                 response.put("recommendation", existingRecommendation.get().getContent());
+                response.put("recommendation_type", existingRecommendation.get().getType());
                 return ResponseEntity.ok(response);
             }
 
             // 3. Generate a new recommendation using the FastAPI service
-            String aiRecommendation = recommendationService.generateRecommendation(utilisateur.get(), produit.get());
+            Map<String, Object> aiResponse = recommendationService.generateRecommendationWithType(utilisateur.get(), produit.get());
+            String aiRecommendation = (String) aiResponse.get("recommendation");
+            String recommendationType = (String) aiResponse.get("recommendation_type");
 
-            // 4. Save the recommendation to the database
-            Recommendation newRecommendation = new Recommendation(utilisateur.get(), produit.get(), aiRecommendation);
+            // 4. Save the recommendation to the database with its type
+            Recommendation newRecommendation = new Recommendation(utilisateur.get(), produit.get(), aiRecommendation, recommendationType);
             recommendationRepository.save(newRecommendation);
 
-            // 5. Return the recommendation and product data
+            // 5. Return the recommendation and its type
             Map<String, Object> response = new HashMap<>();
-            response.put("product", produit.get());
             response.put("recommendation", aiRecommendation);
+            response.put("recommendation_type", recommendationType);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -98,12 +100,17 @@ public class RecommendationController {
     /**
      * Save a recommendation
      */
-    @PostMapping
+    @PostMapping("/save")
     public ResponseEntity<?> saveRecommendation(@RequestBody Map<String, String> request) {
         try {
             String userId = request.get("userId");
             String productId = request.get("productId");
-            String content = request.get("content");
+            String content = request.get("recommendation");
+            String recommendationType = request.get("recommendationType");
+            
+            if (recommendationType == null || recommendationType.isEmpty()) {
+                recommendationType = "caution"; // Default value
+            }
 
             Optional<Utilisateurs> utilisateur = utilisateursRepository.findById(userId);
             Optional<Produit> produit = produitRepository.findById(productId);
@@ -112,7 +119,7 @@ public class RecommendationController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User or product not found");
             }
 
-            Recommendation recommendation = new Recommendation(utilisateur.get(), produit.get(), content);
+            Recommendation recommendation = new Recommendation(utilisateur.get(), produit.get(), content, recommendationType);
             recommendationRepository.save(recommendation);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(recommendation);

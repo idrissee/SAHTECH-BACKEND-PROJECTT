@@ -25,9 +25,25 @@ public class Recommendation {
     
     private String content;
     
+    // Added field for recommendation type: 'recommended', 'caution', or 'avoid'
+    private String recommendationType;
+    
     public Recommendation(Utilisateurs utilisateur, Produit produit, String content) {
         this.utilisateur = utilisateur;
         this.produit = produit;
         this.content = content;
+        this.recommendationType = "caution"; // Default value
+    }
+    
+    public Recommendation(Utilisateurs utilisateur, Produit produit, String content, String recommendationType) {
+        this.utilisateur = utilisateur;
+        this.produit = produit;
+        this.content = content;
+        this.recommendationType = recommendationType;
+    }
+    
+    // Getter for recommendationType that matches the name used in the controller
+    public String getType() {
+        return this.recommendationType;
     }
 } 
