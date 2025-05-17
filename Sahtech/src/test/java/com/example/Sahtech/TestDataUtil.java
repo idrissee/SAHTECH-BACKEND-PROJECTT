@@ -1,6 +1,7 @@
 package com.example.Sahtech;
 
 import com.example.Sahtech.Enum.*;
+import com.example.Sahtech.Dto.ProduitDetaille.IngredientInfoDto;
 import com.example.Sahtech.entities.ProduitDetaille.Additifs;
 import com.example.Sahtech.entities.ProduitDetaille.Ingrediants;
 import com.example.Sahtech.entities.ProduitDetaille.Produit;
@@ -13,6 +14,7 @@ import com.example.Sahtech.entities.Users.NutritionisteDetaille.Nutrisioniste;
 import com.example.Sahtech.entities.Users.Utilisateurs;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class TestDataUtil {
                 .id("1L")
                 .nom("rouiba")
                 .categorie("Boisson")
-                .codeBarre(12365877L)
+                .codeBarre("12365877")
                 .build();
     }
 
@@ -35,7 +37,7 @@ public class TestDataUtil {
                 .id("2L")
                 .nom("Gateau")
                 .categorie("Patisserie")
-                .codeBarre(12348796L)
+                .codeBarre("12348796")
                 .build();
     }
 
@@ -44,7 +46,29 @@ public class TestDataUtil {
                 .id("3L")
                 .nom("milka")
                 .categorie("Chocolat")
-                .codeBarre(1236987L)
+                .codeBarre("1236987")
+                .build();
+    }
+
+    // More complete test product with all fields
+    public static Produit createTestProduitComplete() {
+        List<IngredientInfoDto> ingredients = new ArrayList<>();
+        ingredients.add(new IngredientInfoDto(NomIngrediants.SUCRES, "10g"));
+        ingredients.add(new IngredientInfoDto(NomIngrediants.SODIUM, "2g"));
+        
+        return Produit.builder()
+                .id("4L")
+                .nom("Produit Complet Test")
+                .categorie("Test Category")
+                .codeBarre("9876543210123")
+                .marque("Marque Test")
+                .description("Description test produit")
+                .quantite("500g")
+                .imageUrl("https://example.com/image.jpg")
+                .valeurNutriScore(ValeurNutriScore.B)
+                .descriptionNutriScore("Bonne qualité nutritionnelle")
+                .ingredients(ingredients)
+                .nomAdditif(List.of("E100", "E202"))
                 .build();
     }
 
