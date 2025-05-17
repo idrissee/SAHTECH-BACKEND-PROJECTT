@@ -3,6 +3,7 @@ package com.example.Sahtech.entities.ProduitDetaille;
 
 import com.example.Sahtech.Dto.ProduitDetaille.IngredientInfoDto;
 import com.example.Sahtech.Enum.ValeurNutriScore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +22,20 @@ public class Produit {
     @Id
     private String id;
 
+    // Primary field is codeBarre (String type to ensure compatibility)
     private String codeBarre;
+    
+    // Alternative field name for API consistency
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    public String getBarcode() {
+        return codeBarre;
+    }
+    
+    // Handle incoming barcode values from Flutter
+    @JsonProperty("barcode")
+    public void setBarcode(String barcode) {
+        this.codeBarre = barcode;
+    }
 
     private String nom;
     private String marque;
@@ -38,7 +52,6 @@ public class Produit {
     private List<IngredientInfoDto> ingredients;
     private List<String> nomAdditif;
     
-
 }
 
 
