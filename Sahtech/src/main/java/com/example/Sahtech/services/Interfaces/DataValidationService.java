@@ -32,7 +32,7 @@ public interface DataValidationService {
     /**
      * Normalizes barcode values to ensure consistency
      * @param barcode The raw barcode value (could be String, Long, etc)
-     * @return A normalized String barcode
+     * @return A normalized Long barcode
      */
-    String normalizeBarcode(Object barcode);
+    Long normalizeBarcode(Object barcode);
 } 

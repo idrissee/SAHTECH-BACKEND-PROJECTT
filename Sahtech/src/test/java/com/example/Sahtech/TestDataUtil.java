@@ -28,7 +28,7 @@ public class TestDataUtil {
                 .id("1L")
                 .nom("rouiba")
                 .categorie("Boisson")
-                .codeBarre("12365877")
+                .codeBarre(12365877L)
                 .build();
     }
 
@@ -37,7 +37,7 @@ public class TestDataUtil {
                 .id("2L")
                 .nom("Gateau")
                 .categorie("Patisserie")
-                .codeBarre("12348796")
+                .codeBarre(12348796L)
                 .build();
     }
 
@@ -46,7 +46,7 @@ public class TestDataUtil {
                 .id("3L")
                 .nom("milka")
                 .categorie("Chocolat")
-                .codeBarre("1236987")
+                .codeBarre(1236987L)
                 .build();
     }
 
@@ -60,7 +60,7 @@ public class TestDataUtil {
                 .id("4L")
                 .nom("Produit Complet Test")
                 .categorie("Test Category")
-                .codeBarre("9876543210123")
+                .codeBarre(9876543210123L)
                 .marque("Marque Test")
                 .description("Description test produit")
                 .quantite("500g")

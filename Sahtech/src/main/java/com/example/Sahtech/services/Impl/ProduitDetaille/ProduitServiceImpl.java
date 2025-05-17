@@ -45,10 +45,10 @@ public class ProduitServiceImpl implements ProduitService {
     }
 
     @Override
-    public Optional<Produit> findByCodeBarre(String codeBarre) {
-        System.out.println("Service findByCodeBarre received: " + codeBarre + " (Type: " + codeBarre.getClass().getSimpleName() + ")");
+    public Optional<Produit> findByCodeBarre(Long codeBarre) {
+        System.out.println("Service findByCodeBarre received: " + codeBarre + " (Type: " + (codeBarre != null ? codeBarre.getClass().getSimpleName() : "null") + ")");
         try {
-            // Find product by string barcode
+            // Find product by Long barcode
             Optional<Produit> result = produitRepository.findByCodeBarre(codeBarre);
             System.out.println("Search result for barcode '" + codeBarre + "': " + (result.isPresent() ? "Found" : "Not found"));
             return result;

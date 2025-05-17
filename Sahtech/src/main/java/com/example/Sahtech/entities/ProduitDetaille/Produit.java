@@ -22,19 +22,26 @@ public class Produit {
     @Id
     private String id;
 
-    // Primary field is codeBarre (String type to ensure compatibility)
-    private String codeBarre;
+    // Primary field is codeBarre (Long type for large numeric values)
+    private Long codeBarre;
     
     // Alternative field name for API consistency
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public String getBarcode() {
-        return codeBarre;
+        return codeBarre != null ? codeBarre.toString() : null;
     }
     
     // Handle incoming barcode values from Flutter
     @JsonProperty("barcode")
     public void setBarcode(String barcode) {
-        this.codeBarre = barcode;
+        try {
+            if (barcode != null && !barcode.isEmpty()) {
+                this.codeBarre = Long.parseLong(barcode);
+            }
+        } catch (NumberFormatException e) {
+            // Log error but don't throw exception to prevent API failures
+            System.err.println("Invalid barcode format: " + barcode);
+        }
     }
 
     private String nom;

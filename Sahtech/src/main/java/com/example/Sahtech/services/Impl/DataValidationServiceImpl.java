@@ -28,7 +28,7 @@ public class DataValidationServiceImpl implements DataValidationService {
         }
         
         // Check required fields
-        if (produit.getCodeBarre() == null || produit.getCodeBarre().isEmpty()) {
+        if (produit.getCodeBarre() == null) {
             return false;
         }
         
@@ -136,21 +136,36 @@ public class DataValidationServiceImpl implements DataValidationService {
     /**
      * Normalizes barcode values to ensure consistency
      * @param barcode The raw barcode value (could be String, Long, etc)
-     * @return A normalized String barcode
+     * @return A normalized Long barcode
      */
     @Override
-    public String normalizeBarcode(Object barcode) {
+    public Long normalizeBarcode(Object barcode) {
         if (barcode == null) {
-            return "";
+            return null;
         }
         
-        // Convert to string
-        String barcodeStr = String.valueOf(barcode);
-        
-        // Remove any non-digit characters
-        barcodeStr = barcodeStr.replaceAll("[^0-9]", "");
-        
-        return barcodeStr;
+        try {
+            // If already a Long, return it
+            if (barcode instanceof Long) {
+                return (Long) barcode;
+            }
+            
+            // Convert to string
+            String barcodeStr = String.valueOf(barcode);
+            
+            // Remove any non-digit characters
+            barcodeStr = barcodeStr.replaceAll("[^0-9]", "");
+            
+            if (barcodeStr.isEmpty()) {
+                return null;
+            }
+            
+            // Parse to Long
+            return Long.parseLong(barcodeStr);
+        } catch (NumberFormatException e) {
+            System.err.println("Failed to normalize barcode: " + barcode);
+            return null;
+        }
     }
     
     /**

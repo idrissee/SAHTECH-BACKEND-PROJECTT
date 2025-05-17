@@ -16,7 +16,7 @@ public interface ProduitService {
 
     Optional<Produit> findOnebyId(String id);
 
-    Optional<Produit> findByCodeBarre(String codeBarre);
+    Optional<Produit> findByCodeBarre(Long codeBarre);
 
     boolean isExists(String id);
 
