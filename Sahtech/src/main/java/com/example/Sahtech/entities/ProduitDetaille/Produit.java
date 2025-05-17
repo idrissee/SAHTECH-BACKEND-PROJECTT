@@ -21,7 +21,7 @@ public class Produit {
     @Id
     private String id;
 
-    private Long codeBarre;
+    private String codeBarre;
 
     private String nom;
     private String marque;

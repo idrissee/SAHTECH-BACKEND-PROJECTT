@@ -17,7 +17,7 @@ public class ProduitDto {
     private String id;
 
     private String nom;
-    private Long codeBarre;
+    private String codeBarre;
     private String marque;
     private String categorie;
     private String description;
