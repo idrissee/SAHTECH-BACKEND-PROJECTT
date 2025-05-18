@@ -2,6 +2,7 @@ package com.example.Sahtech.Controllers.ScanControllers;
 
 import com.example.Sahtech.entities.ProduitDetaille.Produit;
 import com.example.Sahtech.entities.Users.Utilisateurs;
+import com.example.Sahtech.repositories.ProduitDetaille.ProduitRepository;
 import com.example.Sahtech.services.Interfaces.ProduitDetaille.ProduitService;
 import com.example.Sahtech.services.Interfaces.DataValidationService;
 import com.example.Sahtech.services.Interfaces.Users.UtilisateursService;
@@ -26,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
 public class ProductScanController {
 
     private final ProduitService produitService;
+    private final ProduitRepository produitRepository;
     private final DataValidationService dataValidationService;
     private final UtilisateursService utilisateursService;
     private final RecommendationService recommendationService;
@@ -54,8 +56,22 @@ public class ProductScanController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
             
-            // Attempt to find the product by barcode
-            Optional<Produit> produit = produitService.findByCodeBarre(normalizedBarcode);
+            // Special handling for known problematic barcode
+            Optional<Produit> produit;
+            if (normalizedBarcode.equals(6133414007137L)) {
+                System.out.println("Using exact query method for priority barcode");
+                // First try the exact query method
+                produit = produitRepository.findByCodeBarreExact(normalizedBarcode);
+                // If that fails, fall back to standard method
+                if (!produit.isPresent()) {
+                    System.out.println("Exact query failed, falling back to standard method");
+                    produit = produitService.findByCodeBarre(normalizedBarcode);
+                }
+            } else {
+                // Standard lookup for other barcodes
+                produit = produitService.findByCodeBarre(normalizedBarcode);
+            }
+            
             System.out.println("Product found: " + produit.isPresent());
             
             // If not found, return not found response
@@ -70,10 +86,11 @@ public class ProductScanController {
             
             // If userId is provided, asynchronously send data to AI for immediate processing
             if (userId != null && !userId.isEmpty()) {
+                final Produit foundProduct = produit.get(); // Create final copy for lambda
                 CompletableFuture.runAsync(() -> {
                     try {
                         System.out.println("Sending product and user data to AI service...");
-                        sendProductAndUserDataToAI(produit.get(), userId);
+                        sendProductAndUserDataToAI(foundProduct, userId);
                     } catch (Exception e) {
                         System.out.println("Error sending data to AI: " + e.getMessage());
                     }
@@ -102,18 +119,35 @@ public class ProductScanController {
             
             // Create payload for AI service
             Map<String, Object> aiPayload = new HashMap<>();
-            aiPayload.put("product", dataValidationService.toFastApiFormat(produit));
+            
+            try {
+                aiPayload.put("product", dataValidationService.toFastApiFormat(produit));
+            } catch (Exception e) {
+                System.out.println("Error formatting product data: " + e.getMessage());
+                // Create minimal product data to continue
+                Map<String, Object> minimalProduct = new HashMap<>();
+                minimalProduct.put("id", produit.getId());
+                minimalProduct.put("name", produit.getNom() != null ? produit.getNom() : "Unknown Product");
+                minimalProduct.put("barcode", produit.getCodeBarre());
+                aiPayload.put("product", minimalProduct);
+            }
             
             // Add user data if available
             if (user != null) {
-                Map<String, Object> userData = new HashMap<>();
-                userData.put("id", user.getId());
-                userData.put("nom", user.getNom());
-                userData.put("prenom", user.getPrenom());
-                userData.put("allergies", user.getAllergies());
-                userData.put("preferences", user.getObjectives());
-                userData.put("healthConditions", user.getMaladies());
-                aiPayload.put("user", userData);
+                try {
+                    Map<String, Object> userData = new HashMap<>();
+                    userData.put("id", user.getId());
+                    userData.put("nom", user.getNom());
+                    userData.put("prenom", user.getPrenom());
+                    userData.put("allergies", user.getAllergies());
+                    userData.put("preferences", user.getObjectives());
+                    userData.put("healthConditions", user.getMaladies());
+                    aiPayload.put("user", userData);
+                } catch (Exception e) {
+                    System.out.println("Error formatting user data: " + e.getMessage());
+                    // Add minimal user data
+                    aiPayload.put("user", Map.of("id", userId));
+                }
             } else {
                 // Add empty user data if not found
                 aiPayload.put("user", Map.of("id", userId));
@@ -129,7 +163,7 @@ public class ProductScanController {
             HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(aiPayload, headers);
             
             // Send to AI service (either directly or via recommendation service)
-            String aiServiceUrl = "http://localhost:8000/api/analyze"; // Replace with actual AI service URL
+            String aiServiceUrl = "http://192.168.1.69:8000/api/analyze"; // Replace with actual AI service URL
             
             // Try to use the generalized recommendation with the product and user
             try {
@@ -143,15 +177,16 @@ public class ProductScanController {
                     System.out.println("AI service direct response: " + response.getStatusCode());
                 }
             } catch (Exception e) {
-                // Fall back to direct REST call on error
-                System.out.println("Falling back to direct AI service call: " + e.getMessage());
-                ResponseEntity<Map> response = restTemplate.postForEntity(
-                    aiServiceUrl, requestEntity, Map.class);
-                System.out.println("AI service response: " + response.getStatusCode());
+                System.out.println("Error generating recommendation: " + e.getMessage());
+                
+                // Don't crash the app - just log the error
+                System.out.println("AI recommendation failed but continuing with app flow: " + e.getMessage());
             }
         } catch (Exception e) {
+            // Log the error but don't crash the app
             System.out.println("Error sending data to AI service: " + e.getMessage());
             e.printStackTrace();
+            System.out.println("Continuing with app flow despite AI service error");
         }
     }
 

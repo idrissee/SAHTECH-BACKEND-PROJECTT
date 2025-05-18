@@ -48,6 +48,26 @@ public class ProduitServiceImpl implements ProduitService {
     public Optional<Produit> findByCodeBarre(Long codeBarre) {
         System.out.println("Service findByCodeBarre received: " + codeBarre + " (Type: " + (codeBarre != null ? codeBarre.getClass().getSimpleName() : "null") + ")");
         try {
+            // Add debugging for special barcode - check if the database has this specific product
+            if (codeBarre != null && codeBarre == 6133414007137L) {
+                System.out.println("PRIORITY BARCODE DETECTED: " + codeBarre);
+                System.out.println("Checking if it exists in database directly...");
+                // Force cast to check if we have any products with this exact value
+                List<Produit> allProducts = produitRepository.findAll();
+                System.out.println("Total products in DB: " + allProducts.size());
+                boolean found = false;
+                for (Produit p : allProducts) {
+                    if (p.getCodeBarre() != null && p.getCodeBarre().toString().equals("6133414007137")) {
+                        System.out.println("FOUND MATCHING PRODUCT: " + p.getNom() + ", ID: " + p.getId());
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    System.out.println("NO MATCHING PRODUCT FOUND FOR 6133414007137");
+                }
+            }
+            
             // Find product by Long barcode
             Optional<Produit> result = produitRepository.findByCodeBarre(codeBarre);
             System.out.println("Search result for barcode '" + codeBarre + "': " + (result.isPresent() ? "Found" : "Not found"));

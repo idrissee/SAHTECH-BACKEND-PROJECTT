@@ -73,6 +73,14 @@ public class SecurityConfig {
                 .requestMatchers("/API/Sahtech/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech").permitAll()
 
+                // Make scan endpoints available to all authenticated users
+                .requestMatchers(HttpMethod.GET, "/API/Sahtech/scan/**").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.POST, "/API/Sahtech/scan/**").hasAnyRole("ADMIN", "USER")
+                
+                // Make recommendation endpoints available to all authenticated users
+                .requestMatchers(HttpMethod.GET, "/API/Sahtech/recommendation/**").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.POST, "/API/Sahtech/recommendation/**").hasAnyRole("ADMIN", "USER")
+
                 // Admin a accès à tout
                 .requestMatchers("/API/Sahtech/Admins/**").hasRole("ADMIN")
 

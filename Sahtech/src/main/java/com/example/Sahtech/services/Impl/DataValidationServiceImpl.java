@@ -108,12 +108,25 @@ public class DataValidationServiceImpl implements DataValidationService {
         fastApiFormat.put("description", produit.getDescription());
         fastApiFormat.put("type", produit.getCategorie());
         
-        // Convert ingredients to string list for FastAPI
+        // Convert ingredients to string list for FastAPI - with improved error handling
         List<String> ingredientStrings = new ArrayList<>();
         if (produit.getIngredients() != null) {
             produit.getIngredients().forEach(ingredient -> {
-                if (ingredient != null && ingredient.getNomIngrediant() != null) {
-                    ingredientStrings.add(ingredient.getNomIngrediant().toString());
+                if (ingredient != null) {
+                    try {
+                        if (ingredient.getNomIngrediant() != null) {
+                            ingredientStrings.add(ingredient.getNomIngrediant().toString());
+                        }
+                    } catch (Exception e) {
+                        // Log error but don't crash
+                        System.err.println("Error processing ingredient: " + e.getMessage());
+                        // Try to include the ingredient name for debugging
+                        try {
+                            ingredientStrings.add("UNKNOWN_INGREDIENT");
+                        } catch (Exception ignored) {
+                            // Completely ignore any further errors
+                        }
+                    }
                 }
             });
         }
