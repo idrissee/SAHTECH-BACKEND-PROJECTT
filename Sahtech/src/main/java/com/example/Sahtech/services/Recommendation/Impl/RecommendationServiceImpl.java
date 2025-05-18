@@ -82,18 +82,25 @@ public class RecommendationServiceImpl implements RecommendationService {
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.set("X-API-Key", aiServiceApiKey);
             
-            // Prepare request body
+            // Create a completely new map structure without any Java-specific metadata
             Map<String, Object> requestBody = new HashMap<>();
             
-            // Prepare user data with field names that match the FastAPI UserData model
+            // Prepare user data - extract only the needed fields as primitive types
             Map<String, Object> userData = new HashMap<>();
             userData.put("user_id", utilisateur.getId());
             
-            // Convert allergies to string list
-            List<String> allergiesList = utilisateur.getAllergies() != null ? utilisateur.getAllergies() : List.of();
+            // Convert allergies to string list - create a new list with defensive copying
+            List<String> allergiesList = new ArrayList<>();
+            if (utilisateur.getAllergies() != null) {
+                for (String allergy : utilisateur.getAllergies()) {
+                    if (allergy != null) {
+                        allergiesList.add(allergy);
+                    }
+                }
+            }
             userData.put("allergies", allergiesList);
             
-            // Convert maladies (Enum objects) to string list for health_conditions
+            // Convert maladies (Enum objects) to string list for health_conditions - create a new list safely
             List<String> healthConditions = new ArrayList<>();
             if (utilisateur.getMaladies() != null) {
                 for (Maladie maladie : utilisateur.getMaladies()) {
@@ -147,44 +154,58 @@ public class RecommendationServiceImpl implements RecommendationService {
                                 break;
                         }
                         healthConditions.add(maladieStr);
-                        logger.info("Added health condition: " + maladieStr + " from enum " + maladie.name());
                     }
                 }
             }
             userData.put("health_conditions", healthConditions);
             
-            userData.put("age", utilisateur.getAge()); // Age is already a primitive int
-            userData.put("weight", utilisateur.getPoids() != null ? utilisateur.getPoids() : 70.0); // Default weight if null
-            userData.put("height", utilisateur.getTaille() != null ? utilisateur.getTaille() : 170.0); // Default height if null
-            userData.put("gender", utilisateur.getSexe() != null ? utilisateur.getSexe() : "not_specified");
+            // Add primitive values
+            Integer age = utilisateur.getAge();
+            userData.put("age", age != null ? age : null);
+            
+            Float poids = utilisateur.getPoids();
+            userData.put("weight", poids != null ? poids.doubleValue() : null);
+            
+            Float taille = utilisateur.getTaille();
+            userData.put("height", taille != null ? taille.doubleValue() : null);
+            
+            String sexe = utilisateur.getSexe();
+            userData.put("gender", sexe != null ? sexe : null);
+            
             userData.put("activity_level", "moderate"); // Default value
             
-            // Convert objectives to string list
+            // Convert objectives to string list - with defensive copying
             List<String> objectivesList = new ArrayList<>();
             if (utilisateur.getObjectives() != null && !utilisateur.getObjectives().isEmpty()) {
-                // User-defined objectives have priority
-                objectivesList = utilisateur.getObjectives();
+                for (String objective : utilisateur.getObjectives()) {
+                    if (objective != null) {
+                        objectivesList.add(objective);
+                    }
+                }
             } else if (utilisateur.getObjectif() != null) {
-                // Add main objective if defined
                 objectivesList.add(utilisateur.getObjectif().name().toLowerCase().replace('_', ' '));
             }
             userData.put("objectives", objectivesList);
             
             userData.put("has_allergies", utilisateur.getAllergies() != null && !utilisateur.getAllergies().isEmpty());
             userData.put("has_chronic_disease", utilisateur.getMaladies() != null && !utilisateur.getMaladies().isEmpty());
-            userData.put("preferred_language", utilisateur.getPreferredLanguage() != null ? utilisateur.getPreferredLanguage() : "french"); // Default language
+            
+            String prefLang = utilisateur.getPreferredLanguage();
+            userData.put("preferred_language", prefLang != null ? prefLang : "french");
             
             // Calculate BMI if height and weight are available
-            if (utilisateur.getTaille() != null && utilisateur.getPoids() != null && utilisateur.getTaille().compareTo(0f) > 0) {
-                float heightInMeters = utilisateur.getTaille() / 100.0f;
-                float bmi = utilisateur.getPoids() / (heightInMeters * heightInMeters);
+            if (taille != null && poids != null && taille.compareTo(0f) > 0) {
+                float heightInMeters = taille / 100.0f;
+                float bmi = poids / (heightInMeters * heightInMeters);
                 userData.put("bmi", Math.round(bmi * 10) / 10.0); // Round to 1 decimal place
             }
             
-            // Prepare product data with field names that match the FastAPI ProductData model
+            // Prepare product data - extract only the needed fields as primitive types
             Map<String, Object> productData = new HashMap<>();
             productData.put("id", produit.getId());
-            productData.put("name", produit.getNom() != null ? produit.getNom() : "Unknown Product");
+            
+            String nom = produit.getNom();
+            productData.put("name", nom != null ? nom : "Unknown Product");
             
             // Ensure barcode is a string
             if (produit.getCodeBarre() != null) {
@@ -196,20 +217,24 @@ public class RecommendationServiceImpl implements RecommendationService {
                 productData.put("barcode", "0000000000000");
             }
             
-            productData.put("brand", produit.getMarque() != null ? produit.getMarque() : "Unknown Brand");
-            productData.put("category", produit.getCategorie() != null ? produit.getCategorie() : "Unknown Category");
-            productData.put("description", ""); // Empty description is fine
-            productData.put("type", produit.getCategorie() != null ? produit.getCategorie() : "Unknown Type");
+            String marque = produit.getMarque();
+            productData.put("brand", marque != null ? marque : "Unknown Brand");
+            
+            String categorie = produit.getCategorie();
+            productData.put("category", categorie != null ? categorie : "Unknown Category");
+            
+            String description = produit.getDescription();
+            productData.put("description", description != null ? description : "");
+            
+            productData.put("type", categorie != null ? categorie : "Unknown Type");
             
             // Extract ingredient names safely with improved error handling
             List<String> ingredientNames = new ArrayList<>();
             if (produit.getIngredients() != null) {
                 for (var ingredient : produit.getIngredients()) {
-                    if (ingredient != null) {
+                    if (ingredient != null && ingredient.getNomIngrediant() != null) {
                         try {
-                            if (ingredient.getNomIngrediant() != null) {
-                                ingredientNames.add(ingredient.getNomIngrediant().toString());
-                            }
+                            ingredientNames.add(ingredient.getNomIngrediant().toString());
                         } catch (Exception e) {
                             logger.log(Level.WARNING, "Error processing ingredient enum: " + e.getMessage(), e);
                         }
@@ -221,8 +246,15 @@ public class RecommendationServiceImpl implements RecommendationService {
             }
             productData.put("ingredients", ingredientNames);
             
-            // Add additives (ensure it's never null)
-            List<String> additives = produit.getNomAdditif() != null ? produit.getNomAdditif() : new ArrayList<>();
+            // Add additives - create a new list with defensive copying
+            List<String> additives = new ArrayList<>();
+            if (produit.getNomAdditif() != null) {
+                for (String additive : produit.getNomAdditif()) {
+                    if (additive != null) {
+                        additives.add(additive);
+                    }
+                }
+            }
             productData.put("additives", additives);
             
             // Add nutri score
@@ -246,10 +278,8 @@ public class RecommendationServiceImpl implements RecommendationService {
             requestBody.put("user_data", userData);
             requestBody.put("product_data", productData);
             
-            // Log the full request for debugging
-            logger.info("Full request data structure: " + requestBody.keySet());
-            logger.info("User data fields: " + userData.keySet());
-            logger.info("Product data fields: " + productData.keySet());
+            // Log for debugging (without entire content)
+            logger.info("Sending request to FastAPI with data: userData(" + userData.size() + " fields), productData(" + productData.size() + " fields)");
             
             // Make API request to FastAPI
             HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
@@ -257,7 +287,29 @@ public class RecommendationServiceImpl implements RecommendationService {
             
             logger.info("Sending request to AI service: " + url);
             
-            return restTemplate.postForObject(url, request, Map.class);
+            // Get the response as a simple Map to avoid serialization issues
+            Map<String, Object> response = restTemplate.postForObject(url, request, Map.class);
+            
+            // Explicitly create a new map with string values to avoid serialization problems
+            Map<String, Object> sanitizedResponse = new HashMap<>();
+            if (response != null) {
+                // Extract the recommendation text and ensure it's a String
+                if (response.containsKey("recommendation")) {
+                    sanitizedResponse.put("recommendation", String.valueOf(response.get("recommendation")));
+                }
+                
+                // Extract the recommendation_type and ensure it's a String
+                if (response.containsKey("recommendation_type")) {
+                    sanitizedResponse.put("recommendation_type", String.valueOf(response.get("recommendation_type")));
+                }
+            } else {
+                // Handle null response
+                sanitizedResponse.put("recommendation", "Unable to generate recommendation. Service returned null.");
+                sanitizedResponse.put("recommendation_type", "caution");
+            }
+            
+            logger.info("Received and sanitized AI service response: " + sanitizedResponse);
+            return sanitizedResponse;
             
         } catch (ResourceAccessException e) {
             // This exception occurs when there are connectivity issues
