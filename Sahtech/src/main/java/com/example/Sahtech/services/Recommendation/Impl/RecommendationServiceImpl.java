@@ -1,5 +1,6 @@
 package com.example.Sahtech.services.Recommendation.Impl;
 
+import com.example.Sahtech.Enum.Maladie;
 import com.example.Sahtech.entities.ProduitDetaille.Produit;
 import com.example.Sahtech.entities.Users.Utilisateurs;
 import com.example.Sahtech.services.Recommendation.RecommendationService;
@@ -87,20 +88,46 @@ public class RecommendationServiceImpl implements RecommendationService {
             // Prepare user data with field names that match the FastAPI UserData model
             Map<String, Object> userData = new HashMap<>();
             userData.put("user_id", utilisateur.getId());
-            userData.put("allergies", utilisateur.getAllergies() != null ? utilisateur.getAllergies() : List.of());
-            userData.put("health_conditions", utilisateur.getMaladies() != null ? utilisateur.getMaladies() : List.of());
+            
+            // Convert allergies to string list
+            List<String> allergiesList = utilisateur.getAllergies() != null ? utilisateur.getAllergies() : List.of();
+            userData.put("allergies", allergiesList);
+            
+            // Convert maladies (Enum objects) to string list for health_conditions
+            List<String> healthConditions = new ArrayList<>();
+            if (utilisateur.getMaladies() != null) {
+                for (Maladie maladie : utilisateur.getMaladies()) {
+                    if (maladie != null) {
+                        // Convert enum name to lowercase and replace underscores with spaces
+                        String maladieStr = maladie.name().toLowerCase().replace('_', ' ');
+                        healthConditions.add(maladieStr);
+                    }
+                }
+            }
+            userData.put("health_conditions", healthConditions);
+            
             userData.put("age", utilisateur.getAge()); // Age is already a primitive int
             userData.put("weight", utilisateur.getPoids() != null ? utilisateur.getPoids() : 70.0); // Default weight if null
             userData.put("height", utilisateur.getTaille() != null ? utilisateur.getTaille() : 170.0); // Default height if null
             userData.put("gender", utilisateur.getSexe() != null ? utilisateur.getSexe() : "not_specified");
             userData.put("activity_level", "moderate"); // Default value
-            userData.put("objectives", utilisateur.getObjectives() != null ? utilisateur.getObjectives() : List.of());
+            
+            // Convert objectives to string list
+            List<String> objectivesList = new ArrayList<>();
+            if (utilisateur.getObjectives() != null && !utilisateur.getObjectives().isEmpty()) {
+                // User-defined objectives have priority
+                objectivesList = utilisateur.getObjectives();
+            } else if (utilisateur.getObjectif() != null) {
+                // Add main objective if defined
+                objectivesList.add(utilisateur.getObjectif().name().toLowerCase().replace('_', ' '));
+            }
+            userData.put("objectives", objectivesList);
+            
             userData.put("has_allergies", utilisateur.getAllergies() != null && !utilisateur.getAllergies().isEmpty());
             userData.put("has_chronic_disease", utilisateur.getMaladies() != null && !utilisateur.getMaladies().isEmpty());
-            userData.put("preferred_language", "french"); // Default language
+            userData.put("preferred_language", utilisateur.getPreferredLanguage() != null ? utilisateur.getPreferredLanguage() : "french"); // Default language
             
             // Calculate BMI if height and weight are available
-
             if (utilisateur.getTaille() != null && utilisateur.getPoids() != null && utilisateur.getTaille().compareTo(0f) > 0) {
                 float heightInMeters = utilisateur.getTaille() / 100.0f;
                 float bmi = utilisateur.getPoids() / (heightInMeters * heightInMeters);
@@ -114,7 +141,10 @@ public class RecommendationServiceImpl implements RecommendationService {
             
             // Ensure barcode is a string
             if (produit.getCodeBarre() != null) {
-                productData.put("barcode", produit.getCodeBarre().toString());
+                String barcodeStr = produit.getCodeBarre().toString();
+                // Remove any non-digit characters
+                barcodeStr = barcodeStr.replaceAll("[^0-9]", "");
+                productData.put("barcode", barcodeStr);
             } else {
                 productData.put("barcode", "0000000000000");
             }
@@ -170,7 +200,9 @@ public class RecommendationServiceImpl implements RecommendationService {
             requestBody.put("product_data", productData);
             
             // Log the full request for debugging
-            logger.info("Full request data: " + requestBody);
+            logger.info("Full request data structure: " + requestBody.keySet());
+            logger.info("User data fields: " + userData.keySet());
+            logger.info("Product data fields: " + productData.keySet());
             
             // Make API request to FastAPI
             HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
@@ -190,6 +222,14 @@ public class RecommendationServiceImpl implements RecommendationService {
         } catch (RestClientException e) {
             // This occurs for other REST client issues (bad responses, etc)
             logger.severe("Error from AI service: " + e.getMessage());
+            
+            // If this is a 422 error, log more diagnostic information
+            if (e.getMessage() != null && e.getMessage().contains("422")) {
+                logger.severe("422 Unprocessable Entity error - likely a data validation issue");
+                logger.severe("Check that all fields match the FastAPI model requirements");
+                logger.severe("Common issues: null values, wrong data types, or missing required fields");
+            }
+            
             Map<String, Object> error = new HashMap<>();
             error.put("recommendation", "Error receiving response from AI service. Please try again later.");
             error.put("recommendation_type", "caution");
