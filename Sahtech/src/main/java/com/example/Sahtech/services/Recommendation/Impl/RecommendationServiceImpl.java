@@ -98,9 +98,56 @@ public class RecommendationServiceImpl implements RecommendationService {
             if (utilisateur.getMaladies() != null) {
                 for (Maladie maladie : utilisateur.getMaladies()) {
                     if (maladie != null) {
-                        // Convert enum name to lowercase and replace underscores with spaces
-                        String maladieStr = maladie.name().toLowerCase().replace('_', ' ');
+                        // Convert enum name to a more user-friendly format that matches Flutter selections
+                        String maladieStr;
+                        switch(maladie) {
+                            case DIABETIQUE:
+                                maladieStr = "diabète";
+                                break;
+                            case HYPERTENSION:
+                                maladieStr = "hypertension artérielle";
+                                break;
+                            case OBESITE:
+                                maladieStr = "obésité";
+                                break;
+                            case CHOLESTEROL:
+                                maladieStr = "cholestérol élevé";
+                                break;
+                            case MALADIE_CARDIAQUE:
+                                maladieStr = "maladie cardiaque";
+                                break;
+                            case INTOLERANCE_LACTOSE:
+                                maladieStr = "intolérance au lactose";
+                                break;
+                            case CELIAQUIE:
+                            case MALADIE_COELIAQUE:
+                                maladieStr = "maladie coeliaque";
+                                break;
+                            case ALLERGIE_ARACHIDES:
+                                maladieStr = "allergie aux arachides";
+                                break;
+                            case ALLERGIE_GLUTEN:
+                                maladieStr = "allergie au gluten";
+                                break;
+                            case ALLERGIE_FRUITS_DE_MER:
+                                maladieStr = "allergie aux fruits de mer";
+                                break;
+                            case MALADIE_RENALE:
+                                maladieStr = "maladie rénale";
+                                break;
+                            case HEPATITE:
+                                maladieStr = "hépatite";
+                                break;
+                            case ASTHME:
+                                maladieStr = "asthme";
+                                break;
+                            default:
+                                // Fallback to standard enum name conversion
+                                maladieStr = maladie.name().toLowerCase().replace('_', ' ');
+                                break;
+                        }
                         healthConditions.add(maladieStr);
+                        logger.info("Added health condition: " + maladieStr + " from enum " + maladie.name());
                     }
                 }
             }

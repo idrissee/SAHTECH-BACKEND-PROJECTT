@@ -210,7 +210,95 @@ public class AuthServiceImpl implements AuthService {
         List<Maladie> result = new ArrayList<>();
         for (String maladieStr : maladiesString) {
             try {
-                // Try to match by enum name (normalized)
+                // First try direct mapping from Flutter disease names to Maladie enum
+                if (maladieStr == null || maladieStr.trim().isEmpty()) {
+                    continue; // Skip empty strings
+                }
+                
+                String input = maladieStr.toLowerCase().trim();
+                System.out.println("DEBUG: Processing disease: '" + input + "'");
+                
+                // Direct mappings from Flutter UI disease names to enum values
+                if (input.equals("diabète") || input.contains("diabet")) {
+                    result.add(Maladie.DIABETIQUE);
+                    System.out.println("DEBUG: Mapped to DIABETIQUE enum");
+                    continue;
+                }
+                
+                if (input.equals("obésité") || input.contains("obesit")) {
+                    result.add(Maladie.OBESITE);
+                    System.out.println("DEBUG: Mapped to OBESITE enum");
+                    continue;
+                }
+                
+                if (input.equals("hypertension artérielle") || input.contains("hypertens")) {
+                    result.add(Maladie.HYPERTENSION);
+                    System.out.println("DEBUG: Mapped to HYPERTENSION enum");
+                    continue;
+                }
+                
+                if (input.equals("maladie coeliaque") || input.contains("coeliaq") || input.contains("celiaq")) {
+                    result.add(Maladie.MALADIE_COELIAQUE);
+                    System.out.println("DEBUG: Mapped to MALADIE_COELIAQUE enum");
+                    continue;
+                }
+                
+                if (input.equals("asthme") || input.contains("asthm")) {
+                    result.add(Maladie.ASTHME);
+                    System.out.println("DEBUG: Mapped to ASTHME enum");
+                    continue;
+                }
+                
+                if (input.contains("cholesterol") || input.contains("cholestérol")) {
+                    result.add(Maladie.CHOLESTEROL);
+                    System.out.println("DEBUG: Mapped to CHOLESTEROL enum");
+                    continue;
+                }
+                
+                if (input.contains("cardiaque") || input.contains("coeur")) {
+                    result.add(Maladie.MALADIE_CARDIAQUE);
+                    System.out.println("DEBUG: Mapped to MALADIE_CARDIAQUE enum");
+                    continue;
+                }
+                
+                if (input.contains("intoler") && input.contains("lactose")) {
+                    result.add(Maladie.INTOLERANCE_LACTOSE);
+                    System.out.println("DEBUG: Mapped to INTOLERANCE_LACTOSE enum");
+                    continue;
+                }
+                
+                if ((input.contains("allergie") || input.contains("allergique")) && input.contains("arachide")) {
+                    result.add(Maladie.ALLERGIE_ARACHIDES);
+                    System.out.println("DEBUG: Mapped to ALLERGIE_ARACHIDES enum");
+                    continue;
+                }
+                
+                if ((input.contains("allergie") || input.contains("allergique")) && input.contains("gluten")) {
+                    result.add(Maladie.ALLERGIE_GLUTEN);
+                    System.out.println("DEBUG: Mapped to ALLERGIE_GLUTEN enum");
+                    continue;
+                }
+                
+                if ((input.contains("allergie") || input.contains("allergique")) && 
+                    (input.contains("fruit") && input.contains("mer"))) {
+                    result.add(Maladie.ALLERGIE_FRUITS_DE_MER);
+                    System.out.println("DEBUG: Mapped to ALLERGIE_FRUITS_DE_MER enum");
+                    continue;
+                }
+                
+                if (input.contains("ren") && (input.contains("maladie") || input.contains("problem"))) {
+                    result.add(Maladie.MALADIE_RENALE);
+                    System.out.println("DEBUG: Mapped to MALADIE_RENALE enum");
+                    continue;
+                }
+                
+                if (input.contains("hepat")) {
+                    result.add(Maladie.HEPATITE);
+                    System.out.println("DEBUG: Mapped to HEPATITE enum");
+                    continue;
+                }
+                
+                // If no direct mapping found, try the general approach with normalization
                 String normalized = maladieStr.toUpperCase()
                     .replace(" ", "_")
                     .replace("É", "E")
@@ -223,20 +311,7 @@ public class AuthServiceImpl implements AuthService {
                 
                 System.out.println("DEBUG: Normalized '" + maladieStr + "' to '" + normalized + "'");
                 
-                // For hypertension artérielle, map it directly to HYPERTENSION
-                if (normalized.contains("HYPERTENSION")) {
-                    result.add(Maladie.HYPERTENSION);
-                    System.out.println("DEBUG: Mapped to HYPERTENSION enum");
-                    continue;
-                }
-                
-                // For asthme, map it directly to ASTHME
-                if (normalized.equals("ASTHME")) {
-                    result.add(Maladie.ASTHME);
-                    System.out.println("DEBUG: Mapped to ASTHME enum");
-                    continue;
-                }
-                
+                // For any other cases, try exact enum matching
                 try {
                     Maladie maladie = Maladie.valueOf(normalized);
                     result.add(maladie);
