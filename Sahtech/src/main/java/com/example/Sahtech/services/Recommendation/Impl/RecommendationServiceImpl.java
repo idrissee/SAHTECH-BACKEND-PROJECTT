@@ -29,7 +29,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     
     private final RestTemplate restTemplate;
     
-    @Value("${ai.service.url:http://192.168.1.69:8000}")
+    @Value("${ai.service.url:http://192.168.137.15:8000}")
     private String aiServiceUrl;
     
     @Value("${ai.service.apikey:sahtech-fastapi-secure-key-2025}")
@@ -52,8 +52,13 @@ public class RecommendationServiceImpl implements RecommendationService {
     
     @Override
     public Map<String, Object> generateRecommendationWithType(Utilisateurs utilisateur, Produit produit) {
+        return generateRecommendationWithType(utilisateur, produit, null);
+    }
+    
+    @Override
+    public Map<String, Object> generateRecommendationWithType(Utilisateurs utilisateur, Produit produit, String flutterCallbackUrl) {
         try {
-            Map<String, Object> result = callAiService(utilisateur, produit);
+            Map<String, Object> result = callAiService(utilisateur, produit, flutterCallbackUrl);
             if (result == null) {
                 Map<String, Object> fallback = new HashMap<>();
                 fallback.put("recommendation", "Unable to generate a recommendation at this time. Please try again later.");
@@ -71,9 +76,17 @@ public class RecommendationServiceImpl implements RecommendationService {
     }
     
     /**
-     * Call the AI service to generate a recommendation
+     * Overloaded method for backward compatibility
      */
     private Map<String, Object> callAiService(Utilisateurs utilisateur, Produit produit) {
+        return callAiService(utilisateur, produit, null);
+    }
+    
+    /**
+     * Call the AI service to generate a recommendation
+     * @param flutterCallbackUrl optional URL for FastAPI to directly send the recommendation to Flutter
+     */
+    private Map<String, Object> callAiService(Utilisateurs utilisateur, Produit produit, String flutterCallbackUrl) {
         logger.info("Generating recommendation for user " + utilisateur.getId() + " and product " + produit.getId());
         
         try {
@@ -277,6 +290,12 @@ public class RecommendationServiceImpl implements RecommendationService {
             // Build full request - make sure the keys match exactly what FastAPI expects
             requestBody.put("user_data", userData);
             requestBody.put("product_data", productData);
+            
+            // Add Flutter callback URL if provided
+            if (flutterCallbackUrl != null && !flutterCallbackUrl.isEmpty()) {
+                logger.info("Including Flutter callback URL in request to FastAPI: " + flutterCallbackUrl);
+                requestBody.put("flutter_callback_url", flutterCallbackUrl);
+            }
             
             // Log for debugging (without entire content)
             logger.info("Sending request to FastAPI with data: userData(" + userData.size() + " fields), productData(" + productData.size() + " fields)");

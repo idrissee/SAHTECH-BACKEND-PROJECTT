@@ -35,10 +35,18 @@ public class RecommendationController {
      * Get recommendation data for a user and product
      * This endpoint is called by the Flutter app when a product is scanned
      * The method now always generates a fresh recommendation regardless of whether one already exists
+     * It can also accept a Flutter callback URL to enable direct communication between FastAPI and Flutter
      */
     @GetMapping("/user/{userId}/data")
-    public ResponseEntity<?> getRecommendationData(@PathVariable String userId, @RequestParam String productId) {
+    public ResponseEntity<?> getRecommendationData(
+            @PathVariable String userId, 
+            @RequestParam String productId,
+            @RequestParam(required = false) String flutterCallbackUrl) {
+        
         logger.info("Getting recommendation for user " + userId + " and product " + productId);
+        if (flutterCallbackUrl != null && !flutterCallbackUrl.isEmpty()) {
+            logger.info("Flutter callback URL provided: " + flutterCallbackUrl);
+        }
         
         try {
             // 1. Find user and product
@@ -68,7 +76,11 @@ public class RecommendationController {
             // 3. Always generate a new recommendation using the FastAPI service
             try {
                 logger.info("Generating fresh recommendation for product: " + produit.get().getNom());
-                Map<String, Object> aiResponse = recommendationService.generateRecommendationWithType(utilisateur.get(), produit.get());
+                Map<String, Object> aiResponse = recommendationService.generateRecommendationWithType(
+                    utilisateur.get(), 
+                    produit.get(),
+                    flutterCallbackUrl  // Pass the Flutter callback URL to the service
+                );
                 String aiRecommendation = (String) aiResponse.get("recommendation");
                 String recommendationType = (String) aiResponse.get("recommendation_type");
 
