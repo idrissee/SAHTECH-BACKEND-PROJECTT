@@ -34,6 +34,7 @@ public class RecommendationController {
     /**
      * Get recommendation data for a user and product
      * This endpoint is called by the Flutter app when a product is scanned
+     * The method now always generates a fresh recommendation regardless of whether one already exists
      */
     @GetMapping("/user/{userId}/data")
     public ResponseEntity<?> getRecommendationData(@PathVariable String userId, @RequestParam String productId) {
@@ -56,32 +57,35 @@ public class RecommendationController {
 
             logger.info("Found user: " + utilisateur.get().getNom() + " and product: " + produit.get().getNom());
 
-            // 2. Check if a recommendation already exists
+            // 2. Check if a recommendation already exists (for logging purposes only)
             Optional<Recommendation> existingRecommendation = 
                 recommendationRepository.findByUtilisateurAndProduit(utilisateur.get(), produit.get());
 
             if (existingRecommendation.isPresent()) {
-                // Return the existing recommendation
-                logger.info("Found existing recommendation for product: " + produit.get().getNom());
-                Map<String, Object> response = new HashMap<>();
-                response.put("recommendation", existingRecommendation.get().getContent());
-                response.put("recommendation_type", existingRecommendation.get().getType());
-                return ResponseEntity.ok(response);
+                logger.info("Found existing recommendation for product: " + produit.get().getNom() + " but will generate a fresh one");
             }
 
-            // 3. Generate a new recommendation using the FastAPI service
+            // 3. Always generate a new recommendation using the FastAPI service
             try {
-                logger.info("Generating new recommendation for product: " + produit.get().getNom());
+                logger.info("Generating fresh recommendation for product: " + produit.get().getNom());
                 Map<String, Object> aiResponse = recommendationService.generateRecommendationWithType(utilisateur.get(), produit.get());
                 String aiRecommendation = (String) aiResponse.get("recommendation");
                 String recommendationType = (String) aiResponse.get("recommendation_type");
 
-                // 4. Save the recommendation to the database with its type
+                // 4. Create a new recommendation object
                 Recommendation newRecommendation = new Recommendation(utilisateur.get(), produit.get(), aiRecommendation, recommendationType);
+                
+                // 5. If a recommendation already exists, delete it before saving the new one
+                if (existingRecommendation.isPresent()) {
+                    recommendationRepository.delete(existingRecommendation.get());
+                    logger.info("Deleted existing recommendation for product: " + produit.get().getNom());
+                }
+                
+                // 6. Save the new recommendation to the database
                 recommendationRepository.save(newRecommendation);
-                logger.info("Saved new recommendation for product: " + produit.get().getNom());
+                logger.info("Saved fresh recommendation for product: " + produit.get().getNom());
 
-                // 5. Return the recommendation and its type
+                // 7. Return the recommendation and its type
                 Map<String, Object> response = new HashMap<>();
                 response.put("recommendation", aiRecommendation);
                 response.put("recommendation_type", recommendationType);
@@ -143,6 +147,16 @@ public class RecommendationController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User or product not found");
             }
 
+            // Check if a recommendation already exists
+            Optional<Recommendation> existingRecommendation = 
+                recommendationRepository.findByUtilisateurAndProduit(utilisateur.get(), produit.get());
+                
+            // If it exists, delete it
+            if (existingRecommendation.isPresent()) {
+                recommendationRepository.delete(existingRecommendation.get());
+            }
+
+            // Create and save the new recommendation
             Recommendation recommendation = new Recommendation(utilisateur.get(), produit.get(), content, recommendationType);
             recommendationRepository.save(recommendation);
 
