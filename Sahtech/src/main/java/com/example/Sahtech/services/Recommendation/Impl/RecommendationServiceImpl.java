@@ -29,7 +29,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     
     private final RestTemplate restTemplate;
     
-    @Value("${ai.service.url:http://192.168.137.15:8000}")
+    @Value("${ai.service.url:http://192.168.1.69:8000}")
     private String aiServiceUrl;
     
     @Value("${ai.service.apikey:sahtech-fastapi-secure-key-2025}")
