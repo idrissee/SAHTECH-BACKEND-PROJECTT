@@ -1,11 +1,11 @@
 package com.example.Sahtech.security;
 
-import com.example.Sahtech.entities.Admin;
-import com.example.Sahtech.entities.Nutrisioniste;
-import com.example.Sahtech.entities.Utilisateurs;
-import com.example.Sahtech.repositories.AdminRepository;
-import com.example.Sahtech.repositories.NutritionisteRepository;
-import com.example.Sahtech.repositories.UtilisateursRepository;
+import com.example.Sahtech.entities.Users.Admin;
+import com.example.Sahtech.entities.Users.NutritionisteDetaille.Nutrisioniste;
+import com.example.Sahtech.entities.Users.Utilisateurs;
+import com.example.Sahtech.repositories.Users.AdminRepository;
+import com.example.Sahtech.repositories.Users.NutritionisteDetaille.NutritionisteRepository;
+import com.example.Sahtech.repositories.Users.UtilisateursRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

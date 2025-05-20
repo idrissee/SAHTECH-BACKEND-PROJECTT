@@ -1,7 +1,7 @@
 package com.example.Sahtech.mappers.Impl;
 
-import com.example.Sahtech.Dto.PubliciteDto;
-import com.example.Sahtech.entities.Publicite;
+import com.example.Sahtech.Dto.Pub.PubliciteDto;
+import com.example.Sahtech.entities.Pub.Publicite;
 import com.example.Sahtech.mappers.Mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

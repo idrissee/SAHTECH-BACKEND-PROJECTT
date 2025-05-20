@@ -1,7 +1,7 @@
 package com.example.Sahtech.mappers.Impl;
 
-import com.example.Sahtech.Dto.LocalisationDto;
-import com.example.Sahtech.entities.Localisation;
+import com.example.Sahtech.Dto.Users.NutritionisteDetaille.LocalisationDto;
+import com.example.Sahtech.entities.Users.NutritionisteDetaille.Localisation;
 import com.example.Sahtech.mappers.Mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

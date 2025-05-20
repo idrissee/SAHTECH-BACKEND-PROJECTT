@@ -1,16 +1,15 @@
 package com.example.Sahtech.Repositpries;
 
+import com.example.Sahtech.Enum.NomIngrediants;
 import com.example.Sahtech.TestDataUtil;
 import com.example.Sahtech.config.MongoTestConfig;
-import com.example.Sahtech.entities.Ingrediants;
-import com.example.Sahtech.repositories.IngrediantsRepository;
+import com.example.Sahtech.entities.ProduitDetaille.Ingrediants;
+import com.example.Sahtech.repositories.ProduitDetaille.IngrediantsRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -60,7 +59,7 @@ public class IngrediantRepositoryIntegrationTests {
     public void TestThatIngrediantsCanBeUpdated(){
         Ingrediants ingrediantA = TestDataUtil.createTestIngrediantsA();
         underTest.save(ingrediantA);
-        ingrediantA.setNomIngrediant("UPDATED");
+        ingrediantA.setNomIngrediant(NomIngrediants.CALCIUM);
         underTest.save(ingrediantA);
         Optional<Ingrediants> result = underTest.findById(ingrediantA.getIdIngrediant());
         assertThat(result).isPresent();

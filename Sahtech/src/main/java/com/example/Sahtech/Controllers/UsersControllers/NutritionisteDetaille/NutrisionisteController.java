@@ -1,0 +1,155 @@
+package com.example.Sahtech.Controllers.UsersControllers.NutritionisteDetaille;
+
+
+import com.example.Sahtech.Dto.Users.NutritionisteDetaille.NutrisionisteDto;
+import com.example.Sahtech.entities.Users.NutritionisteDetaille.Nutrisioniste;
+import com.example.Sahtech.mappers.Mapper;
+
+import com.example.Sahtech.services.Impl.Image.ImageServiceImpl;
+import com.example.Sahtech.services.Interfaces.Auth_Author.AuthorizationService;
+import com.example.Sahtech.services.Interfaces.Users.NutritionisteDetaille.NutrisionisteService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/API/Sahtech/Nutrisionistes")
+public class NutrisionisteController {
+
+    @Autowired
+    private NutrisionisteService nutrisionisteService;
+
+    @Autowired
+    private Mapper<Nutrisioniste, NutrisionisteDto> nutrisionisteMapper;
+    
+    @Autowired
+    private AuthorizationService authorizationService;
+
+    @Autowired
+    private ImageServiceImpl imageServiceImpl;
+
+    // GET ALL - accessible aux admins et users
+    @GetMapping("/All")
+    public ResponseEntity<List<NutrisionisteDto>> getAllNutrisionistes() {
+        // Vérification que l'utilisateur est bien un admin ou user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        boolean isUser = authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"));
+        
+        if (!isAdmin && !isUser) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        
+        List<Nutrisioniste> nutrisionistes = nutrisionisteService.getAllNutrisionistes();
+        List<NutrisionisteDto> dtos = nutrisionistes.stream()
+                .map(nutrisionisteMapper::mapTo)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+
+    // GET BY ID - accessible à l'admin et au nutritionniste lui-même
+    @GetMapping("/{id}")
+    public ResponseEntity<NutrisionisteDto> getNutrisionisteById(@PathVariable String id, HttpServletRequest request) {
+        // Vérifier si l'utilisateur est autorisé
+        if (!authorizationService.isAuthorizedToAccessResource(id, request)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        
+        Nutrisioniste nutrisioniste = nutrisionisteService.getNutrisionisteById(id);
+        if (nutrisioniste == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(nutrisionisteMapper.mapTo(nutrisioniste), HttpStatus.OK);
+    }
+
+    // GET BY EMAIL - réservé à l'admin (déjà géré par SecurityConfig)
+    @GetMapping("/email")
+    public NutrisionisteDto getNutrisionisteByEmail(@RequestParam String email) {
+        return nutrisionisteMapper.mapTo(nutrisionisteService.getNutrisionisteByEmail(email));
+    }
+
+    // GET BY NUMÉRO DE TÉLÉPHONE - réservé à l'admin (déjà géré par SecurityConfig)
+    @GetMapping("/telephone/{telephone}")
+    public NutrisionisteDto getNutrisionisteByTelephone(@PathVariable String telephone) {
+        return nutrisionisteMapper.mapTo(nutrisionisteService.getNutrisionisteByTelephone(telephone));
+    }
+
+    // GET BY SPECIALITE - réservé à l'admin (déjà géré par SecurityConfig)
+    @GetMapping("/specialite/{specialite}")
+    public List<NutrisionisteDto> getNutrisionistesBySpecialite(@PathVariable String specialite) {
+        return nutrisionisteService.getNutrisionistesBySpecialite(specialite).stream()
+                .map(nutrisionisteMapper::mapTo)
+                .collect(Collectors.toList());
+    }
+
+    // CREATE - réservé à l'admin (déjà géré par SecurityConfig)
+    @PostMapping("/Create")
+    public NutrisionisteDto createNutrisioniste(@RequestBody NutrisionisteDto nutrisionisteDto) {
+        Nutrisioniste nutrisioniste = nutrisionisteMapper.mapFrom(nutrisionisteDto);
+        return nutrisionisteMapper.mapTo(nutrisionisteService.createNutrisioniste(nutrisioniste));
+    }
+
+    // UPDATE - accessible à l'admin et au nutritionniste lui-même
+    @PutMapping("/{id}")
+    public ResponseEntity<NutrisionisteDto> updateNutrisioniste(@PathVariable String id, @RequestBody NutrisionisteDto nutrisionisteDto, HttpServletRequest request) {
+        // Vérifier si l'utilisateur est autorisé
+        if (!authorizationService.isAuthorizedToAccessResource(id, request)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        
+        Nutrisioniste nutrisioniste = nutrisionisteMapper.mapFrom(nutrisionisteDto);
+        Nutrisioniste updated = nutrisionisteService.updateNutrisioniste(id, nutrisioniste);
+        if (updated == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(nutrisionisteMapper.mapTo(updated), HttpStatus.OK);
+    }
+
+    // DELETE - réservé à l'admin (déjà géré par SecurityConfig)
+    @DeleteMapping("/Delete/{id}")
+    public ResponseEntity<Void> deleteNutrisioniste(@PathVariable String id) {
+        boolean deleted = nutrisionisteService.deleteNutrisioniste(id);
+        return deleted ? new ResponseEntity<>(HttpStatus.NO_CONTENT) 
+               : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/{id}/uploadPhoto")
+    public ResponseEntity<Nutrisioniste> uploadPhoto(
+            @PathVariable String id,
+            @RequestParam("file") MultipartFile file,
+            HttpServletRequest request
+    ) throws IOException {
+        // Vérifier si le nutrisioniste est autorisé
+        if (!authorizationService.isAuthorizedToAccessResource(id, request)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        String photoUrl = imageServiceImpl.uploadImage(file, "nutritionnistes/photos");
+        Nutrisioniste updated = nutrisionisteService.setPhotoUrl(id, photoUrl);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PostMapping("/{id}/uploadPhotoDiplome")
+    public ResponseEntity<Nutrisioniste> uploadPhotoDiplome(
+            @PathVariable String id,
+            @RequestParam("file") MultipartFile file,
+            HttpServletRequest request
+    ) throws IOException {
+        // Vérifier si le nutrisioniste est autorisé
+        if (!authorizationService.isAuthorizedToAccessResource(id, request)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        String photoUrl = imageServiceImpl.uploadImage(file, "nutritionnistes/diplomes");
+        Nutrisioniste updated = nutrisionisteService.setPhotoDiplome(id, photoUrl);
+        return ResponseEntity.ok(updated);
+    }
+}

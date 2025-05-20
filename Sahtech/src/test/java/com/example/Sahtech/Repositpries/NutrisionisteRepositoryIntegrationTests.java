@@ -2,8 +2,8 @@ package com.example.Sahtech.Repositpries;
 
 import com.example.Sahtech.TestDataUtil;
 import com.example.Sahtech.config.MongoTestConfig;
-import com.example.Sahtech.entities.Nutrisioniste;
-import com.example.Sahtech.repositories.NutritionisteRepository;
+import com.example.Sahtech.entities.Users.NutritionisteDetaille.Nutrisioniste;
+import com.example.Sahtech.repositories.Users.NutritionisteDetaille.NutritionisteRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
