@@ -1,5 +1,6 @@
 package com.example.Sahtech.services.Interfaces.ProduitDetaille;
 
+
 import com.example.Sahtech.entities.ProduitDetaille.Produit;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface ProduitService {
 
     Optional<Produit> findOnebyId(String id);
 
-    Optional<Produit> findByCodeBarre(String codeBarre);
+    Optional<Produit> findByCodeBarre(Long codeBarre);
 
     boolean isExists(String id);
 
@@ -23,4 +24,5 @@ public interface ProduitService {
 
     void delete(String id);
 
+    Produit setPhotoUrl(String id, String photoUrl);
 }

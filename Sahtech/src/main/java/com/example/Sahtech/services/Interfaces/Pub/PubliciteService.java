@@ -89,4 +89,9 @@ public interface PubliciteService {
      * Supprimer une publicité
      */
     void delete(String id);
+
+    /**
+     * Mettre à jour l'URL de la photo d'une publicité
+     */
+    Publicite setPhotoUrl(String id, String photoUrl);
 } 

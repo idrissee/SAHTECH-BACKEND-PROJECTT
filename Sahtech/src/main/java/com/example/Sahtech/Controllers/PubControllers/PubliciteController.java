@@ -4,17 +4,25 @@ import com.example.Sahtech.Dto.Pub.PubliciteDto;
 import com.example.Sahtech.Enum.EtatPublicite;
 import com.example.Sahtech.Enum.StatusPublicite;
 import com.example.Sahtech.Enum.TypePublicite;
+
 import com.example.Sahtech.entities.Pub.Publicite;
 import com.example.Sahtech.mappers.Mapper;
+
+import com.example.Sahtech.services.Interfaces.Image.ImageService;
 import com.example.Sahtech.services.Interfaces.Pub.PubliciteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.Id;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,6 +34,8 @@ public class PubliciteController {
 
     private final PubliciteService publiciteService;
     private final Mapper<Publicite, PubliciteDto> publiciteMapper;
+    @Autowired
+    private final ImageService imageService;
 
     @PostMapping
     public ResponseEntity<PubliciteDto> createPublicite(@RequestBody PubliciteDto publiciteDto) {
@@ -145,11 +155,24 @@ public class PubliciteController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-
+    @PostMapping("/{id}/uploadPhoto")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<PubliciteDto> uploadPhoto(
+            @PathVariable String id,
+            @RequestParam("file") MultipartFile file
+    ) throws IOException {
+        String photoUrl = imageService.uploadImage(file, "publicites/photos");
+        Publicite updated = publiciteService.setPhotoUrl(id, photoUrl);
+        if (updated == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(publiciteMapper.mapTo(updated));
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePublicite(@PathVariable String id) {
         publiciteService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-} 
+
+}

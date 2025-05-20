@@ -1,6 +1,7 @@
 package com.example.Sahtech;
 
 import com.example.Sahtech.Enum.*;
+import com.example.Sahtech.Dto.ProduitDetaille.IngredientInfoDto;
 import com.example.Sahtech.entities.ProduitDetaille.Additifs;
 import com.example.Sahtech.entities.ProduitDetaille.Ingrediants;
 import com.example.Sahtech.entities.ProduitDetaille.Produit;
@@ -13,6 +14,7 @@ import com.example.Sahtech.entities.Users.NutritionisteDetaille.Nutrisioniste;
 import com.example.Sahtech.entities.Users.Utilisateurs;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class TestDataUtil {
         return Produit.builder()
                 .id("1L")
                 .nom("rouiba")
-                .typeProduit(TypeProduit.produitLate)
+                .categorie("Boisson")
                 .codeBarre(12365877L)
                 .build();
     }
@@ -34,7 +36,7 @@ public class TestDataUtil {
         return Produit.builder()
                 .id("2L")
                 .nom("Gateau")
-                .typeProduit(TypeProduit.produitLate)
+                .categorie("Patisserie")
                 .codeBarre(12348796L)
                 .build();
     }
@@ -43,8 +45,30 @@ public class TestDataUtil {
         return Produit.builder()
                 .id("3L")
                 .nom("milka")
-                .typeProduit(TypeProduit.produitLate)
+                .categorie("Chocolat")
                 .codeBarre(1236987L)
+                .build();
+    }
+
+    // More complete test product with all fields
+    public static Produit createTestProduitComplete() {
+        List<IngredientInfoDto> ingredients = new ArrayList<>();
+        ingredients.add(new IngredientInfoDto(NomIngrediants.SUCRES, "10g"));
+        ingredients.add(new IngredientInfoDto(NomIngrediants.SODIUM, "2g"));
+        
+        return Produit.builder()
+                .id("4L")
+                .nom("Produit Complet Test")
+                .categorie("Test Category")
+                .codeBarre(9876543210123L)
+                .marque("Marque Test")
+                .description("Description test produit")
+                .quantite("500g")
+                .imageUrl("https://example.com/image.jpg")
+                .valeurNutriScore(ValeurNutriScore.B)
+                .descriptionNutriScore("Bonne qualité nutritionnelle")
+                .ingredients(ingredients)
+                .nomAdditif(List.of("E100", "E202"))
                 .build();
     }
 
@@ -52,24 +76,27 @@ public class TestDataUtil {
     public static Ingrediants createTestIngrediantsA() {
         return Ingrediants.builder()
                 .idIngrediant("1L")
-                .Quantite(5.0F)
-                .nomIngrediant("salt")
+                .quantite("5.0g")
+                .nomIngrediant(NomIngrediants.SODIUM)
+                .produitId("1L")
                 .build();
     }
 
     public static Ingrediants createTestIngrediantsB() {
         return Ingrediants.builder()
                 .idIngrediant("2L")
-                .Quantite(4.0F)
-                .nomIngrediant("SUGAR")
+                .quantite("4.0g")
+                .nomIngrediant(NomIngrediants.SUCRES)
+                .produitId("2L")
                 .build();
     }
 
     public static Ingrediants createTestIngrediantsC() {
         return Ingrediants.builder()
                 .idIngrediant("3L")
-                .Quantite(4.4F)
-                .nomIngrediant("SODIUM")
+                .quantite("4.4g")
+                .nomIngrediant(NomIngrediants.SODIUM)
+                .produitId("3L")
                 .build();
     }
 
@@ -77,7 +104,7 @@ public class TestDataUtil {
     public static Additifs createTestAdditifsA() {
        return Additifs.builder()
                .idAdditif("1L")
-               .maladieCause(Maladie.MALADIE_RENALE)
+               .typeAdditif(TypeAdditif.Colorant)
                .seuil(2F)
                .nomAdditif("sin1")
                .build();
@@ -86,7 +113,7 @@ public class TestDataUtil {
     public static Additifs createTestAdditifsB() {
         return Additifs.builder()
                 .idAdditif("2L")
-                .maladieCause(Maladie.MALADIE_CARDIAQUE)
+                .typeAdditif(TypeAdditif.Conservateur)
                 .seuil(3F)
                 .nomAdditif("sin2")
                 .build();
@@ -95,7 +122,7 @@ public class TestDataUtil {
     public static Additifs createTestAdditifsC() {
         return Additifs.builder()
                 .idAdditif("3L")
-                .maladieCause(Maladie.CELIAQUIE)
+                .typeAdditif(TypeAdditif.Édulcorant)
                 .seuil(4F)
                 .nomAdditif("sin3")
                 .build();

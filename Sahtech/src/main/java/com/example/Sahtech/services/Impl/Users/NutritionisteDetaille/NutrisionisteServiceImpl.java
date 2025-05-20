@@ -1,7 +1,9 @@
 package com.example.Sahtech.services.Impl.Users.NutritionisteDetaille;
 
+
 import com.example.Sahtech.entities.Users.NutritionisteDetaille.Nutrisioniste;
 import com.example.Sahtech.exceptions.ResourceNotFoundException;
+
 import com.example.Sahtech.repositories.Users.NutritionisteDetaille.NutritionisteRepository;
 import com.example.Sahtech.services.Interfaces.Users.NutritionisteDetaille.NutrisionisteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,6 @@ public class NutrisionisteServiceImpl implements NutrisionisteService {
     @Autowired
     private NutritionisteRepository nutrisionisteRepository;
 
-
     @Override
     public List<Nutrisioniste> getAllNutrisionistes() {
         return nutrisionisteRepository.findAll();
@@ -24,7 +25,7 @@ public class NutrisionisteServiceImpl implements NutrisionisteService {
 
     @Override
     public Nutrisioniste getNutrisionisteById(String id) {
-        Optional<Nutrisioniste> nutrisioniste = nutrisionisteRepository.findById(id);
+        Optional<Nutrisioniste>  nutrisioniste = nutrisionisteRepository.findById(id);
         return nutrisioniste.orElse(null);
     }
 
@@ -71,4 +72,14 @@ public class NutrisionisteServiceImpl implements NutrisionisteService {
         return nutrisionisteRepository.findBySpecialite(specialite);
     }
 
+    @Override
+    public Nutrisioniste setPhotoUrl(String id, String photoUrl){
+        Nutrisioniste nutrisioniste = getNutrisionisteById(id);
+        nutrisioniste.setPhotoUrl(photoUrl);
+        return nutrisionisteRepository.save(nutrisioniste);
+    }
+
+    public  Nutrisioniste setPhotoDiplome(String id, String photoUrl){
+        return getNutrisionisteById(id);
+    }
 }
