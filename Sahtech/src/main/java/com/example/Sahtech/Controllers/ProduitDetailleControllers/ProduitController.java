@@ -29,6 +29,7 @@ public class ProduitController {
 
     private ProduitService produitService;
     private Mapper<Produit, ProduitDto> produitMapper;
+    @Autowired
     private  ImageService imageService;
 
     @Autowired

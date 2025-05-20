@@ -17,13 +17,13 @@ public enum NomIngrediants {
     NITRITES,
 
     SUCRES,
+    LACTOSE,
     PROTÉINES,
     SEL,
     LIPIDES,
     ACIDES_GRAS_SATURÉS,
     GLUCIDES,
     FIBRES_ALIMENTAIRES,
-    ÉNERGIE,
 
     FER,
     ZINC,
