@@ -1,11 +1,13 @@
 package com.example.Sahtech.Controllers.RecommendationControllers;
 
+import com.example.Sahtech.Dto.Scan.HistoriqueScanDto;
 import com.example.Sahtech.entities.ProduitDetaille.Produit;
-import com.example.Sahtech.entities.Recommendation.Recommendation;
+import com.example.Sahtech.entities.Scan.HistoriqueScan;
 import com.example.Sahtech.entities.Users.Utilisateurs;
 import com.example.Sahtech.repositories.ProduitDetaille.ProduitRepository;
-import com.example.Sahtech.repositories.Recommendation.RecommendationRepository;
+import com.example.Sahtech.repositories.Scan.HistoriqueScanRepository;
 import com.example.Sahtech.repositories.Users.UtilisateursRepository;
+import com.example.Sahtech.services.Interfaces.Scan.HistoriqueScanService;
 import com.example.Sahtech.services.Recommendation.RecommendationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,11 +15,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/API/Sahtech/recommendation")
@@ -27,9 +31,10 @@ public class RecommendationController {
     private static final Logger logger = Logger.getLogger(RecommendationController.class.getName());
 
     private final RecommendationService recommendationService;
-    private final RecommendationRepository recommendationRepository;
     private final UtilisateursRepository utilisateursRepository;
     private final ProduitRepository produitRepository;
+    private final HistoriqueScanRepository historiqueScanRepository;
+    private final HistoriqueScanService historiqueScanService;
 
     /**
      * Get recommendation data for a user and product
@@ -65,50 +70,71 @@ public class RecommendationController {
 
             logger.info("Found user: " + utilisateur.get().getNom() + " and product: " + produit.get().getNom());
 
-            // 2. Check if a recommendation already exists (for logging purposes only)
-            Optional<Recommendation> existingRecommendation = 
-                recommendationRepository.findByUtilisateurAndProduit(utilisateur.get(), produit.get());
-
-            if (existingRecommendation.isPresent()) {
-                logger.info("Found existing recommendation for product: " + produit.get().getNom() + " but will generate a fresh one");
+            // 2. Check if a scan with recommendation already exists for this user and product
+            List<HistoriqueScan> existingScans = historiqueScanRepository.findByUtilisateurIdAndProduitId(userId, productId);
+            
+            HistoriqueScan latestScan = null;
+            if (!existingScans.isEmpty()) {
+                // Find the most recent scan with a recommendation
+                latestScan = existingScans.stream()
+                    .filter(scan -> scan.getRecommandationIA() != null && !scan.getRecommandationIA().isEmpty())
+                    .sorted((s1, s2) -> s2.getDateScan().compareTo(s1.getDateScan()))
+                    .findFirst()
+                    .orElse(null);
+                
+                if (latestScan != null) {
+                    logger.info("Found existing scan with recommendation for product: " + produit.get().getNom());
+                }
             }
 
-            // 3. Always generate a new recommendation using the FastAPI service
-            try {
-                logger.info("Generating fresh recommendation for product: " + produit.get().getNom());
-                Map<String, Object> aiResponse = recommendationService.generateRecommendationWithType(
-                    utilisateur.get(), 
-                    produit.get(),
-                    flutterCallbackUrl  // Pass the Flutter callback URL to the service
-                );
-                String aiRecommendation = (String) aiResponse.get("recommendation");
-                String recommendationType = (String) aiResponse.get("recommendation_type");
-
-                // 4. Create a new recommendation object
-                Recommendation newRecommendation = new Recommendation(utilisateur.get(), produit.get(), aiRecommendation, recommendationType);
+            // 3. If a recent scan with recommendation exists, use it; otherwise generate a new recommendation
+            if (latestScan != null) {
+                logger.info("Using existing recommendation from scan id: " + latestScan.getId());
                 
-                // 5. If a recommendation already exists, delete it before saving the new one
-                if (existingRecommendation.isPresent()) {
-                    recommendationRepository.delete(existingRecommendation.get());
-                    logger.info("Deleted existing recommendation for product: " + produit.get().getNom());
-                }
-                
-                // 6. Save the new recommendation to the database
-                recommendationRepository.save(newRecommendation);
-                logger.info("Saved fresh recommendation for product: " + produit.get().getNom());
-
-                // 7. Return the recommendation and its type
                 Map<String, Object> response = new HashMap<>();
-                response.put("recommendation", aiRecommendation);
-                response.put("recommendation_type", recommendationType);
+                response.put("recommendation", latestScan.getRecommandationIA());
+                response.put("recommendation_type", latestScan.getRecommendationType());
                 return ResponseEntity.ok(response);
-            } catch (ResourceAccessException e) {
-                // Handle AI service connectivity issues
-                logger.severe("AI service connectivity error: " + e.getMessage());
-                Map<String, Object> fallbackResponse = new HashMap<>();
-                fallbackResponse.put("recommendation", "Impossible de générer une recommandation pour ce produit. Veuillez vérifier votre connexion internet ou réessayer plus tard.");
-                fallbackResponse.put("recommendation_type", "caution");
-                return ResponseEntity.ok(fallbackResponse);
+                
+            } else {
+                try {
+                    // Generate a fresh recommendation
+                    logger.info("Generating fresh recommendation for product: " + produit.get().getNom());
+                    Map<String, Object> aiResponse = recommendationService.generateRecommendationWithType(
+                        utilisateur.get(), 
+                        produit.get(),
+                        flutterCallbackUrl  // Pass the Flutter callback URL to the service
+                    );
+                    String aiRecommendation = (String) aiResponse.get("recommendation");
+                    String recommendationType = (String) aiResponse.get("recommendation_type");
+                    
+                    // Create a new scan with the recommendation
+                    HistoriqueScan newScan = new HistoriqueScan();
+                    newScan.setUtilisateur(utilisateur.get());
+                    newScan.setProduit(produit.get());
+                    newScan.setDateScan(LocalDateTime.now());
+                    newScan.setRecommandationIA(aiRecommendation);
+                    newScan.setRecommendationType(recommendationType);
+                    newScan.setNoteNutriScore(produit.get().getValeurNutriScore() != null ? produit.get().getValeurNutriScore().toString() : "C");
+                    
+                    // Save the scan with recommendation
+                    HistoriqueScan savedScan = historiqueScanService.saveScan(newScan);
+                    logger.info("Saved new scan with recommendation, scan ID: " + savedScan.getId());
+                    
+                    // Return the recommendation
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("recommendation", aiRecommendation);
+                    response.put("recommendation_type", recommendationType);
+                    return ResponseEntity.ok(response);
+                    
+                } catch (ResourceAccessException e) {
+                    // Handle AI service connectivity issues
+                    logger.severe("AI service connectivity error: " + e.getMessage());
+                    Map<String, Object> fallbackResponse = new HashMap<>();
+                    fallbackResponse.put("recommendation", "Impossible de générer une recommandation pour ce produit. Veuillez vérifier votre connexion internet ou réessayer plus tard.");
+                    fallbackResponse.put("recommendation_type", "caution");
+                    return ResponseEntity.ok(fallbackResponse);
+                }
             }
         } catch (Exception e) {
             logger.severe("Error generating recommendation: " + e.getMessage());
@@ -128,55 +154,29 @@ public class RecommendationController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
             }
 
-            List<Recommendation> recommendations = recommendationRepository.findByUtilisateur(utilisateur.get());
+            // Find scans with recommendations for this user
+            List<HistoriqueScan> scansWithRecommendations = historiqueScanRepository.findByUtilisateurId(userId).stream()
+                .filter(scan -> scan.getRecommandationIA() != null && !scan.getRecommandationIA().isEmpty())
+                .collect(Collectors.toList());
+            
+            // Convert to a simpler response format with just the recommendation data
+            List<Map<String, Object>> recommendations = scansWithRecommendations.stream().map(scan -> {
+                Map<String, Object> rec = new HashMap<>();
+                rec.put("id", scan.getId());
+                rec.put("userId", userId);
+                rec.put("productId", scan.getProduit().getId());
+                rec.put("productName", scan.getProduit().getNom());
+                rec.put("recommendation", scan.getRecommandationIA());
+                rec.put("recommendation_type", scan.getRecommendationType());
+                rec.put("date", scan.getDateScan());
+                return rec;
+            }).collect(Collectors.toList());
+            
             return ResponseEntity.ok(recommendations);
         } catch (Exception e) {
             logger.severe("Error fetching recommendations: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Error fetching recommendations: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Save a recommendation
-     */
-    @PostMapping("/save")
-    public ResponseEntity<?> saveRecommendation(@RequestBody Map<String, String> request) {
-        try {
-            String userId = request.get("userId");
-            String productId = request.get("productId");
-            String content = request.get("recommendation");
-            String recommendationType = request.get("recommendationType");
-            
-            if (recommendationType == null || recommendationType.isEmpty()) {
-                recommendationType = "caution"; // Default value
-            }
-
-            Optional<Utilisateurs> utilisateur = utilisateursRepository.findById(userId);
-            Optional<Produit> produit = produitRepository.findById(productId);
-
-            if (utilisateur.isEmpty() || produit.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User or product not found");
-            }
-
-            // Check if a recommendation already exists
-            Optional<Recommendation> existingRecommendation = 
-                recommendationRepository.findByUtilisateurAndProduit(utilisateur.get(), produit.get());
-                
-            // If it exists, delete it
-            if (existingRecommendation.isPresent()) {
-                recommendationRepository.delete(existingRecommendation.get());
-            }
-
-            // Create and save the new recommendation
-            Recommendation recommendation = new Recommendation(utilisateur.get(), produit.get(), content, recommendationType);
-            recommendationRepository.save(recommendation);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(recommendation);
-        } catch (Exception e) {
-            logger.severe("Error saving recommendation: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Error saving recommendation: " + e.getMessage());
         }
     }
 } 

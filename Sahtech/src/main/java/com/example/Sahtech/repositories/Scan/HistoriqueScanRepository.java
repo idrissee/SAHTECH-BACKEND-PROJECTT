@@ -16,6 +16,9 @@ public interface HistoriqueScanRepository extends MongoRepository<HistoriqueScan
     // Trouver les scans d'un produit spécifique
     List<HistoriqueScan> findByProduitId(String produitId);
     
+    // Trouver les scans pour un utilisateur et un produit spécifiques
+    List<HistoriqueScan> findByUtilisateurIdAndProduitId(String utilisateurId, String produitId);
+    
     // Trouver les scans par note NutriScore
     List<HistoriqueScan> findByNoteNutriScore(String noteNutriScore);
     

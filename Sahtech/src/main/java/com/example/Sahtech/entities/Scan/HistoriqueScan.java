@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Document(collection = "historique_scans")
+@Document(collection = "HistoriqueScann")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,6 +28,7 @@ public class HistoriqueScan {
     private LocalDateTime dateScan;
     private String noteNutriScore; // A, B, C, D, E
     private String recommandationIA;
+    private String recommendationType; // 'recommended', 'caution', or 'avoid'
     private List<String> additifsDetectes;
     private List<String> ingredients;
     private List<String> pointsPositifs;
