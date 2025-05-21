@@ -115,7 +115,6 @@ public class RecommendationController {
                     newScan.setDateScan(LocalDateTime.now());
                     newScan.setRecommandationIA(aiRecommendation);
                     newScan.setRecommendationType(recommendationType);
-                    newScan.setNoteNutriScore(produit.get().getValeurNutriScore() != null ? produit.get().getValeurNutriScore().toString() : "C");
                     
                     // Save the scan with recommendation
                     HistoriqueScan savedScan = historiqueScanService.saveScan(newScan);

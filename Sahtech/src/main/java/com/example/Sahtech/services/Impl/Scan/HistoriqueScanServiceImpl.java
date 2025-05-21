@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -18,8 +19,8 @@ import java.util.stream.StreamSupport;
 public class HistoriqueScanServiceImpl implements HistoriqueScanService {
 
     private final HistoriqueScanRepository historiqueScanRepository;
-
     private final UtilisateursService utilisateursService;
+    private static final Logger logger = Logger.getLogger(HistoriqueScanServiceImpl.class.getName());
 
     @Override
     public HistoriqueScan saveScan(HistoriqueScan scan) {
@@ -57,8 +58,8 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
     }
 
     @Override
-    public List<HistoriqueScan> getScansByNutriScore(String note) {
-        return historiqueScanRepository.findByNoteNutriScore(note);
+    public List<HistoriqueScan> getScansByRecommendationType(String recommendationType) {
+        return historiqueScanRepository.findByRecommendationType(recommendationType);
     }
 
     @Override
@@ -67,21 +68,9 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
         return historiqueScanRepository.findByUtilisateurIdAndDateScanAfter(utilisateurId, dateLimite);
     }
 
-
-
     @Override
     public List<HistoriqueScan> getScansByPeriode(LocalDateTime startDate, LocalDateTime endDate) {
         return historiqueScanRepository.findByDateScanBetween(startDate, endDate);
-    }
-
-
-
-    @Override
-    public HistoriqueScan addCommentaire(String scanId, String commentaire) {
-        HistoriqueScan scan = historiqueScanRepository.findById(scanId)
-                .orElseThrow(() -> new RuntimeException("Scan non trouvé"));
-        scan.setCommentaireUtilisateur(commentaire);
-        return historiqueScanRepository.save(scan);
     }
 
     @Override
@@ -95,7 +84,6 @@ public class HistoriqueScanServiceImpl implements HistoriqueScanService {
 
     @Override
     public boolean hasUserScannedProduct(String utilisateurId, String produitId) {
-
         // Récupérer l'historique des scans de l'utilisateur
         List<HistoriqueScan> scansUtilisateur = historiqueScanRepository.findByUtilisateurId(utilisateurId);
 

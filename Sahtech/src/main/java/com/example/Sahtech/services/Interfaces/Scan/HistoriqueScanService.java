@@ -15,16 +15,13 @@ public interface HistoriqueScanService {
     // Opérations métier spécifiques
     List<HistoriqueScan> getHistoriqueUtilisateur(String utilisateurId);
     List<HistoriqueScan> getScansProduit(String produitId);
-    List<HistoriqueScan> getScansByNutriScore(String note);
+    List<HistoriqueScan> getScansByRecommendationType(String recommendationType);
     List<HistoriqueScan> getScansRecents(String utilisateurId, int jours);
     List<HistoriqueScan> getScansByPeriode(LocalDateTime startDate, LocalDateTime endDate);
     
     // Nouvel ajout - Récupérer les utilisateurs qui ont scanné un produit spécifique
     List<Utilisateurs> getUtilisateursByProduit(String produitId);
     
-    // Opérations de mise à jour
-    HistoriqueScan addCommentaire(String scanId, String commentaire);
-
     // Vérifier si un utilisateur a scanné un produit spécifique
     boolean hasUserScannedProduct(String utilisateurId, String produitId);
 

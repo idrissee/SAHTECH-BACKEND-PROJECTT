@@ -57,6 +57,11 @@ public class HistoriqueScanController {
 
         HistoriqueScan scan = historiqueScanMapper.mapFrom(scanDto);
         
+        // Set the scan date if not already set
+        if (scan.getDateScan() == null) {
+            scan.setDateScan(LocalDateTime.now());
+        }
+        
         // Generate recommendation before saving the scan
         try {
             logger.info("Generating recommendation for user " + scan.getUtilisateur().getId() + " and product " + scan.getProduit().getId());
@@ -129,10 +134,7 @@ public class HistoriqueScanController {
             @PathVariable String id, 
             HttpServletRequest request) {
         
-        // Vérifier si l'utilisateur est autorisé (admin ou lui-même)
-        if (!authorizationService.isAuthorizedToAccessResource(id, request)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        
         
         List<HistoriqueScanDto> scanDtos = historiqueScanService.getHistoriqueUtilisateur(id).stream()
                 .map(historiqueScanMapper::mapTo)
@@ -169,14 +171,13 @@ public class HistoriqueScanController {
         return new ResponseEntity<>(scanDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/nutriscore/{note}")
-    public ResponseEntity<List<HistoriqueScanDto>> getScansByNutriScore(@PathVariable String note) {
-        List<HistoriqueScanDto> scanDtos = historiqueScanService.getScansByNutriScore(note).stream()
+    @GetMapping("/recommendation-type/{type}")
+    public ResponseEntity<List<HistoriqueScanDto>> getScansByRecommendationType(@PathVariable String type) {
+        List<HistoriqueScanDto> scanDtos = historiqueScanService.getScansByRecommendationType(type).stream()
                 .map(historiqueScanMapper::mapTo)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(scanDtos, HttpStatus.OK);
     }
-
 
     @GetMapping("/periode")
     public ResponseEntity<List<HistoriqueScanDto>> getScansByPeriode(
@@ -188,11 +189,5 @@ public class HistoriqueScanController {
         return new ResponseEntity<>(scanDtos, HttpStatus.OK);
     }
 
-    @PutMapping("/commentaire/{scanId}")
-    public ResponseEntity<HistoriqueScanDto> addCommentaire(
-            @PathVariable String scanId,
-            @RequestParam String commentaire) {
-        HistoriqueScan updatedScan = historiqueScanService.addCommentaire(scanId, commentaire);
-        return new ResponseEntity<>(historiqueScanMapper.mapTo(updatedScan), HttpStatus.OK);
-    }
+
 } 
