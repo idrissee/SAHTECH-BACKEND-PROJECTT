@@ -8,7 +8,8 @@ import com.example.Sahtech.entities.Pub.Publicite;
 import com.example.Sahtech.repositories.Pub.PartenaireRepository;
 import com.example.Sahtech.repositories.Pub.PubliciteRepository;
 import com.example.Sahtech.services.Interfaces.Pub.PubliciteService;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -19,11 +20,14 @@ import java.util.Optional;
  * Implémentation du service de gestion des publicités
  */
 @Service
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class PubliciteServiceImpl implements PubliciteService {
 
-    private final PubliciteRepository publiciteRepository;
-    private final PartenaireRepository partenaireRepository;
+    @Autowired
+    private PubliciteRepository publiciteRepository;
+    
+    @Autowired
+    private PartenaireRepository partenaireRepository;
 
     @Override
     public Publicite save(Publicite publicite) {

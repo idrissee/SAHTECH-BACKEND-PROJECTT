@@ -10,7 +10,7 @@ public class FondsInsuffisantsException extends RuntimeException {
     private final Double soldeActuel;
     
     public FondsInsuffisantsException(String partenaireId, Double montantDemande, Double soldeActuel) {
-        super(String.format("Fonds insuffisants pour le partenaire %d : solde actuel %.2f, montant demandé %.2f", 
+        super(String.format("Fonds insuffisants pour le partenaire %s : solde actuel %.2f, montant demandé %.2f", 
                 partenaireId, soldeActuel, montantDemande));
         this.partenaireId = partenaireId;
         this.montantDemande = montantDemande;

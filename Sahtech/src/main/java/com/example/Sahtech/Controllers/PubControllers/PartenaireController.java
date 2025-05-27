@@ -7,6 +7,7 @@ import com.example.Sahtech.exceptions.FondsInsuffisantsException;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.Interfaces.Pub.PartenaireService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +18,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/API/Sahtech/Partenaires")
-@RequiredArgsConstructor
 public class PartenaireController {
 
-    private final PartenaireService partenaireService;
-    private final Mapper<Partenaire, PartenaireDto> partenaireMapper;
+    @Autowired
+    private PartenaireService partenaireService;
+    
+    @Autowired
+    private Mapper<Partenaire, PartenaireDto> partenaireMapper;
 
     @PostMapping
     public ResponseEntity<PartenaireDto> createPartenaire(@RequestBody PartenaireDto partenaireDto) {

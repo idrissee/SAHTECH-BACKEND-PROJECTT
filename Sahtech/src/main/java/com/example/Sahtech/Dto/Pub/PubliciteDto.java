@@ -23,7 +23,7 @@ public class PubliciteDto {
     // Relations
 
     private Partenaire partenaire;
-    private Long partenaire_id;
+    private String partenaire_id;
 
     // Informations de base
     private String titre;

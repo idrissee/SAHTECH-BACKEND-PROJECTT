@@ -1,6 +1,7 @@
 package com.example.Sahtech.entities.Recommendation;
 
 import com.example.Sahtech.entities.ProduitDetaille.Produit;
+import com.example.Sahtech.entities.Scan.HistoriqueScan;
 import com.example.Sahtech.entities.Users.Utilisateurs;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +29,10 @@ public class Recommendation {
     // Added field for recommendation type: 'recommended', 'caution', or 'avoid'
     private String recommendationType;
     
+    // Added field for reference to the scan record
+    @DBRef
+    private HistoriqueScan historiqueScan;
+    
     public Recommendation(Utilisateurs utilisateur, Produit produit, String content) {
         this.utilisateur = utilisateur;
         this.produit = produit;
@@ -40,6 +45,14 @@ public class Recommendation {
         this.produit = produit;
         this.content = content;
         this.recommendationType = recommendationType;
+    }
+    
+    public Recommendation(Utilisateurs utilisateur, Produit produit, String content, String recommendationType, HistoriqueScan historiqueScan) {
+        this.utilisateur = utilisateur;
+        this.produit = produit;
+        this.content = content;
+        this.recommendationType = recommendationType;
+        this.historiqueScan = historiqueScan;
     }
     
     // Getter for recommendationType that matches the name used in the controller
