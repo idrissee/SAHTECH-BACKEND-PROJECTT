@@ -239,31 +239,19 @@ public class TestDataUtil {
                 .utilisateur(createTestUtilisateurA())
                 .produit(creatTestProduitA())
                 .dateScan(LocalDateTime.now())
-                .noteNutriScore("A")
                 .recommandationIA("Produit recommandé")
-                .additifsDetectes(List.of("E100", "E200"))
-                .ingredients(List.of("Sucre", "Sel"))
-                .pointsPositifs(List.of("Peu de sucre"))
-                .pointsNegatifs(List.of("Contient des additifs"))
-                .impactSante("Bonne")
-                .commentaireUtilisateur("Très bon produit")
+                .recommendationType("recommended")
                 .build();
     }
     
     public static HistoriqueScan createTestHistoriqueScanB() {
         return HistoriqueScan.builder()
-                .id("L")
+                .id("2")
                 .utilisateur(createTestUtilisateurB())
                 .produit(creatTestProduitB())
                 .dateScan(LocalDateTime.now().minusDays(5))
-                .noteNutriScore("C")
                 .recommandationIA("Consommation modérée conseillée")
-                .additifsDetectes(List.of("E300", "E400"))
-                .ingredients(List.of("Farine", "Œufs"))
-                .pointsPositifs(List.of("Sources de protéines"))
-                .pointsNegatifs(List.of("Contient trop de matières grasses"))
-                .impactSante("Moyenne")
-                .commentaireUtilisateur("Assez bon")
+                .recommendationType("caution")
                 .build();
     }
     

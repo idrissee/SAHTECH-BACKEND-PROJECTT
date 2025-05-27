@@ -91,14 +91,14 @@ public class HistoriqueScanRepositoryIntegrationTests {
         HistoriqueScan historiqueScan = createTestHistoriqueScan(savedUtilisateurA, savedProduitA);
         underTest.save(historiqueScan);
         
-        historiqueScan.setNoteNutriScore("B");
-        historiqueScan.setCommentaireUtilisateur("Commentaire mis à jour");
+        historiqueScan.setRecommendationType("avoid");
+        historiqueScan.setRecommandationIA("Mise à jour de recommandation");
         underTest.save(historiqueScan);
         
         Optional<HistoriqueScan> result = underTest.findById(historiqueScan.getId());
         assertThat(result).isPresent();
-        assertThat(result.get().getNoteNutriScore()).isEqualTo("B");
-        assertThat(result.get().getCommentaireUtilisateur()).isEqualTo("Commentaire mis à jour");
+        assertThat(result.get().getRecommendationType()).isEqualTo("avoid");
+        assertThat(result.get().getRecommandationIA()).isEqualTo("Mise à jour de recommandation");
     }
 
     @Test
@@ -145,23 +145,23 @@ public class HistoriqueScanRepositoryIntegrationTests {
     }
 
     @Test
-    public void testFindByNoteNutriScore() {
+    public void testFindByRecommendationType() {
         HistoriqueScan historiqueScanA = createTestHistoriqueScan(savedUtilisateurA, savedProduitA);
-        historiqueScanA.setNoteNutriScore("A");
+        historiqueScanA.setRecommendationType("recommended");
         underTest.save(historiqueScanA);
         HistoriqueScan historiqueScanB = createTestHistoriqueScan(savedUtilisateurB, savedProduitB);
         historiqueScanB.setId("2");
-        historiqueScanB.setNoteNutriScore("A");
+        historiqueScanB.setRecommendationType("recommended");
         underTest.save(historiqueScanB);
         HistoriqueScan historiqueScanC = createTestHistoriqueScan(savedUtilisateurA, savedProduitB);
         historiqueScanC.setId("3");
-        historiqueScanC.setNoteNutriScore("B");
+        historiqueScanC.setRecommendationType("caution");
         underTest.save(historiqueScanC);
 
-        List<HistoriqueScan> result = underTest.findByNoteNutriScore("A");
+        List<HistoriqueScan> result = underTest.findByRecommendationType("recommended");
         assertThat(result).hasSize(2);
-        assertThat(result).extracting(HistoriqueScan::getNoteNutriScore)
-                .containsOnly("A");
+        assertThat(result).extracting(HistoriqueScan::getRecommendationType)
+                .containsOnly("recommended");
     }
 
     @Test
@@ -195,14 +195,8 @@ public class HistoriqueScanRepositoryIntegrationTests {
                 .utilisateur(utilisateur)
                 .produit(produit)
                 .dateScan(LocalDateTime.now())
-                .noteNutriScore("A")
                 .recommandationIA("Produit recommandé")
-                .additifsDetectes(List.of("E100", "E200"))
-                .ingredients(List.of("Sucre", "Sel"))
-                .pointsPositifs(List.of("Peu de sucre"))
-                .pointsNegatifs(List.of("Contient des additifs"))
-                .impactSante("Bonne")
-                .commentaireUtilisateur("Très bon produit")
+                .recommendationType("recommended")
                 .build();
     }
 } 

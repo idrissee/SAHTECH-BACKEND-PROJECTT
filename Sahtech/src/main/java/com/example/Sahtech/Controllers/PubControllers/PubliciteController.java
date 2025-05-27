@@ -29,13 +29,16 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/API/Sahtech/Publicites")
-@RequiredArgsConstructor
 public class PubliciteController {
 
-    private final PubliciteService publiciteService;
-    private final Mapper<Publicite, PubliciteDto> publiciteMapper;
     @Autowired
-    private final ImageService imageService;
+    private PubliciteService publiciteService;
+    
+    @Autowired
+    private Mapper<Publicite, PubliciteDto> publiciteMapper;
+    
+    @Autowired
+    private ImageService imageService;
 
     @PostMapping
     public ResponseEntity<PubliciteDto> createPublicite(@RequestBody PubliciteDto publiciteDto) {
