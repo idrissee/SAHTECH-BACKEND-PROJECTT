@@ -1,6 +1,6 @@
 package com.example.Sahtech.repositories;
 
-import com.example.Sahtech.entities.Nutrisioniste;
+import com.example.Sahtech.entities.Users.NutritionisteDetaille.*;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
