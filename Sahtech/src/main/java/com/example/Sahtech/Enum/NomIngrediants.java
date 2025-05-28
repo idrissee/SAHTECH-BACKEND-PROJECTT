@@ -17,6 +17,7 @@ public enum NomIngrediants {
     NITRITES,
 
     SUCRES,
+    LACTOSE,
     PROTÉINES,
     SEL,
     LIPIDES,
