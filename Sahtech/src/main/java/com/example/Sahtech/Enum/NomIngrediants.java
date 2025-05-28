@@ -25,6 +25,7 @@ public enum NomIngrediants {
     FIBRES_ALIMENTAIRES,
     CARBOHYDRATE,
     GRAS_TRANS,
+    FRUITS,
 
     FER,
     ZINC,
