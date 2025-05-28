@@ -5,6 +5,7 @@ import com.example.Sahtech.entities.Scan.HistoriqueScan;
 import com.example.Sahtech.mappers.Mapper;
 import com.example.Sahtech.services.Interfaces.Auth_Author.AuthorizationService;
 import com.example.Sahtech.services.Interfaces.Scan.HistoriqueScanService;
+import com.example.Sahtech.services.Recommendation.RecommendationService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @RestController
@@ -27,6 +30,12 @@ public class HistoriqueScanController {
     
     @Autowired
     private AuthorizationService authorizationService;
+    
+    // Added for recommendation generation
+    @Autowired
+    private RecommendationService recommendationService;
+    
+    private static final Logger logger = Logger.getLogger(HistoriqueScanController.class.getName());
 
     public HistoriqueScanController(HistoriqueScanService historiqueScanService, 
                                   Mapper<HistoriqueScan, HistoriqueScanDto> historiqueScanMapper) {
@@ -47,12 +56,47 @@ public class HistoriqueScanController {
         }
 
         HistoriqueScan scan = historiqueScanMapper.mapFrom(scanDto);
+        
+        // Set the scan date if not already set
+        if (scan.getDateScan() == null) {
+            scan.setDateScan(LocalDateTime.now());
+        }
+        
+        // Generate recommendation before saving the scan
+        try {
+            logger.info("Generating recommendation for user " + scan.getUtilisateur().getId() + " and product " + scan.getProduit().getId());
+            
+            // Generate recommendation with AI service
+            Map<String, Object> aiResponse = recommendationService.generateRecommendationWithType(
+                scan.getUtilisateur(), 
+                scan.getProduit(),
+                null  // No Flutter callback URL needed here
+            );
+            
+            String aiRecommendation = (String) aiResponse.get("recommendation");
+            String recommendationType = (String) aiResponse.get("recommendation_type");
+            
+            // Set the recommendation directly on the scan entity
+            scan.setRecommandationIA(aiRecommendation);
+            scan.setRecommendationType(recommendationType);
+            
+            logger.info("Successfully generated recommendation and set on scan entity");
+            
+        } catch (Exception e) {
+            logger.severe("Error generating recommendation: " + e.getMessage());
+            // Continue with the scan save even if recommendation fails
+        }
+        
+        // Save the scan with the recommendation data
         HistoriqueScan savedScan = historiqueScanService.saveScan(scan);
 
-        String utilisateurId = scan.getUtilisateur().getId();
+        String utilisateurId = savedScan.getUtilisateur().getId();
         if (utilisateurId != null) {
             historiqueScanService.incrementUserScanCount(utilisateurId);
         }
+        
+        logger.info("Saved scan with ID: " + savedScan.getId() + " including recommendation data");
+        
         return new ResponseEntity<>(historiqueScanMapper.mapTo(savedScan), HttpStatus.CREATED);
     }
 
@@ -90,10 +134,7 @@ public class HistoriqueScanController {
             @PathVariable String id, 
             HttpServletRequest request) {
         
-        // Vérifier si l'utilisateur est autorisé (admin ou lui-même)
-        if (!authorizationService.isAuthorizedToAccessResource(id, request)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        
         
         List<HistoriqueScanDto> scanDtos = historiqueScanService.getHistoriqueUtilisateur(id).stream()
                 .map(historiqueScanMapper::mapTo)
@@ -130,14 +171,13 @@ public class HistoriqueScanController {
         return new ResponseEntity<>(scanDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/nutriscore/{note}")
-    public ResponseEntity<List<HistoriqueScanDto>> getScansByNutriScore(@PathVariable String note) {
-        List<HistoriqueScanDto> scanDtos = historiqueScanService.getScansByNutriScore(note).stream()
+    @GetMapping("/recommendation-type/{type}")
+    public ResponseEntity<List<HistoriqueScanDto>> getScansByRecommendationType(@PathVariable String type) {
+        List<HistoriqueScanDto> scanDtos = historiqueScanService.getScansByRecommendationType(type).stream()
                 .map(historiqueScanMapper::mapTo)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(scanDtos, HttpStatus.OK);
     }
-
 
     @GetMapping("/periode")
     public ResponseEntity<List<HistoriqueScanDto>> getScansByPeriode(
@@ -149,11 +189,5 @@ public class HistoriqueScanController {
         return new ResponseEntity<>(scanDtos, HttpStatus.OK);
     }
 
-    @PutMapping("/commentaire/{scanId}")
-    public ResponseEntity<HistoriqueScanDto> addCommentaire(
-            @PathVariable String scanId,
-            @RequestParam String commentaire) {
-        HistoriqueScan updatedScan = historiqueScanService.addCommentaire(scanId, commentaire);
-        return new ResponseEntity<>(historiqueScanMapper.mapTo(updatedScan), HttpStatus.OK);
-    }
+
 } 

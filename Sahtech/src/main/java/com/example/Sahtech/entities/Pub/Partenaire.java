@@ -41,4 +41,109 @@ public class Partenaire {
     private String description;
     private String conditions;
     private String referent;
+    
+    // Getters and setters
+    public String getId() {
+        return id;
+    }
+    
+    public void setId(String id) {
+        this.id = id;
+    }
+    
+    public String getNom() {
+        return nom;
+    }
+    
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+    
+    public String getDomaineActivite() {
+        return domaineActivite;
+    }
+    
+    public void setDomaineActivite(String domaineActivite) {
+        this.domaineActivite = domaineActivite;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    public String getTelephone() {
+        return telephone;
+    }
+    
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+    
+    public String getSiteWeb() {
+        return siteWeb;
+    }
+    
+    public void setSiteWeb(String siteWeb) {
+        this.siteWeb = siteWeb;
+    }
+    
+    public String getLogo() {
+        return logo;
+    }
+    
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+    
+    public Date getDateInscription() {
+        return dateInscription;
+    }
+    
+    public void setDateInscription(Date dateInscription) {
+        this.dateInscription = dateInscription;
+    }
+    
+    public StatutPartenaire getStatut() {
+        return statut;
+    }
+    
+    public void setStatut(StatutPartenaire statut) {
+        this.statut = statut;
+    }
+    
+    public Double getSolde() {
+        return solde;
+    }
+    
+    public void setSolde(Double solde) {
+        this.solde = solde;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
+    public String getConditions() {
+        return conditions;
+    }
+    
+    public void setConditions(String conditions) {
+        this.conditions = conditions;
+    }
+    
+    public String getReferent() {
+        return referent;
+    }
+    
+    public void setReferent(String referent) {
+        this.referent = referent;
+    }
 } 

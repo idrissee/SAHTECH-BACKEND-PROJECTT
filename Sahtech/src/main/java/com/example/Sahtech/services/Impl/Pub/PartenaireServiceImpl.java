@@ -5,7 +5,8 @@ import com.example.Sahtech.entities.Pub.Partenaire;
 import com.example.Sahtech.exceptions.FondsInsuffisantsException;
 import com.example.Sahtech.repositories.Pub.PartenaireRepository;
 import com.example.Sahtech.services.Interfaces.Pub.PartenaireService;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -16,10 +17,11 @@ import java.util.Optional;
  * Implémentation du service de gestion des partenaires
  */
 @Service
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class PartenaireServiceImpl implements PartenaireService {
 
-    private final PartenaireRepository partenaireRepository;
+    @Autowired
+    private PartenaireRepository partenaireRepository;
 
     @Override
     public Partenaire save(Partenaire partenaire) {
