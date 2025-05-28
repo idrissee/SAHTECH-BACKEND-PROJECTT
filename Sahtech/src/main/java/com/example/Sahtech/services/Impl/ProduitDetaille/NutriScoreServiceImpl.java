@@ -263,25 +263,5 @@ public class NutriScoreServiceImpl implements NutriScoreService {
         }
     }
 
-    @Override
-    public ValeurNutriScore calculateNutriScore(Produit produit, TypeProduit typeProduit) {
-        if (typeProduit == TypeProduit.EAU) {
-            return ValeurNutriScore.A;
-        }
 
-        double energie = getEnergieValue(produit);
-        double sucres = getSucresValue(produit);
-        double acidesGrasSatures = getAcidesGrasSaturesValue(produit);
-        double sodium = getSodiumValue(produit);
-        double fibres = getFibresValue(produit);
-        double proteines = getProteinesValue(produit);
-        double fruits = getFruitsValue(produit);
-
-        int negativePoints = calculateNegativePoints(energie, sucres, acidesGrasSatures, sodium, typeProduit);
-        int positivePoints = calculatePositivePoints(fibres, proteines, fruits, typeProduit);
-        
-        int score = calculateFinalScore(negativePoints, positivePoints, fruits, typeProduit);
-        
-        return determineNutriScore(score, typeProduit);
-    }
 }
