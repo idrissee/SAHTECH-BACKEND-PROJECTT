@@ -84,6 +84,22 @@ public class UtilisateursServiceImpl implements UtilisateursService {
                     updatedUser.setHealthGoals(existingUser.getHealthGoals());
                 }
                 
+                // Toujours recalculer l'IMC si le poids et la taille sont disponibles
+                // Si l'utilisateur n'a pas fourni de nouvelles valeurs, utiliser les valeurs existantes
+                Float poids = updatedUser.getPoids() != null ? updatedUser.getPoids() : existingUser.getPoids();
+                Float taille = updatedUser.getTaille() != null ? updatedUser.getTaille() : existingUser.getTaille();
+                
+                if (poids != null && taille != null && taille > 0) {
+                    Float imc = calculerIMC(poids, taille);
+                    updatedUser.setImc(imc);
+                    
+                    // Mettre à jour l'interprétation de l'IMC
+                    updatedUser.updateInterpretationIMC();
+                    
+                    logger.info("IMC recalculé lors de la mise à jour: {}, Interprétation: {}", 
+                              imc, updatedUser.getInterpretationIMC());
+                }
+                
                 // Save the updated user
                 Utilisateurs savedUser = utilisateursRepository.save(updatedUser);
                 logger.info("User updated successfully: {}", savedUser.getEmail());
@@ -108,7 +124,50 @@ public class UtilisateursServiceImpl implements UtilisateursService {
 
     @Override
     public Utilisateurs addUtilisateur(Utilisateurs user) {
-        return utilisateursRepository.save(user);
+        logger.info("Début de la création d'un utilisateur avec email: {}", user.getEmail());
+        
+        // Vérifier si les données pour calculer l'IMC sont présentes
+        logger.info("Données pour calcul IMC - Poids: {}, Taille: {}", user.getPoids(), user.getTaille());
+        
+        // Calcul automatique de l'IMC si la taille et le poids sont fournis
+        if (user.getPoids() != null && user.getTaille() != null && user.getTaille() > 0) {
+            // Calculer l'IMC et le définir dans l'objet utilisateur
+            Float imc = calculerIMC(user.getPoids(), user.getTaille());
+            logger.debug("IMC calculé: {} (formule: {} / (({}/100) * ({}/100)))", 
+                       imc, user.getPoids(), user.getTaille(), user.getTaille());
+            
+            // Définir l'IMC dans l'objet utilisateur
+            user.setImc(imc);
+            
+            // Mettre à jour l'interprétation de l'IMC
+            user.updateInterpretationIMC();
+            
+            logger.info("IMC calculé automatiquement: {} (poids: {}, taille: {}), Interprétation: {}", 
+                      imc, user.getPoids(), user.getTaille(), user.getInterpretationIMC());
+            
+            // Vérifier que l'IMC a bien été défini
+            logger.debug("Vérification après setImc - IMC stocké dans l'objet: {}", user.getImc());
+        } else {
+            logger.warn("Impossible de calculer l'IMC: données de poids ou taille manquantes ou invalides");
+            if (user.getPoids() == null) {
+                logger.debug("Poids manquant");
+            }
+            if (user.getTaille() == null) {
+                logger.debug("Taille manquante");
+            }
+            if (user.getTaille() != null && user.getTaille() == 0) {
+                logger.debug("Taille égale à zéro");
+            }
+        }
+        
+        // Sauvegarder l'utilisateur
+        logger.debug("Sauvegarde de l'utilisateur avec IMC: {}", user.getImc());
+        Utilisateurs savedUser = utilisateursRepository.save(user);
+        
+        // Vérifier si l'IMC a été correctement stocké
+        logger.info("Utilisateur créé avec ID: {}, IMC stocké: {}", savedUser.getId(), savedUser.getImc());
+        
+        return savedUser;
     }
 
 
@@ -159,5 +218,93 @@ public class UtilisateursServiceImpl implements UtilisateursService {
         
         logger.info("Password changed successfully for user with ID: {}", id);
         return true;
+    }
+
+    @Override
+    public Float getImcByUserId(String id) {
+        logger.info("Getting IMC for user with ID: {}", id);
+        
+        Optional<Utilisateurs> userOpt = utilisateursRepository.findById(id);
+        if (userOpt.isEmpty()) {
+            logger.error("User with ID {} not found when getting IMC", id);
+            return null;
+        }
+        
+        Utilisateurs user = userOpt.get();
+        
+        // Recalculer l'IMC à chaque appel pour s'assurer qu'il est à jour
+        if (user.getPoids() != null && user.getTaille() != null && user.getTaille() > 0) {
+            Float imc = calculerIMC(user.getPoids(), user.getTaille());
+            
+            // Mettre à jour l'IMC dans la base de données
+            user.setImc(imc);
+            
+            // Mettre à jour l'interprétation de l'IMC
+            user.updateInterpretationIMC();
+            
+            utilisateursRepository.save(user);
+            
+            logger.info("IMC calculé et mis à jour pour l'utilisateur avec ID {}: {}, Interprétation: {}", 
+                      id, imc, user.getInterpretationIMC());
+            return imc;
+        }
+        
+        logger.warn("Impossible de calculer l'IMC pour l'utilisateur avec ID {}: données manquantes", id);
+        return null;
+    }
+    
+    /**
+     * Méthode utilitaire pour calculer l'IMC à partir du poids et de la taille
+     * 
+     * @param poids en kg
+     * @param taille en cm
+     * @return la valeur de l'IMC calculée
+     */
+    private Float calculerIMC(Float poids, Float taille) {
+        logger.debug("Calcul de l'IMC avec poids={} kg et taille={} cm", poids, taille);
+        
+        if (poids == null || taille == null || taille == 0) {
+            logger.warn("Impossible de calculer l'IMC: paramètres invalides (poids={}, taille={})", poids, taille);
+            return null;
+        }
+        
+        // Convertir la taille de cm en m et calculer l'IMC
+        float tailleEnMetres = taille / 100.0f;
+        float imc = poids / (tailleEnMetres * tailleEnMetres);
+        
+        logger.debug("IMC calculé: {} (formule: {} / ({} * {}))", 
+                   imc, poids, tailleEnMetres, tailleEnMetres);
+        
+        return imc;
+    }
+
+    /**
+     * Méthode pour recalculer l'IMC de tous les utilisateurs dans la base de données
+     * @return Le nombre d'utilisateurs mis à jour
+     */
+    public int recalculerTousLesIMC() {
+        logger.info("Début du recalcul de l'IMC pour tous les utilisateurs");
+        List<Utilisateurs> utilisateurs = utilisateursRepository.findAll();
+        int compteurMisesAJour = 0;
+        
+        for (Utilisateurs utilisateur : utilisateurs) {
+            if (utilisateur.getPoids() != null && utilisateur.getTaille() != null && utilisateur.getTaille() > 0) {
+                Float imc = calculerIMC(utilisateur.getPoids(), utilisateur.getTaille());
+                utilisateur.setImc(imc);
+                
+                // Mettre à jour l'interprétation de l'IMC
+                utilisateur.updateInterpretationIMC();
+                
+                utilisateursRepository.save(utilisateur);
+                compteurMisesAJour++;
+                logger.info("IMC recalculé pour l'utilisateur {}: {}, Interprétation: {}", 
+                          utilisateur.getId(), imc, utilisateur.getInterpretationIMC());
+            } else {
+                logger.warn("Impossible de calculer l'IMC pour l'utilisateur {}: données manquantes", utilisateur.getId());
+            }
+        }
+        
+        logger.info("Fin du recalcul de l'IMC: {} utilisateurs mis à jour sur {}", compteurMisesAJour, utilisateurs.size());
+        return compteurMisesAJour;
     }
 }

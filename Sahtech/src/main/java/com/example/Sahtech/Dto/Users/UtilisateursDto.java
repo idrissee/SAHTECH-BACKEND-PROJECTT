@@ -30,5 +30,6 @@ public class UtilisateursDto {
     private String type;
     private Long countScans = 0L;
     private String photoUrl;
+    private Float imc;
 }
 

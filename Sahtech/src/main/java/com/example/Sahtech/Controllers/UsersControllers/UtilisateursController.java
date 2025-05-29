@@ -88,9 +88,23 @@ public class UtilisateursController {
     // CREATE NEW USER - réservé à l'admin (déjà géré par SecurityConfig)
     @PostMapping
     public ResponseEntity<UtilisateursDto> addUser(@RequestBody UtilisateursDto userDto) {
+        logger.info("Création d'un nouvel utilisateur avec email: {}", userDto.getEmail());
+        
         Utilisateurs user = utilisateursMapper.mapFrom(userDto);
+        
+        // Le calcul de l'IMC est géré automatiquement dans le service
         Utilisateurs savedUser = utilisateurService.addUtilisateur(user);
+        
+        // Vérifier si l'IMC a bien été calculé
+        if (savedUser.getImc() != null) {
+            logger.info("IMC calculé pour l'utilisateur {}: {}", savedUser.getId(), savedUser.getImc());
+        } else {
+            logger.warn("IMC non calculé pour l'utilisateur {}", savedUser.getId());
+        }
+        
         UtilisateursDto savedDto = utilisateursMapper.mapTo(savedUser);
+        logger.info("Utilisateur créé avec succès, ID: {}", savedUser.getId());
+        
         return new ResponseEntity<>(savedDto, HttpStatus.CREATED);
     }
 
@@ -185,5 +199,185 @@ public class UtilisateursController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Error changing password: " + e.getMessage()));
         }
+    }
+
+    @GetMapping(value = "/{id}/imc")
+    public ResponseEntity<?> getImcUser(@PathVariable String id, HttpServletRequest request) {
+        // Log pour déboguer
+        logger.info("Endpoint GET IMC appelé pour l'utilisateur avec ID: {}", id);
+        
+        // Vérifier si l'utilisateur est autorisé
+        if (!authorizationService.isAuthorizedToAccessResource(id, request)) {
+            logger.error("User not authorized to access IMC for user ID: {}", id);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        
+        // Récupérer l'utilisateur directement
+        Utilisateurs utilisateur = utilisateurService.getUtilisateurById(id);
+        if (utilisateur == null) {
+            logger.error("Utilisateur avec ID {} non trouvé", id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Utilisateur non trouvé"));
+        }
+        
+        // Récupérer l'IMC directement depuis l'entité utilisateur
+        Float imc = utilisateur.getImc();
+        String interpretation = utilisateur.getInterpretationIMC();
+        
+        logger.info("Utilisateur trouvé - Email: {}, Poids: {}, Taille: {}, IMC stocké: {}, Interprétation: {}", 
+                utilisateur.getEmail(), utilisateur.getPoids(), utilisateur.getTaille(), imc, interpretation);
+        
+        // Si l'IMC n'est pas encore calculé mais que les données sont disponibles, le calculer maintenant
+        if (imc == null && utilisateur.getPoids() != null && utilisateur.getTaille() != null && utilisateur.getTaille() > 0) {
+            // Calculer l'IMC manuellement
+            imc = utilisateur.getPoids() / ((utilisateur.getTaille()/100) * (utilisateur.getTaille()/100));
+            
+            // Mettre à jour l'utilisateur avec l'IMC calculé
+            utilisateur.setImc(imc);
+            
+            // Mettre à jour l'interprétation de l'IMC
+            utilisateur.updateInterpretationIMC();
+            interpretation = utilisateur.getInterpretationIMC();
+            
+            utilisateurService.updateUtilisateur(id, utilisateur);
+            
+            logger.info("IMC calculé à la volée et stocké: {}, Interprétation: {}", imc, interpretation);
+        }
+        
+        if (imc == null) {
+            logger.warn("IMC non disponible pour l'utilisateur {}", id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "IMC non disponible pour cet utilisateur"));
+        }
+        
+        logger.info("IMC retourné avec succès: {}, Interprétation: {}", imc, interpretation);
+        // Ne retourner que l'IMC sans l'interprétation
+        return ResponseEntity.ok(Map.of("imc", imc));
+    }
+
+    // Endpoint de test simple pour vérifier le fonctionnement du contrôleur
+    @GetMapping("/test")
+    public ResponseEntity<String> testEndpoint() {
+        logger.info("Test endpoint called");
+        return ResponseEntity.ok("Le contrôleur fonctionne correctement");
+    }
+    
+    // Endpoint pour forcer le calcul et la mise à jour de l'IMC
+    @PostMapping("/{id}/calculer-imc")
+    public ResponseEntity<?> calculerEtMajImc(@PathVariable String id, HttpServletRequest request) {
+        // Vérifier si l'utilisateur est autorisé
+        if (!authorizationService.isAuthorizedToAccessResource(id, request)) {
+            logger.error("User not authorized to update IMC for user ID: {}", id);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        
+        // Récupérer l'utilisateur
+        Utilisateurs utilisateur = utilisateurService.getUtilisateurById(id);
+        if (utilisateur == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Utilisateur non trouvé"));
+        }
+        
+        // Vérifier si les données nécessaires sont présentes
+        if (utilisateur.getPoids() == null || utilisateur.getTaille() == null || utilisateur.getTaille() == 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Données de poids ou taille manquantes ou invalides"));
+        }
+        
+        // Calculer l'IMC
+        Float imc = utilisateur.getPoids() / ((utilisateur.getTaille()/100) * (utilisateur.getTaille()/100));
+        
+        // Mettre à jour l'utilisateur avec l'IMC calculé
+        utilisateur.setImc(imc);
+        
+        // Mettre à jour l'interprétation de l'IMC
+        utilisateur.updateInterpretationIMC();
+        String interpretation = utilisateur.getInterpretationIMC();
+        
+        utilisateurService.updateUtilisateur(id, utilisateur);
+        
+        logger.info("IMC calculé et mis à jour pour l'utilisateur {}: {}, Interprétation: {}", 
+                  id, imc, interpretation);
+        
+        // Ne retourner que l'IMC sans l'interprétation
+        return ResponseEntity.ok(Map.of(
+            "message", "IMC calculé et mis à jour avec succès",
+            "imc", imc,
+            "poids", utilisateur.getPoids(),
+            "taille", utilisateur.getTaille()
+        ));
+    }
+    
+    // Endpoint pour recalculer l'IMC de tous les utilisateurs (réservé à l'admin)
+    @PostMapping("/recalculer-tous-imc")
+    public ResponseEntity<?> recalculerTousImc() {
+        logger.info("Recalcul de l'IMC pour tous les utilisateurs");
+        
+        // Utiliser la méthode du service pour recalculer tous les IMC
+        int compteurMisesAJour = utilisateurService.recalculerTousLesIMC();
+        
+        logger.info("Recalcul de l'IMC terminé: {} utilisateurs mis à jour", compteurMisesAJour);
+        
+        return ResponseEntity.ok(Map.of(
+            "message", "Recalcul de l'IMC terminé",
+            "mises_a_jour", compteurMisesAJour
+        ));
+    }
+
+    // Endpoint pour récupérer l'IMC avec son interprétation
+    @GetMapping(value = "/{id}/imc-avec-interpretation")
+    public ResponseEntity<?> getImcAvecInterpretation(@PathVariable String id, HttpServletRequest request) {
+        // Log pour déboguer
+        logger.info("Endpoint GET IMC avec interprétation appelé pour l'utilisateur avec ID: {}", id);
+        
+        // Vérifier si l'utilisateur est autorisé
+        if (!authorizationService.isAuthorizedToAccessResource(id, request)) {
+            logger.error("User not authorized to access IMC for user ID: {}", id);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        
+        // Récupérer l'utilisateur directement
+        Utilisateurs utilisateur = utilisateurService.getUtilisateurById(id);
+        if (utilisateur == null) {
+            logger.error("Utilisateur avec ID {} non trouvé", id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Utilisateur non trouvé"));
+        }
+        
+        // Récupérer l'IMC directement depuis l'entité utilisateur
+        Float imc = utilisateur.getImc();
+        String interpretation = utilisateur.getInterpretationIMC();
+        
+        logger.info("Utilisateur trouvé - Email: {}, Poids: {}, Taille: {}, IMC stocké: {}, Interprétation: {}", 
+                utilisateur.getEmail(), utilisateur.getPoids(), utilisateur.getTaille(), imc, interpretation);
+        
+        // Si l'IMC n'est pas encore calculé mais que les données sont disponibles, le calculer maintenant
+        if (imc == null && utilisateur.getPoids() != null && utilisateur.getTaille() != null && utilisateur.getTaille() > 0) {
+            // Calculer l'IMC manuellement
+            imc = utilisateur.getPoids() / ((utilisateur.getTaille()/100) * (utilisateur.getTaille()/100));
+            
+            // Mettre à jour l'utilisateur avec l'IMC calculé
+            utilisateur.setImc(imc);
+            
+            // Mettre à jour l'interprétation de l'IMC
+            utilisateur.updateInterpretationIMC();
+            interpretation = utilisateur.getInterpretationIMC();
+            
+            utilisateurService.updateUtilisateur(id, utilisateur);
+            
+            logger.info("IMC calculé à la volée et stocké: {}, Interprétation: {}", imc, interpretation);
+        }
+        
+        if (imc == null) {
+            logger.warn("IMC non disponible pour l'utilisateur {}", id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "IMC non disponible pour cet utilisateur"));
+        }
+        
+        logger.info("IMC avec interprétation retourné avec succès: {}, Interprétation: {}", imc, interpretation);
+        return ResponseEntity.ok(Map.of(
+            "imc", imc,
+            "interpretation", interpretation != null ? interpretation : "Non disponible"
+        ));
     }
 }
