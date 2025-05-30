@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +26,9 @@ public class UtilisateursDto {
     private Float poids;
     private String sexe;
     private Maladie maladie;
+    private List<Maladie> maladies;
+    private List<String> chronicConditions;
+    private boolean hasChronicDisease;
     private Objectif objectif;
     private String provider;
     private String type;

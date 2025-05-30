@@ -31,6 +31,7 @@ public class Utilisateurs {
     private String email;
     private Date dateDeNaissance;
     private List<Maladie> maladies;
+    private List<String> chronicConditions; // Alternative format for diseases
     private Float poids;
     private Float taille;
     private Boolean sport;
