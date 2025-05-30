@@ -8,7 +8,7 @@ public enum NomIngrediants {
     CALCIUM,
     POTASSIUM,
     SODIUM,
-    MAGNÉSIUM,
+    MAGNESIUM,
     NITRATES,
     CHLORURE,
     PH,
@@ -17,10 +17,10 @@ public enum NomIngrediants {
     NITRITES,
 
     SUCRES,
-    PROTÉINES,
+    PROTEINES,
     SEL,
     LIPIDES,
-    ACIDES_GRAS_SATURÉS,
+    ACIDES_GRAS_SATURES,
     GLUCIDES,
     FIBRES_ALIMENTAIRES,
     CARBOHYDRATE,
@@ -33,8 +33,8 @@ public enum NomIngrediants {
     VITAMINE_D,
     VITAMINE_B12,
     VITAMINE_B6,
-    ÉNERGIE_KCAL,
-    CHOLESTÉROL,
+    ENERGIE_KCAL,
+    CHOLESTEROL,
     RS_A_180_C
 
     }
