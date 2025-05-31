@@ -59,11 +59,26 @@ public class UtilisateursServiceImpl implements UtilisateursService {
                     updatedUser.setPassword(existingUser.getPassword());
                 }
                 
-                // Handle empty lists - keep existing data if updated data is empty
-                if (updatedUser.getMaladies() == null || updatedUser.getMaladies().isEmpty()) {
-                    updatedUser.setMaladies(existingUser.getMaladies());
+                // Special handling for disease-related fields
+                // If hasChronicDisease is false, explicitly set empty lists for maladies and chronicConditions
+                if (!updatedUser.isHasChronicDisease()) {
+                    logger.info("User has no chronic diseases, explicitly setting empty lists");
+                    // Use empty lists instead of null to ensure MongoDB keeps the fields
+                    updatedUser.setMaladies(java.util.Collections.emptyList());
+                    updatedUser.setChronicConditions(java.util.Collections.emptyList());
+                    logger.info("Set empty disease lists - will be preserved in MongoDB");
+                } else {
+                    // Handle the case where we need to preserve existing diseases
+                    if (updatedUser.getMaladies() == null && existingUser.getMaladies() != null) {
+                        updatedUser.setMaladies(existingUser.getMaladies());
+                    }
+                    
+                    if (updatedUser.getChronicConditions() == null && existingUser.getChronicConditions() != null) {
+                        updatedUser.setChronicConditions(existingUser.getChronicConditions());
+                    }
                 }
                 
+                // Handle other empty lists - keep existing data if updated data is empty
                 if (updatedUser.getAllergies() == null || updatedUser.getAllergies().isEmpty()) {
                     updatedUser.setAllergies(existingUser.getAllergies());
                 }
