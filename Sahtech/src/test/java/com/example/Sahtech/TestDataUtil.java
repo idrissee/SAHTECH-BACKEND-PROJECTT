@@ -1,7 +1,6 @@
 package com.example.Sahtech;
 
 import com.example.Sahtech.Enum.*;
-import com.example.Sahtech.Dto.ProduitDetaille.IngredientInfoDto;
 import com.example.Sahtech.entities.ProduitDetaille.Additifs;
 import com.example.Sahtech.entities.ProduitDetaille.Ingrediants;
 import com.example.Sahtech.entities.ProduitDetaille.Produit;
@@ -14,7 +13,6 @@ import com.example.Sahtech.entities.Users.NutritionisteDetaille.Nutrisioniste;
 import com.example.Sahtech.entities.Users.Utilisateurs;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,8 +25,6 @@ public class TestDataUtil {
         return Produit.builder()
                 .id("1L")
                 .nom("rouiba")
-                .categorie("Boisson")
-                .codeBarre(12365877L)
                 .build();
     }
 
@@ -36,7 +32,7 @@ public class TestDataUtil {
         return Produit.builder()
                 .id("2L")
                 .nom("Gateau")
-                .categorie("Patisserie")
+                .typeProduit(TypeProduit.produitLate)
                 .codeBarre(12348796L)
                 .build();
     }
@@ -45,30 +41,7 @@ public class TestDataUtil {
         return Produit.builder()
                 .id("3L")
                 .nom("milka")
-                .categorie("Chocolat")
                 .codeBarre(1236987L)
-                .build();
-    }
-
-    // More complete test product with all fields
-    public static Produit createTestProduitComplete() {
-        List<IngredientInfoDto> ingredients = new ArrayList<>();
-        ingredients.add(new IngredientInfoDto(NomIngrediants.SUCRES, "10g"));
-        ingredients.add(new IngredientInfoDto(NomIngrediants.SODIUM, "2g"));
-        
-        return Produit.builder()
-                .id("4L")
-                .nom("Produit Complet Test")
-                .categorie("Test Category")
-                .codeBarre(9876543210123L)
-                .marque("Marque Test")
-                .description("Description test produit")
-                .quantite("500g")
-                .imageUrl("https://example.com/image.jpg")
-                .valeurNutriScore(ValeurNutriScore.B)
-                .descriptionNutriScore("Bonne qualité nutritionnelle")
-                .ingredients(ingredients)
-                .nomAdditif(List.of("E100", "E202"))
                 .build();
     }
 
@@ -76,27 +49,22 @@ public class TestDataUtil {
     public static Ingrediants createTestIngrediantsA() {
         return Ingrediants.builder()
                 .idIngrediant("1L")
-                .quantite("5.0g")
-                .nomIngrediant(NomIngrediants.SODIUM)
-                .produitId("1L")
+                .nomIngrediant("salt")
                 .build();
     }
 
     public static Ingrediants createTestIngrediantsB() {
         return Ingrediants.builder()
                 .idIngrediant("2L")
-                .quantite("4.0g")
-                .nomIngrediant(NomIngrediants.SUCRES)
-                .produitId("2L")
+                .Quantite(4.0F)
+                .nomIngrediant("SUGAR")
                 .build();
     }
 
     public static Ingrediants createTestIngrediantsC() {
         return Ingrediants.builder()
                 .idIngrediant("3L")
-                .quantite("4.4g")
-                .nomIngrediant(NomIngrediants.SODIUM)
-                .produitId("3L")
+                .nomIngrediant("SODIUM")
                 .build();
     }
 
@@ -105,29 +73,29 @@ public class TestDataUtil {
        return Additifs.builder()
                .idAdditif("1L")
                .typeAdditif(TypeAdditif.Colorant)
-               .seuil("niveau 2")
+               .seuil("2")
                .nomAdditif("sin1")
                .codeAdditif("E100")
                .toxicite("Faible")
                .build();
     }
-    
+
     public static Additifs createTestAdditifsB() {
         return Additifs.builder()
                 .idAdditif("2L")
                 .typeAdditif(TypeAdditif.Conservateur)
-                .seuil("niveau 3")
+                .seuil("3")
                 .nomAdditif("sin2")
                 .codeAdditif("E200")
                 .toxicite("Moyenne")
                 .build();
     }
-    
+
     public static Additifs createTestAdditifsC() {
         return Additifs.builder()
                 .idAdditif("3L")
                 .typeAdditif(TypeAdditif.Édulcorant)
-                .seuil("niveau 4")
+                .seuil("4")
                 .nomAdditif("sin3")
                 .codeAdditif("E300")
                 .toxicite("Élevée")
@@ -149,7 +117,7 @@ public class TestDataUtil {
                 .localisationId("1L")
                 .build();
     }
-    
+
     public static Nutrisioniste createTestNutrisionisteB() {
         return Nutrisioniste.builder()
                 .id("2L")
@@ -164,7 +132,7 @@ public class TestDataUtil {
                 .localisationId("2L")
                 .build();
     }
-    
+
     public static Nutrisioniste createTestNutrisionisteC() {
         return Nutrisioniste.builder()
                 .id("3L")
@@ -191,7 +159,7 @@ public class TestDataUtil {
                 .password("adminpass123")
                 .build();
     }
-    
+
     public static Admin createTestAdminB() {
         return Admin.builder()
                 .id("2L")
@@ -220,7 +188,7 @@ public class TestDataUtil {
                 .objectif(Objectif.PERDRE_DU_POIDS)
                 .build();
     }
-    
+
     public static Utilisateurs createTestUtilisateurB() {
         return Utilisateurs.builder()
                 .id("2L")
@@ -245,22 +213,34 @@ public class TestDataUtil {
                 .utilisateur(createTestUtilisateurA())
                 .produit(creatTestProduitA())
                 .dateScan(LocalDateTime.now())
+                .noteNutriScore("A")
                 .recommandationIA("Produit recommandé")
-                .recommendationType("recommended")
+                .additifsDetectes(List.of("E100", "E200"))
+                .ingredients(List.of("Sucre", "Sel"))
+                .pointsPositifs(List.of("Peu de sucre"))
+                .pointsNegatifs(List.of("Contient des additifs"))
+                .impactSante("Bonne")
+                .commentaireUtilisateur("Très bon produit")
                 .build();
     }
-    
+
     public static HistoriqueScan createTestHistoriqueScanB() {
         return HistoriqueScan.builder()
-                .id("2")
+                .id("L")
                 .utilisateur(createTestUtilisateurB())
                 .produit(creatTestProduitB())
                 .dateScan(LocalDateTime.now().minusDays(5))
+                .noteNutriScore("C")
                 .recommandationIA("Consommation modérée conseillée")
-                .recommendationType("caution")
+                .additifsDetectes(List.of("E300", "E400"))
+                .ingredients(List.of("Farine", "Œufs"))
+                .pointsPositifs(List.of("Sources de protéines"))
+                .pointsNegatifs(List.of("Contient trop de matières grasses"))
+                .impactSante("Moyenne")
+                .commentaireUtilisateur("Assez bon")
                 .build();
     }
-    
+
     // Localisation test data
     public static Localisation createTestLocalisationA() {
         return Localisation.builder()
@@ -273,7 +253,7 @@ public class TestDataUtil {
                 .longitude(2.3522)
                 .build();
     }
-    
+
     public static Localisation createTestLocalisationB() {
         return Localisation.builder()
                 .id("2L")
@@ -285,7 +265,7 @@ public class TestDataUtil {
                 .longitude(4.8320)
                 .build();
     }
-    
+
     public static Localisation createTestLocalisationC() {
         return Localisation.builder()
                 .id("3L")
@@ -297,7 +277,7 @@ public class TestDataUtil {
                 .longitude(5.3698)
                 .build();
     }
-    
+
     // Partenaire test data
     public static Partenaire createTestPartenaireA() {
         return Partenaire.builder()
@@ -311,7 +291,7 @@ public class TestDataUtil {
                 .statut(StatutPartenaire.EN_ATTENTE)
                 .build();
     }
-    
+
     public static Partenaire createTestPartenaireB() {
         return Partenaire.builder()
                 .id("2L")
@@ -324,7 +304,7 @@ public class TestDataUtil {
                 .statut(StatutPartenaire.ACTIF)
                 .build();
     }
-    
+
     // Publicite test data
     public static Publicite createTestPubliciteA() {
         return Publicite.builder()
@@ -337,7 +317,7 @@ public class TestDataUtil {
                 .partenaire_id("1L")
                 .build();
     }
-    
+
     public static Publicite createTestPubliciteB() {
         return Publicite.builder()
                 .id("2L")
@@ -347,6 +327,22 @@ public class TestDataUtil {
                 .etatPublicite(EtatPublicite.PUBLIEE)
                 .statusPublicite(StatusPublicite.EN_ATTENTE)
                 .partenaire_id("2L")
+                .build();
+    }
+
+    // Complete product test data with all fields
+    public static Produit createTestProduitComplete() {
+        return Produit.builder()
+                .id("complete-test-id")
+                .nom("Produit Test Complet")
+                .codeBarre(9876543210L)
+                .marque("Marque Test")
+                .categorie("Catégorie Test")
+                .description("Description complète du produit test")
+                .imageUrl("https://example.com/image.jpg")
+                .typeProduit(TypeProduit.produitLate)
+                .ingredients(List.of(createTestIngrediantsA(), createTestIngrediantsB()))
+                .nomAdditif(List.of("E100", "E200"))
                 .build();
     }
 }

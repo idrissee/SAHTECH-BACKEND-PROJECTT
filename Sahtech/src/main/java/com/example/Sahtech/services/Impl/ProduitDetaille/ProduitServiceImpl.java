@@ -1,10 +1,11 @@
 package com.example.Sahtech.services.Impl.ProduitDetaille;
 
-
-
+import com.example.Sahtech.Enum.TypeProduit;
+import com.example.Sahtech.Enum.ValeurNutriScore;
 import com.example.Sahtech.entities.ProduitDetaille.Produit;
 import com.example.Sahtech.repositories.ProduitDetaille.AdditifsRepository;
 import com.example.Sahtech.repositories.ProduitDetaille.ProduitRepository;
+import com.example.Sahtech.services.Interfaces.ProduitDetaille.NutriScoreService;
 import com.example.Sahtech.services.Interfaces.ProduitDetaille.ProduitService;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -16,18 +17,58 @@ import java.util.stream.StreamSupport;
 @Service
 public class ProduitServiceImpl implements ProduitService {
 
-    ProduitRepository produitRepository;
-    private final AdditifsRepository additifRepository;
+    private final ProduitRepository produitRepository;
 
-    public ProduitServiceImpl(ProduitRepository produitRepository, AdditifsRepository additifRepository) {
+    private final AdditifsRepository additifRepository;
+    private final NutriScoreService nutriScoreService;
+
+    public ProduitServiceImpl(ProduitRepository produitRepository, 
+                            AdditifsRepository additifRepository,
+                            NutriScoreService nutriScoreService) {
         this.produitRepository = produitRepository;
         this.additifRepository = additifRepository;
+        this.nutriScoreService = nutriScoreService;
+    }
+
+    private String generateNutriScoreDescription(ValeurNutriScore nutriScore) {
+        switch (nutriScore) {
+            case A:
+                return "Excellent choix nutritionnel";
+            case B:
+                return "Bon choix nutritionnel";
+            case C:
+                return "Choix nutritionnel moyen";
+            case D:
+                return "Choix nutritionnel à limiter";
+            case E:
+                return "Choix nutritionnel à éviter";
+            default:
+                return "Score nutritionnel non disponible";
+        }
     }
 
     @Override
-    public Produit createProduit(Produit produit) {
-        Produit savedProduit = produitRepository.save(produit);
-        return savedProduit;
+    public Produit createProduit(Produit produit, TypeProduit typeProduit) {
+        if (typeProduit == null) {
+            // Handle the case where typeProduit is null, e.g., throw an exception
+            throw new IllegalArgumentException("TypeProduit cannot be null");
+        }
+
+        // IMPORTANT DEBUG LOG
+        System.out.println("CREATING PRODUCT: " + produit.getNom() + " WITH BARCODE: " + produit.getCodeBarre());
+        
+        // Calculer le NutriScore
+        ValeurNutriScore nutriScore = nutriScoreService.calculateNutriScore(produit, typeProduit);
+        
+        // IMPORTANT DEBUG LOG
+        System.out.println("CALCULATED NUTRISCORE: " + nutriScore + " FOR PRODUCT: " + produit.getNom());
+        
+        // Définir le NutriScore et sa description
+        produit.setValeurNutriScore(nutriScore);
+        produit.setDescriptionNutriScore(generateNutriScoreDescription(nutriScore));
+        
+        // Sauvegarder le produit avec le NutriScore calculé
+        return produitRepository.save(produit);
     }
 
     @Override
@@ -85,38 +126,53 @@ public class ProduitServiceImpl implements ProduitService {
 
     @Override
     public Produit partialUpdate(String id, Produit produit) {
-
-        produit.setId(id);
-
-        return produitRepository.findById(id).map(exisitingProduit ->{
-            Optional.ofNullable(produit.getNom()).ifPresent(exisitingProduit::setNom);
-            Optional.ofNullable(produit.getDescription()).ifPresent(exisitingProduit::setDescription);
-            return produitRepository.save(exisitingProduit);
-        }).orElseThrow(() -> new RuntimeException("Produit not found"));
-
-
+        return produitRepository.findById(id)
+                .map(existingProduit -> {
+                    if (produit.getNom() != null) existingProduit.setNom(produit.getNom());
+                    if (produit.getCodeBarre() != null) existingProduit.setCodeBarre(produit.getCodeBarre());
+                    if (produit.getMarque() != null) existingProduit.setMarque(produit.getMarque());
+                    if (produit.getCategorie() != null) existingProduit.setCategorie(produit.getCategorie());
+                    if (produit.getDescription() != null) existingProduit.setDescription(produit.getDescription());
+                    if (produit.getQuantite() != null) existingProduit.setQuantite(produit.getQuantite());
+                    if (produit.getImageUrl() != null) existingProduit.setImageUrl(produit.getImageUrl());
+                    if (produit.getIngredients() != null) existingProduit.setIngredients(produit.getIngredients());
+                    if (produit.getNomAdditif() != null) existingProduit.setNomAdditif(produit.getNomAdditif());
+                    return produitRepository.save(existingProduit);
+                })
+                .orElse(null);
     }
 
     @Override
     public void delete(String id) {
-
         produitRepository.deleteById(id);
     }
 
     @Override
-    public Produit save(Produit produit) {
-
-        return  produitRepository.save(produit);
+    public Produit setPhotoUrl(String id, String photoUrl) {
+        return produitRepository.findById(id)
+                .map(produit -> {
+                    produit.setImageUrl(photoUrl);
+                    return produitRepository.save(produit);
+                })
+                .orElse(null);
     }
 
     @Override
-    public Produit setPhotoUrl(String id, String photoUrl) {
-        Optional<Produit> produitOpt = produitRepository.findById(id);
-        if (produitOpt.isPresent()) {
-            Produit produit = produitOpt.get();
-            produit.setImageUrl(photoUrl);
-            return produitRepository.save(produit);
-        }
-        return null;
+    public Produit save(Produit produit) {
+        return produitRepository.save(produit);
+    }
+
+    @Override
+    public List<Produit> getProduitsByType(TypeProduit typeProduit) {
+        return produitRepository.findAll().stream()
+                .filter(produit -> {
+                    // Calculer le NutriScore pour chaque produit
+                    ValeurNutriScore nutriScore = nutriScoreService.calculateNutriScore(produit, typeProduit);
+                    // Mettre à jour le NutriScore du produit
+                    produit.setValeurNutriScore(nutriScore);
+                    produit.setDescriptionNutriScore(generateNutriScoreDescription(nutriScore));
+                    return true;
+                })
+                .collect(Collectors.toList());
     }
 }

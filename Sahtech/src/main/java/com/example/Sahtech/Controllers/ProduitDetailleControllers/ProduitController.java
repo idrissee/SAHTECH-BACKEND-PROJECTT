@@ -2,6 +2,7 @@ package com.example.Sahtech.Controllers.ProduitDetailleControllers;
 
 import com.example.Sahtech.Dto.ProduitDetaille.ProduitDto;
 import com.example.Sahtech.Enum.ValeurNutriScore;
+import com.example.Sahtech.Enum.TypeProduit;
 
 import com.example.Sahtech.entities.ProduitDetaille.Produit;
 import com.example.Sahtech.mappers.Mapper;
@@ -29,6 +30,7 @@ public class ProduitController {
 
     private ProduitService produitService;
     private Mapper<Produit, ProduitDto> produitMapper;
+    @Autowired
     private  ImageService imageService;
 
     @Autowired
@@ -43,7 +45,7 @@ public class ProduitController {
     @PostMapping()
     public ResponseEntity<ProduitDto> createProduit(@RequestBody ProduitDto produitDto) {
         Produit produit = produitMapper.mapFrom(produitDto);
-        Produit savedProduit = produitService.createProduit(produit);
+        Produit savedProduit = produitService.createProduit(produit, produitDto.getTypeProduit());
         return new ResponseEntity<>(produitMapper.mapTo(savedProduit), HttpStatus.CREATED);
     }
 
@@ -179,5 +181,14 @@ public class ProduitController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(updated);
+    }
+
+    @GetMapping("/type/{typeProduit}")
+    public ResponseEntity<List<ProduitDto>> getProduitsByType(@PathVariable TypeProduit typeProduit) {
+        List<Produit> produits = produitService.getProduitsByType(typeProduit);
+        List<ProduitDto> produitDtos = produits.stream()
+                .map(produitMapper::mapTo)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(produitDtos, HttpStatus.OK);
     }
 }
