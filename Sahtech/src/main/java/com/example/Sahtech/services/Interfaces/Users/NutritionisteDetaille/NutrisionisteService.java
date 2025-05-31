@@ -27,5 +27,7 @@ public interface NutrisionisteService {
     Nutrisioniste setPhotoUrl(String id, String photoUrl) ;
 
     Nutrisioniste setPhotoDiplome(String id, String photoUrl) ;
+    
+    Nutrisioniste save(Nutrisioniste nutrisioniste);
 
 }

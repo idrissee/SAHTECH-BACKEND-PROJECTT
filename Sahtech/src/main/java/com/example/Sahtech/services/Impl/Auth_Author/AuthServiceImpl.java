@@ -16,7 +16,7 @@ import com.example.Sahtech.repositories.Users.UtilisateursRepository;
 import com.example.Sahtech.security.JwtTokenProvider;
 import com.example.Sahtech.security.TokenBlacklistService;
 import com.example.Sahtech.services.Interfaces.Auth_Author.AuthService;
-import com.example.Sahtech.services.Interfaces.Users.NutrisionisteService;
+import com.example.Sahtech.services.Interfaces.Users.NutritionisteDetaille.NutrisionisteService;
 import com.example.Sahtech.services.Interfaces.Users.UtilisateursService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -197,8 +197,28 @@ public class AuthServiceImpl implements AuthService {
             .password(passwordEncoder.encode(request.getPassword()))
             .numTelephone(request.getNumTelephone())
             .dateDeNaissance(request.getDateDeNaissance())
+            .sexe(request.getSexe())
+            .poids(request.getPoids())
+            .taille(request.getTaille())
+            .sport(request.getSport())
+            .allergies(request.getAllergies())
+            .maladies(request.getMaladies())
+            .hasChronicDisease(request.getHasChronicDisease() != null ? request.getHasChronicDisease() : false)
+            .hasAllergies(request.getHasAllergies() != null ? request.getHasAllergies() : false)
+            .preferredLanguage(request.getPreferredLanguage())
+            .objectives(request.getObjectives())
+            .healthGoals(request.getHealthGoals())
+            .physicalActivities(request.getPhysicalActivities())
+            .specialite(request.getSpecialite())
+            .cabinetAddress(request.getCabinetAddress())
+            .latitude(request.getLatitude())
+            .longitude(request.getLongitude())
+            .proveAttestationType(request.getProveAttestationType())
+            .dailyActivities(request.getDailyActivities())
+            .photoUrlDiplome(request.getPhotoUrlDiplome())
+            .photoUrl(request.getPhotoUrl())
             .estVerifie(false)
-            .provider("LOCAL")
+            .provider(request.getProvider() != null ? request.getProvider() : "LOCAL")
             .type("NUTRITIONIST")
             .build();
         Nutrisioniste savedNutritionist = nutritionistService.save(nutritionist);

@@ -12,6 +12,7 @@ public interface UtilisateursService {
     boolean deleteUtilisateur(String id);
 
     Utilisateurs getUtilisateursByEmail(String email);
+    boolean existsByEmail(String email);
 
     Utilisateurs addUtilisateur(Utilisateurs user);
     Utilisateurs setPhotoUrl(String id, String photoUrl);

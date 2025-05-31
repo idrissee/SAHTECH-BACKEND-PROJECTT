@@ -47,7 +47,11 @@ public class UtilisateursServiceImpl implements UtilisateursService {
         Optional<Utilisateurs> utilisateur = utilisateursRepository.findByEmail(email);
         return utilisateur.orElse(null);
     }
-
+    
+    @Override
+    public boolean existsByEmail(String email) {
+        return utilisateursRepository.existsByEmail(email);
+    }
 
     @Override
     public Utilisateurs updateUtilisateur(String id, Utilisateurs updatedUser) {

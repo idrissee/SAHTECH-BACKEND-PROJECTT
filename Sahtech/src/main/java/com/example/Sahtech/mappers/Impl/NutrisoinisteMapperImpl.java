@@ -21,7 +21,7 @@ public class NutrisoinisteMapperImpl implements Mapper<Nutrisioniste, Nutrisioni
     }
 
     @Override
-        public Nutrisioniste mapFrom(NutrisionisteDto nutrisionisteDto) {
+    public Nutrisioniste mapFrom(NutrisionisteDto nutrisionisteDto) {
         return modelMapper.map(nutrisionisteDto, Nutrisioniste.class);
     }
 } 

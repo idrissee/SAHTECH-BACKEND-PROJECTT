@@ -50,6 +50,11 @@ public class NutrisionisteServiceImpl implements NutrisionisteService {
     }
 
     @Override
+    public Nutrisioniste save(Nutrisioniste nutrisioniste) {
+        return nutrisionisteRepository.save(nutrisioniste);
+    }
+
+    @Override
     public Nutrisioniste updateNutrisioniste(String id, Nutrisioniste nutrisioniste) {
         if (nutrisionisteRepository.existsById(id)) {
             nutrisioniste.setId(id);
@@ -79,7 +84,10 @@ public class NutrisionisteServiceImpl implements NutrisionisteService {
         return nutrisionisteRepository.save(nutrisioniste);
     }
 
-    public  Nutrisioniste setPhotoDiplome(String id, String photoUrl){
-        return getNutrisionisteById(id);
+    @Override
+    public Nutrisioniste setPhotoDiplome(String id, String photoUrl){
+        Nutrisioniste nutrisioniste = getNutrisionisteById(id);
+        nutrisioniste.setPhotoUrlDiplome(photoUrl);
+        return nutrisionisteRepository.save(nutrisioniste);
     }
 }

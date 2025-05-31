@@ -4,7 +4,9 @@ import com.example.Sahtech.Enum.Maladie;
 import com.example.Sahtech.Enum.Objectif;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -20,6 +22,8 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder
 @Data
+@Getter
+@Setter
 @Document(collection = "utilisateurs")
 public class Utilisateurs {
 
@@ -55,7 +59,10 @@ public class Utilisateurs {
         this.type = type;
     }
     private List<String> physicalActivities; // User's physical activities
+    
+    @Field("user_daily_activities")
     private List<String> dailyActivities; // User's daily activities 
+    
     private List<String> healthGoals; // Additional health goals/objectives
     private List<String> historiqueScanIds;
     

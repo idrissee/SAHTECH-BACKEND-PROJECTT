@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -19,6 +21,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Produit {
     @Id
     private String id;
@@ -62,12 +66,40 @@ public class Produit {
     private List<IngredientInfoDto> ingredients;
     private List<String> nomAdditif;
     
+    // Additional explicit getter for typeProduit
+    public TypeProduit getTypeProduit() {
+        return typeProduit;
+    }
+
+    public void setTypeProduit(TypeProduit typeProduit) {
+        this.typeProduit = typeProduit;
+    }
+    
+    // Explicit getters and setters for valeurNutriScore
     public ValeurNutriScore getValeurNutriScore() {
         return valeurNutriScore;
     }
 
     public void setValeurNutriScore(ValeurNutriScore valeurNutriScore) {
         this.valeurNutriScore = valeurNutriScore;
+    }
+    
+    // Explicit getter and setter for descriptionNutriScore
+    public String getDescriptionNutriScore() {
+        return descriptionNutriScore;
+    }
+    
+    public void setDescriptionNutriScore(String descriptionNutriScore) {
+        this.descriptionNutriScore = descriptionNutriScore;
+    }
+    
+    // Explicit getters and setters for ingredients
+    public List<IngredientInfoDto> getIngredients() {
+        return ingredients;
+    }
+    
+    public void setIngredients(List<IngredientInfoDto> ingredients) {
+        this.ingredients = ingredients;
     }
 }
 

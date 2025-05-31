@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
@@ -23,8 +24,10 @@ public class Nutrisioniste extends Utilisateurs {
     private Double longitude;
     private String cabinetAddress;
     private List<String> proveAttestationType;
-    private List<String> dailyActivities; // Specific to nutritionist's daily activities like "Consultations", "Préparation de plans alimentaires"
     
+    @Field("nutritionist_daily_activities")
+    private List<String> dailyActivities;
+   
     public Nutrisioniste() {
         super("NUTRITIONIST");
     }

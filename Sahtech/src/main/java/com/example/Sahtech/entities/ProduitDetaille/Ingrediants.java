@@ -15,6 +15,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Builder
 @Data
+@Getter
+@Setter
 public class Ingrediants {
 
     @Id
