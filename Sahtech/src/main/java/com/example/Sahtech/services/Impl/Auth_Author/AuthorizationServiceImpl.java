@@ -118,6 +118,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                     return nutritionniste != null && locationId.equals(nutritionniste.getLocalisationId());
                 }
             } catch (Exception e) {
+                logger.error("Error checking nutritionist authorization: {}", e.getMessage(), e);
                 return false;
             }
         }
@@ -149,6 +150,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                 return historiqueScanService.hasUserScannedProduct(userId, produitId);
             }
         } catch (Exception e) {
+            logger.error("Error checking user product scan: {}", e.getMessage(), e);
             return false;
         }
 

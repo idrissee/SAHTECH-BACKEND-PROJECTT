@@ -2,6 +2,7 @@ package com.example.Sahtech.entities.ProduitDetaille;
 
 
 import com.example.Sahtech.Dto.ProduitDetaille.IngredientInfoDto;
+import com.example.Sahtech.Enum.TypeProduit;
 import com.example.Sahtech.Enum.ValeurNutriScore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -55,10 +56,19 @@ public class Produit {
     private ValeurNutriScore valeurNutriScore; // A, B, C, D, E
     private String descriptionNutriScore;
 
+    private TypeProduit typeProduit;
+
     // Composition
     private List<IngredientInfoDto> ingredients;
     private List<String> nomAdditif;
     
+    public ValeurNutriScore getValeurNutriScore() {
+        return valeurNutriScore;
+    }
+
+    public void setValeurNutriScore(ValeurNutriScore valeurNutriScore) {
+        this.valeurNutriScore = valeurNutriScore;
+    }
 }
 
 

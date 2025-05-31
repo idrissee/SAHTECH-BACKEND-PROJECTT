@@ -5,6 +5,7 @@ import com.example.Sahtech.Dto.auth.LoginRequest;
 import com.example.Sahtech.Dto.auth.LogoutRequest;
 import com.example.Sahtech.Dto.auth.LogoutResponse;
 import com.example.Sahtech.Dto.auth.RegisterRequest;
+import com.example.Sahtech.Dto.auth.RegisterNutritionisteDto;
 import com.example.Sahtech.Enum.Maladie;
 import com.example.Sahtech.entities.Users.Admin;
 import com.example.Sahtech.entities.Users.NutritionisteDetaille.Nutrisioniste;
@@ -15,9 +16,12 @@ import com.example.Sahtech.repositories.Users.UtilisateursRepository;
 import com.example.Sahtech.security.JwtTokenProvider;
 import com.example.Sahtech.security.TokenBlacklistService;
 import com.example.Sahtech.services.Interfaces.Auth_Author.AuthService;
+import com.example.Sahtech.services.Interfaces.Users.NutrisionisteService;
+import com.example.Sahtech.services.Interfaces.Users.UtilisateursService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -49,8 +53,13 @@ public class AuthServiceImpl implements AuthService {
 
     private  final TokenBlacklistService tokenBlacklistService;
 
+    private final UtilisateursService utilisateursService;
+
+    private final NutrisionisteService nutritionistService;
+
     public AuthServiceImpl(AuthenticationManager authenticationManager,JwtTokenProvider tokenProvider,PasswordEncoder passwordEncoder
-    ,AdminRepository adminRepository,NutritionisteRepository nutrisionisteRepository,UtilisateursRepository utilisateursRepository ,TokenBlacklistService tokenBlacklistService) {
+    ,AdminRepository adminRepository,NutritionisteRepository nutrisionisteRepository,UtilisateursRepository utilisateursRepository ,TokenBlacklistService tokenBlacklistService,
+                         UtilisateursService utilisateursService, NutrisionisteService nutritionistService) {
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
         this.passwordEncoder = passwordEncoder;
@@ -58,6 +67,8 @@ public class AuthServiceImpl implements AuthService {
         this.nutrisionisteRepository = nutrisionisteRepository;
         this.utilisateursRepository = utilisateursRepository;
         this.tokenBlacklistService = tokenBlacklistService;
+        this.utilisateursService = utilisateursService;
+        this.nutritionistService = nutritionistService;
     }
 
 
@@ -142,30 +153,6 @@ public class AuthServiceImpl implements AuthService {
                  adminRepository.save(admin);
                 break;
 
-            case "NUTRITIONIST":
-                Nutrisioniste nutritionist = Nutrisioniste.builder()
-                        .nom(registerRequest.getNom())
-                        .prenom(registerRequest.getPrenom())
-                        .email(email)
-                        .password(password)
-                        .numTelephone(registerRequest.getTelephone())
-                        .dateDeNaissance(dateDeNaissance)
-                        .estVerifie(false)
-                        .provider("LOCAL")
-                        .type("NUTRITIONIST")
-                        .maladies(convertToMaladies(registerRequest.getMaladies()))
-                        .allergies(registerRequest.getAllergies() != null ? registerRequest.getAllergies() : new ArrayList<>())
-                        .objectives(registerRequest.getObjectives() != null ? registerRequest.getObjectives() : new ArrayList<>())
-                        .hasChronicDisease(registerRequest.getHasChronicDisease() != null ? registerRequest.getHasChronicDisease() : false)
-                        .hasAllergies(registerRequest.getHasAllergies() != null ? registerRequest.getHasAllergies() : false)
-                        .preferredLanguage(registerRequest.getPreferredLanguage())
-                        .poids(registerRequest.getPoids())
-                        .taille(registerRequest.getTaille())
-                        .photoUrl(registerRequest.getPhotoUrl())
-                        .build();
-                 nutrisionisteRepository.save(nutritionist);
-                break;
-
             case "USER":
                 Utilisateurs user = Utilisateurs.builder()
                         .nom(registerRequest.getNom())
@@ -196,6 +183,35 @@ public class AuthServiceImpl implements AuthService {
 
         // Return login response
         return login(new LoginRequest(email, registerRequest.getPassword(), userType));
+    }
+
+    @Override
+    public AuthResponse registerNutritionniste(RegisterNutritionisteDto request) {
+        if (utilisateursService.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
+        Nutrisioniste nutritionist = Nutrisioniste.builder()
+            .nom(request.getNom())
+            .prenom(request.getPrenom())
+            .email(request.getEmail())
+            .password(passwordEncoder.encode(request.getPassword()))
+            .numTelephone(request.getNumTelephone())
+            .dateDeNaissance(request.getDateDeNaissance())
+            .estVerifie(false)
+            .provider("LOCAL")
+            .type("NUTRITIONIST")
+            .build();
+        Nutrisioniste savedNutritionist = nutritionistService.save(nutritionist);
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+        String token = tokenProvider.generateToken(authentication, "NUTRITIONIST", savedNutritionist.getId());
+        return AuthResponse.builder()
+            .token(token)
+            .userId(savedNutritionist.getId())
+            .email(savedNutritionist.getEmail())
+            .userType("NUTRITIONIST")
+            .build();
     }
 
     // Helper method to convert string list to Maladie enum list

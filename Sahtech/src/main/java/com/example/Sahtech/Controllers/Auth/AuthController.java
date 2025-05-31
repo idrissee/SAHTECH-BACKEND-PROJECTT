@@ -5,6 +5,7 @@ import com.example.Sahtech.Dto.auth.LoginRequest;
 import com.example.Sahtech.Dto.auth.LogoutRequest;
 import com.example.Sahtech.Dto.auth.LogoutResponse;
 import com.example.Sahtech.Dto.auth.RegisterRequest;
+import com.example.Sahtech.Dto.auth.RegisterNutritionisteDto;
 import com.example.Sahtech.services.Interfaces.Auth_Author.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,11 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
         return ResponseEntity.ok(authService.register(registerRequest));
+    }
+
+    @PostMapping("/register/nutritionniste")
+    public ResponseEntity<AuthResponse> registerNutritionniste(@Valid @RequestBody RegisterNutritionisteDto registerRequest) {
+        return ResponseEntity.ok(authService.registerNutritionniste(registerRequest));
     }
     
     @PostMapping("/logout")
