@@ -50,7 +50,7 @@ public class ProductScanControllerTest {
 
     @BeforeEach
     void setUp() {
-        testProduit = TestDataUtil.createTestProduitComplete();
+        testProduit = TestDataUtil.creatTestProduitB();
         testBarcode = "123-456-789"; // Barcode with non-numeric characters
         normalizedBarcode = 123456789L; // Expected normalized Long barcode
         
