@@ -105,8 +105,10 @@ public class TestDataUtil {
        return Additifs.builder()
                .idAdditif("1L")
                .typeAdditif(TypeAdditif.Colorant)
-               .seuil(2F)
+               .seuil("niveau 2")
                .nomAdditif("sin1")
+               .codeAdditif("E100")
+               .toxicite("Faible")
                .build();
     }
     
@@ -114,8 +116,10 @@ public class TestDataUtil {
         return Additifs.builder()
                 .idAdditif("2L")
                 .typeAdditif(TypeAdditif.Conservateur)
-                .seuil(3F)
+                .seuil("niveau 3")
                 .nomAdditif("sin2")
+                .codeAdditif("E200")
+                .toxicite("Moyenne")
                 .build();
     }
     
@@ -123,8 +127,10 @@ public class TestDataUtil {
         return Additifs.builder()
                 .idAdditif("3L")
                 .typeAdditif(TypeAdditif.Édulcorant)
-                .seuil(4F)
+                .seuil("niveau 4")
                 .nomAdditif("sin3")
+                .codeAdditif("E300")
+                .toxicite("Élevée")
                 .build();
     }
 
