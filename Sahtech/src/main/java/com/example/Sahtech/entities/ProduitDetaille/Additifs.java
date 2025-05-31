@@ -19,7 +19,8 @@ public class Additifs {
     private String codeAdditif;
     private String nomAdditif;
     private TypeAdditif typeAdditif;
-    private Float seuil;
+    private String seuil;
+    private String toxicite;
 
 
 }

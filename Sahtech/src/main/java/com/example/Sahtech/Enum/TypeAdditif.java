@@ -9,5 +9,8 @@ public enum TypeAdditif {
     Édulcorant,
     Épaississant,
     Stabilisant,
-    Humectant;
+    Humectant,
+    Malates_de_calcium,
+    Malates_de_potassium,
+
 }

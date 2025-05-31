@@ -2,6 +2,7 @@ package com.example.Sahtech.services.Interfaces.ProduitDetaille;
 
 import com.example.Sahtech.entities.ProduitDetaille.Additifs;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,4 +22,6 @@ public interface AdditifsService {
     void delete(String id);
 
     Additifs getBycodeAdditif(String nom);
+
+    void loadAndSaveAdditifs() throws IOException;
 }

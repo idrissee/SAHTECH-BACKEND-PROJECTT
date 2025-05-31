@@ -3,8 +3,11 @@ package com.example.Sahtech.services.Impl.ProduitDetaille;
 import com.example.Sahtech.entities.ProduitDetaille.Additifs;
 import com.example.Sahtech.repositories.ProduitDetaille.AdditifsRepository;
 import com.example.Sahtech.services.Interfaces.ProduitDetaille.AdditifsService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -64,5 +67,19 @@ public class AdditifsServiceImpl implements AdditifsService {
         return additifsRepository.findByCodeAdditif(nom);
     }
 
+    @Override
+    public  void loadAndSaveAdditifs() throws IOException {
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("additifs.json");
+
+        if (inputStream == null) {
+            throw new IllegalArgumentException("Fichier additifs.json non trouvé dans resources !");
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Additifs> additifs = objectMapper.readValue(inputStream,
+                objectMapper.getTypeFactory().constructCollectionType(List.class, Additifs.class));
+
+        additifsRepository.saveAll(additifs);
+    }
 
 }
