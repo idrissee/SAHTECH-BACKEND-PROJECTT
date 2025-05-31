@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -57,7 +58,10 @@ public class Utilisateurs {
     private List<String> dailyActivities; // User's daily activities 
     private List<String> healthGoals; // Additional health goals/objectives
     private List<String> historiqueScanIds;
-    private List<String> nutritionisteFavorisIds;
+    
+    // List of favorite nutritionist IDs
+    @Field("favoriteNutritionistIds")
+    private List<String> favoriteNutritionistIds = new ArrayList<>();
 
     // Explicitly annotate for MongoDB to ensure it's not ignored
     @Field("photoUrl")

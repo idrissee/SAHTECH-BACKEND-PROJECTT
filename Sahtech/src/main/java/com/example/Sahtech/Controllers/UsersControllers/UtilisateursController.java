@@ -1,8 +1,11 @@
 package com.example.Sahtech.Controllers.UsersControllers;
 
+import com.example.Sahtech.Dto.Users.NutritionisteDetaille.NutrisionisteDto;
 import com.example.Sahtech.Dto.Users.UtilisateursDto;
+import com.example.Sahtech.entities.Users.NutritionisteDetaille.Nutrisioniste;
 import com.example.Sahtech.entities.Users.Utilisateurs;
 import com.example.Sahtech.mappers.Mapper;
+import com.example.Sahtech.repositories.Users.NutritionisteDetaille.NutritionisteRepository;
 import com.example.Sahtech.services.Impl.Image.ImageServiceImpl;
 import com.example.Sahtech.services.Interfaces.Auth_Author.AuthorizationService;
 import com.example.Sahtech.services.Interfaces.Users.UtilisateursService;
@@ -32,12 +35,18 @@ public class UtilisateursController {
 
     @Autowired
     private Mapper<Utilisateurs, UtilisateursDto> utilisateursMapper;
+    
+    @Autowired
+    private Mapper<Nutrisioniste, NutrisionisteDto> nutritionistMapper;
 
     @Autowired
     private AuthorizationService authorizationService;
 
     @Autowired
     private ImageServiceImpl imageServiceImpl;
+    
+    @Autowired
+    private NutritionisteRepository nutritionistRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(UtilisateursController.class);
 
@@ -184,6 +193,150 @@ public class UtilisateursController {
             logger.error("Error changing password: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Error changing password: " + e.getMessage()));
+        }
+    }
+    
+    /**
+     * Add a nutritionist to the user's favorites list
+     * 
+     * @param userId The ID of the user
+     * @param nutritionistId The ID of the nutritionist to add to favorites
+     * @param request The HTTP request
+     * @return The updated user DTO with the new favorite nutritionist added
+     */
+    @PostMapping("/{userId}/favorites/{nutritionistId}")
+    public ResponseEntity<?> addFavoriteNutritionist(
+            @PathVariable String userId,
+            @PathVariable String nutritionistId,
+            HttpServletRequest request
+    ) {
+        logger.info("Adding nutritionist {} to favorites for user {}", nutritionistId, userId);
+        
+        // Check if user is authorized
+        if (!authorizationService.isAuthorizedToAccessResource(userId, request)) {
+            logger.error("User not authorized to modify favorites for user ID: {}", userId);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        
+        // Verify that the nutritionist exists
+        if (!nutritionistRepository.existsById(nutritionistId)) {
+            logger.error("Nutritionist with ID {} not found", nutritionistId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Nutritionist not found with ID: " + nutritionistId));
+        }
+        
+        try {
+            Utilisateurs updatedUser = utilisateurService.addFavoriteNutritionist(userId, nutritionistId);
+            
+            if (updatedUser == null) {
+                logger.error("User with ID {} not found", userId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "User not found with ID: " + userId));
+            }
+            
+            return ResponseEntity.ok(Map.of(
+                "message", "Nutritionist added to favorites successfully",
+                "user", utilisateursMapper.mapTo(updatedUser)
+            ));
+            
+        } catch (Exception e) {
+            logger.error("Error adding nutritionist to favorites: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Error adding nutritionist to favorites: " + e.getMessage()));
+        }
+    }
+    
+    /**
+     * Remove a nutritionist from the user's favorites list
+     * 
+     * @param userId The ID of the user
+     * @param nutritionistId The ID of the nutritionist to remove from favorites
+     * @param request The HTTP request
+     * @return Success or error response
+     */
+    @DeleteMapping("/{userId}/favorites/{nutritionistId}")
+    public ResponseEntity<?> removeFavoriteNutritionist(
+            @PathVariable String userId,
+            @PathVariable String nutritionistId,
+            HttpServletRequest request
+    ) {
+        logger.info("Removing nutritionist {} from favorites for user {}", nutritionistId, userId);
+        
+        // Check if user is authorized
+        if (!authorizationService.isAuthorizedToAccessResource(userId, request)) {
+            logger.error("User not authorized to modify favorites for user ID: {}", userId);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        
+        try {
+            Utilisateurs updatedUser = utilisateurService.removeFavoriteNutritionist(userId, nutritionistId);
+            
+            if (updatedUser == null) {
+                logger.error("User with ID {} not found", userId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "User not found with ID: " + userId));
+            }
+            
+            return ResponseEntity.ok(Map.of(
+                "message", "Nutritionist removed from favorites successfully",
+                "user", utilisateursMapper.mapTo(updatedUser)
+            ));
+            
+        } catch (Exception e) {
+            logger.error("Error removing nutritionist from favorites: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Error removing nutritionist from favorites: " + e.getMessage()));
+        }
+    }
+    
+    /**
+     * Get all favorite nutritionists for a user
+     * 
+     * @param userId The ID of the user
+     * @param request The HTTP request
+     * @return List of nutritionist DTOs that are favorites of the user
+     */
+    @GetMapping("/{userId}/favorites")
+    public ResponseEntity<?> getFavoriteNutritionists(
+            @PathVariable String userId,
+            HttpServletRequest request
+    ) {
+        logger.info("Getting favorite nutritionists for user {}", userId);
+        
+        // Check if user is authorized
+        if (!authorizationService.isAuthorizedToAccessResource(userId, request)) {
+            logger.error("User not authorized to access favorites for user ID: {}", userId);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        
+        try {
+            // Get the user to check if they exist
+            Utilisateurs user = utilisateurService.getUtilisateurById(userId);
+            if (user == null) {
+                logger.error("User with ID {} not found", userId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "User not found with ID: " + userId));
+            }
+            
+            // Get the favorite nutritionists
+            List<Nutrisioniste> favorites = utilisateurService.getFavoriteNutritionists(userId);
+            
+            // Convert to DTOs
+            List<NutrisionisteDto> favoriteDtos = favorites.stream()
+                    .map(nutritionistMapper::mapTo)
+                    .collect(Collectors.toList());
+            
+            logger.info("Found {} favorite nutritionists for user {}", favoriteDtos.size(), userId);
+            
+            return ResponseEntity.ok(Map.of(
+                "favorites", favoriteDtos,
+                "count", favoriteDtos.size()
+            ));
+            
+        } catch (Exception e) {
+            logger.error("Error getting favorite nutritionists: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Error getting favorite nutritionists: " + e.getMessage()));
         }
     }
 }
