@@ -16,4 +16,5 @@ public class AuthResponse {
     private String email;
     private String nom;
     private String prenom;
+    private Float imc;
 }

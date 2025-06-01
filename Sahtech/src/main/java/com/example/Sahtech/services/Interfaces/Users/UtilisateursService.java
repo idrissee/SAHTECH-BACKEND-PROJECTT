@@ -18,7 +18,15 @@ public interface UtilisateursService {
     Utilisateurs setPhotoUrl(String id, String photoUrl);
 
     boolean changePassword(String id, String currentPassword, String newPassword);
-    
+
+    Float getImcByUserId(String id);
+
+    /**
+     * Recalcule l'IMC pour tous les utilisateurs dans la base de données
+     * @return Le nombre d'utilisateurs mis à jour
+     */
+    int recalculerTousLesIMC();
+
     // Methods for favorite nutritionists
     Utilisateurs addFavoriteNutritionist(String userId, String nutritionistId);
     Utilisateurs removeFavoriteNutritionist(String userId, String nutritionistId);

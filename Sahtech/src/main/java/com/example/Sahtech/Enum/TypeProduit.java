@@ -7,4 +7,5 @@ public enum TypeProduit {
     FROMAGES,
     BOISSONS,
     EAU
+
 }

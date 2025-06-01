@@ -119,6 +119,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/API/Sahtech/Utilisateurs/{id}").hasAnyRole("ADMIN", "USER")
                 .requestMatchers(HttpMethod.POST, "/API/Sahtech/Utilisateurs/{id}/uploadPhoto").hasAnyRole("ADMIN", "USER")
                 .requestMatchers(HttpMethod.PUT, "/API/Sahtech/Utilisateurs/{id}/changePassword").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.GET, "/API/Sahtech/Utilisateurs/{id}/imc").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.GET, "/API/Sahtech/Utilisateurs/{id}/imc-avec-interpretation").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.POST, "/API/Sahtech/Utilisateurs/{id}/calculer-imc").hasAnyRole("ADMIN", "USER")
+                .requestMatchers(HttpMethod.POST, "/API/Sahtech/Utilisateurs/recalculer-tous-imc").hasRole("ADMIN")
 
                 // Historique de scan : utilisateur peut uniquement consulter son propre historique et statistiques
                 .requestMatchers(HttpMethod.GET, "/API/Sahtech/HistoriqueScan/utilisateur/{id}").hasAnyRole("ADMIN", "USER")

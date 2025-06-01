@@ -1,5 +1,6 @@
 package com.example.Sahtech.entities.Users;
 
+import com.example.Sahtech.Enum.InterpretationIMC;
 import com.example.Sahtech.Enum.Maladie;
 import com.example.Sahtech.Enum.Objectif;
 import lombok.AllArgsConstructor;
@@ -50,6 +51,8 @@ public class Utilisateurs {
     private boolean hasChronicDisease;
     private boolean hasAllergies;
     private String preferredLanguage;
+    private Float imc; // Ajout du champ IMC pour stocker la valeur calculée
+    private String interpretationIMC; // Interprétation de l'IMC selon les standards de l'OMS
 
     // Champ pour distinguer le type d'utilisateur
     private String type;
@@ -79,9 +82,16 @@ public class Utilisateurs {
         LocalDate birthDate = new java.sql.Date(dateDeNaissance.getTime()).toLocalDate();
         return Period.between(birthDate, LocalDate.now()).getYears();
     }
-
-    public Float getIMC() {
-        if (poids == null || taille == null || taille == 0) return null;
-        return poids / ((taille/100) * (taille/100));
+    
+    /**
+     * Met à jour l'interprétation de l'IMC en fonction de la valeur calculée
+     */
+    public void updateInterpretationIMC() {
+        if (this.imc != null) {
+            InterpretationIMC interpretation = InterpretationIMC.getInterpretation(this.imc);
+            if (interpretation != null) {
+                this.interpretationIMC = interpretation.getDescription();
+            }
+        }
     }
 }

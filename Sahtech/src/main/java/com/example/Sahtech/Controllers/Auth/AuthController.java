@@ -36,7 +36,7 @@ public class AuthController {
     public ResponseEntity<AuthResponse> registerNutritionniste(@Valid @RequestBody RegisterNutritionisteDto registerRequest) {
         return ResponseEntity.ok(authService.registerNutritionniste(registerRequest));
     }
-    
+
     @PostMapping("/logout")
     public ResponseEntity<LogoutResponse> logout(@Valid @RequestBody LogoutRequest logoutRequest) {
         return ResponseEntity.ok(authService.logout(logoutRequest));

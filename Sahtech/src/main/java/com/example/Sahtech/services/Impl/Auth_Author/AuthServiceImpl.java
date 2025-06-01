@@ -174,7 +174,23 @@ public class AuthServiceImpl implements AuthService {
                         .sport(registerRequest.getDoesExercise())
                         .photoUrl(registerRequest.getPhotoUrl())
                         .build();
-                 utilisateursRepository.save(user);
+                
+                // Calculer l'IMC directement ici
+                if (user.getPoids() != null && user.getTaille() != null && user.getTaille() > 0) {
+                    float tailleEnMetres = user.getTaille() / 100.0f;
+                    float imc = user.getPoids() / (tailleEnMetres * tailleEnMetres);
+                    user.setImc(imc);
+                    
+                    // Déterminer l'interprétation de l'IMC et la définir
+                    user.updateInterpretationIMC();
+                    
+                    System.out.println("DEBUG: IMC calculé directement: " + imc);
+                    System.out.println("DEBUG: Interprétation de l'IMC: " + user.getInterpretationIMC());
+                } else {
+                    System.out.println("DEBUG: Impossible de calculer l'IMC: données manquantes");
+                }
+                
+                utilisateursRepository.save(user);
                 break;
 
             default:
@@ -182,7 +198,19 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // Return login response
-        return login(new LoginRequest(email, registerRequest.getPassword(), userType));
+        AuthResponse authResponse = login(new LoginRequest(email, registerRequest.getPassword(), userType));
+        
+        // For USER type, include IMC in the response
+        if (userType.equalsIgnoreCase("USER")) {
+            Optional<Utilisateurs> userOpt = utilisateursRepository.findByEmail(email);
+            if (userOpt.isPresent()) {
+                Utilisateurs user = userOpt.get();
+                authResponse.setImc(user.getImc());
+                // Ne pas inclure l'interprétation de l'IMC dans la réponse
+            }
+        }
+        
+        return authResponse;
     }
 
     @Override
