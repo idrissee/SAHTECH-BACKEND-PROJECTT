@@ -1,0 +1,87 @@
+package com.example.Sahtech.entities.Users;
+
+import com.example.Sahtech.Enum.Maladie;
+import com.example.Sahtech.Enum.Objectif;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
+@Data
+@Getter
+@Setter
+@Document(collection = "utilisateurs")
+public class Utilisateurs {
+
+    @Id
+    private String id;
+
+    private String nom;
+    private String prenom;
+    private Long numTelephone;
+    private String email;
+    private Date dateDeNaissance;
+    private List<Maladie> maladies;
+    private List<String> chronicConditions; // Alternative format for diseases
+    private Float poids;
+    private Float taille;
+    private Boolean sport;
+    private String sexe;
+    private List<String> allergies;
+    private String password;
+    private Objectif objectif;
+    private String provider; // LOCAL, GOOGLE
+    private Long countScans = 0L;
+    private List<String> objectives; // Main list for all health objectives/goals
+    private boolean hasChronicDisease;
+    private boolean hasAllergies;
+    private String preferredLanguage;
+
+    // Champ pour distinguer le type d'utilisateur
+    private String type;
+
+    // Constructeur protégé pour les sous-classes
+    protected Utilisateurs(String type) {
+        this.type = type;
+    }
+    private List<String> physicalActivities; // User's physical activities
+    
+    @Field("user_daily_activities")
+    private List<String> dailyActivities; // User's daily activities 
+    
+    private List<String> healthGoals; // Additional health goals/objectives
+    private List<String> historiqueScanIds;
+    
+    // List of favorite nutritionist IDs
+    @Field("favoriteNutritionistIds")
+    private List<String> favoriteNutritionistIds = new ArrayList<>();
+
+    // Explicitly annotate for MongoDB to ensure it's not ignored
+    @Field("photoUrl")
+    private String photoUrl; // lien Cloudinary
+
+    public int getAge() {
+        if (dateDeNaissance == null) return 0;
+        LocalDate birthDate = new java.sql.Date(dateDeNaissance.getTime()).toLocalDate();
+        return Period.between(birthDate, LocalDate.now()).getYears();
+    }
+
+    public Float getIMC() {
+        if (poids == null || taille == null || taille == 0) return null;
+        return poids / ((taille/100) * (taille/100));
+    }
+}

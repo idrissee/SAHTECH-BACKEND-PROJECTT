@@ -1,0 +1,667 @@
+[
+  {
+    "codeAdditif": "SIN124",
+    "nomAdditif": "Rouge cochenille A",
+    "typeAdditif": "Colorant",
+    "seuil": "200 mg/Kg",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN127",
+    "nomAdditif": "Érythrosine",
+    "typeAdditif": "Colorant",
+    "seuil": "100 mg/Kg",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN131",
+    "nomAdditif": "Bleu patenté V",
+    "typeAdditif": "Colorant",
+    "seuil": "100 mg/Kg",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN132",
+    "nomAdditif": "Indigotine",
+    "typeAdditif": "Colorant",
+    "seuil": "500 mg/Kg",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN133",
+    "nomAdditif": "Bleu brillant FCF",
+    "typeAdditif": "Colorant",
+    "seuil": "200 mg/Kg",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN142",
+    "nomAdditif": "Vert S",
+    "typeAdditif": "Colorant",
+    "seuil": "100 mg/Kg",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN150a",
+    "nomAdditif": "Caramel ordinaire",
+    "typeAdditif": "Colorant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN160a",
+    "nomAdditif": "Bêta-carotène",
+    "typeAdditif": "Colorant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN160c",
+    "nomAdditif": "Extrait de paprika",
+    "typeAdditif": "Colorant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN162",
+    "nomAdditif": "Rouge de betterave",
+    "typeAdditif": "Colorant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN200",
+    "nomAdditif": "Acide sorbique",
+    "typeAdditif": "Conservateur",
+    "seuil": "1000 mg/Kg",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN202",
+    "nomAdditif": "Sorbate de potassium",
+    "typeAdditif": "Conservateur",
+    "seuil": "1000 mg/Kg",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN210",
+    "nomAdditif": "Acide benzoïque",
+    "typeAdditif": "Conservateur",
+    "seuil": "150 mg/Kg",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN211",
+    "nomAdditif": "Benzoate de sodium",
+    "typeAdditif": "Conservateur",
+    "seuil": "150 mg/Kg",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN220",
+    "nomAdditif": "Anhydride sulfureux",
+    "typeAdditif": "Conservateur",
+    "seuil": "200 mg/Kg",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN221",
+    "nomAdditif": "Sulfite de sodium",
+    "typeAdditif": "Conservateur",
+    "seuil": "200 mg/Kg",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN223",
+    "nomAdditif": "Métabisulfite de sodium",
+    "typeAdditif": "Conservateur",
+    "seuil": "200 mg/Kg",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN224",
+    "nomAdditif": "Métabisulfite de potassium",
+    "typeAdditif": "Conservateur",
+    "seuil": "200 mg/Kg",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN250",
+    "nomAdditif": "Nitrite de sodium",
+    "typeAdditif": "Conservateur",
+    "seuil": "100 mg/Kg",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN251",
+    "nomAdditif": "Nitrate de sodium",
+    "typeAdditif": "Conservateur",
+    "seuil": "150 mg/Kg",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN252",
+    "nomAdditif": "Nitrate de potassium",
+    "typeAdditif": "Conservateur",
+    "seuil": "150 mg/Kg",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN260",
+    "nomAdditif": "Acide acétique",
+    "typeAdditif": "Acidifiant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN270",
+    "nomAdditif": "Acide lactique",
+    "typeAdditif": "Acidifiant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN296",
+    "nomAdditif": "Acide malique",
+    "typeAdditif": "Acidifiant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN300",
+    "nomAdditif": "Acide ascorbique",
+    "typeAdditif": "Antioxydant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN301",
+    "nomAdditif": "Ascorbate de sodium",
+    "typeAdditif": "Antioxydant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN302",
+    "nomAdditif": "Ascorbate de calcium",
+    "typeAdditif": "Antioxydant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN310",
+    "nomAdditif": "Gallate de propyle",
+    "typeAdditif": "Antioxydant",
+    "seuil": "100 mg/Kg",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN320",
+    "nomAdditif": "BHA",
+    "typeAdditif": "Antioxydant",
+    "seuil": "200 mg/Kg",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN321",
+    "nomAdditif": "BHT",
+    "typeAdditif": "Antioxydant",
+    "seuil": "200 mg/Kg",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN322",
+    "nomAdditif": "Lécithines",
+    "typeAdditif": "Émulsifiant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN330",
+    "nomAdditif": "Acide citrique",
+    "typeAdditif": "Acidifiant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN331",
+    "nomAdditif": "Citrates de sodium",
+    "typeAdditif": "Régulateur_de_pH",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN407",
+    "nomAdditif": "Carraghénanes",
+    "typeAdditif": "Épaississant",
+    "seuil": "BPF",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN410",
+    "nomAdditif": "Gomme de caroube",
+    "typeAdditif": "Épaississant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN412",
+    "nomAdditif": "Gomme de guar",
+    "typeAdditif": "Épaississant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN414",
+    "nomAdditif": "Gomme arabique",
+    "typeAdditif": "Épaississant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN415",
+    "nomAdditif": "Gomme xanthane",
+    "typeAdditif": "Épaississant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN420",
+    "nomAdditif": "Sorbitol",
+    "typeAdditif": "Édulcorant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN421",
+    "nomAdditif": "Mannitol",
+    "typeAdditif": "Édulcorant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN422",
+    "nomAdditif": "Glycérol",
+    "typeAdditif": "Humectant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN950",
+    "nomAdditif": "Acésulfame K",
+    "typeAdditif": "Édulcorant",
+    "seuil": "15 mg/Kg",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN951",
+    "nomAdditif": "Aspartame",
+    "typeAdditif": "Édulcorant",
+    "seuil": "40 mg/Kg",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN952",
+    "nomAdditif": "Cyclamates",
+    "typeAdditif": "Édulcorant",
+    "seuil": "11 mg/Kg",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN954",
+    "nomAdditif": "Saccharine",
+    "typeAdditif": "Édulcorant",
+    "seuil": "5 mg/Kg",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN955",
+    "nomAdditif": "Sucralose",
+    "typeAdditif": "Édulcorant",
+    "seuil": "15 mg/Kg",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN1442",
+    "nomAdditif": "Amidon oxydé",
+    "typeAdditif": "Épaississant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN150c",
+    "nomAdditif": "Caramel ammoniacal",
+    "typeAdditif": "Colorant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN160e",
+    "nomAdditif": "Beta-apo-8'-caroténal",
+    "typeAdditif": "Colorant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN163",
+    "nomAdditif": "Anthocyanes",
+    "typeAdditif": "Colorant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN170",
+    "nomAdditif": "Carbonate de calcium",
+    "typeAdditif": "Colorant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN171",
+    "nomAdditif": "Dioxyde de titane",
+    "typeAdditif": "Colorant",
+    "seuil": "BPF",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN173",
+    "nomAdditif": "Aluminium",
+    "typeAdditif": "Colorant",
+    "seuil": "200 mg/Kg",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN200",
+    "nomAdditif": "Acide sorbique",
+    "typeAdditif": "Conservateur",
+    "seuil": "1000 mg/Kg",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN280",
+    "nomAdditif": "Acide propionique",
+    "typeAdditif": "Conservateur",
+    "seuil": "3000 mg/Kg",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN281",
+    "nomAdditif": "Propionate de sodium",
+    "typeAdditif": "Conservateur",
+    "seuil": "3000 mg/Kg",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN282",
+    "nomAdditif": "Propionate de calcium",
+    "typeAdditif": "Conservateur",
+    "seuil": "3000 mg/Kg",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN283",
+    "nomAdditif": "Propionate de potassium",
+    "typeAdditif": "Conservateur",
+    "seuil": "3000 mg/Kg",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN300",
+    "nomAdditif": "Acide ascorbique",
+    "typeAdditif": "Antioxydant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN304",
+    "nomAdditif": "Palmitate d'ascorbyle",
+    "typeAdditif": "Antioxydant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN306",
+    "nomAdditif": "Extraits riches en tocophérols",
+    "typeAdditif": "Antioxydant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN307",
+    "nomAdditif": "Alpha-tocophérol",
+    "typeAdditif": "Antioxydant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN308",
+    "nomAdditif": "Gamma-tocophérol",
+    "typeAdditif": "Antioxydant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN309",
+    "nomAdditif": "Delta-tocophérol",
+    "typeAdditif": "Antioxydant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN322",
+    "nomAdditif": "Lécithine",
+    "typeAdditif": "Émulsifiant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN325",
+    "nomAdditif": "Lactate de sodium",
+    "typeAdditif": "Antioxydant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN326",
+    "nomAdditif": "Lactate_de_potassium",
+    "typeAdditif": "Antioxydant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN327",
+    "nomAdditif": "Lactate_de_calcium",
+    "typeAdditif": "Antioxydant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN330",
+    "nomAdditif": "Acide citrique",
+    "typeAdditif": "Acidifiant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN331",
+    "nomAdditif": "Citrates de sodium",
+    "typeAdditif": "Régulateur_de_pH",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN332",
+    "nomAdditif": "Citrates de potassium",
+    "typeAdditif": "Régulateur_de_pH",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN333",
+    "nomAdditif": "Citrates de calcium",
+    "typeAdditif": "Régulateur_de_pH",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN334",
+    "nomAdditif": "Acide tartrique",
+    "typeAdditif": "Acidifiant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN335",
+    "nomAdditif": "Tartrates de sodium",
+    "typeAdditif": "Acidifiant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN336",
+    "nomAdditif": "Tartrates de potassium",
+    "typeAdditif": "Acidifiant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN337",
+    "nomAdditif": "Tartrate double de sodium et de potassium",
+    "typeAdditif": "Acidifiant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN338",
+    "nomAdditif": "Acide phosphorique",
+    "typeAdditif": "Acidifiant",
+    "seuil": "700 mg/Kg",
+    "toxicite": "À limiter"
+  },
+  {
+    "codeAdditif": "SIN339",
+    "nomAdditif": "Phosphates de sodium",
+    "typeAdditif": "Stabilisant",
+    "seuil": "2200 mg/Kg",
+    "toxicite": "À limiter"
+  },
+  {
+    "codeAdditif": "SIN340",
+    "nomAdditif": "Phosphates de potassium",
+    "typeAdditif": "Stabilisant",
+    "seuil": "BPF",
+    "toxicite": "À limiter"
+  },
+  {
+    "codeAdditif": "SIN341",
+    "nomAdditif": "Phosphates de calcium",
+    "typeAdditif": "Stabilisant",
+    "seuil": "BPF",
+    "toxicite": "À limiter"
+  },
+  {
+    "codeAdditif": "SIN343",
+    "nomAdditif": "Phosphates de magnésium",
+    "typeAdditif": "Stabilisant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN350",
+    "nomAdditif": "Malates de sodium",
+    "typeAdditif": "Acidifiant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN351",
+    "nomAdditif": "Malates de potassium",
+    "typeAdditif": "Acidifiant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN352",
+    "nomAdditif": "Malates de calcium",
+    "typeAdditif": "Acidifiant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN380",
+    "nomAdditif": "Citrate de triammonium",
+    "typeAdditif": "Régulateur_de_pH",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN400",
+    "nomAdditif": "Acide alginique",
+    "typeAdditif": "Épaississant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN401",
+    "nomAdditif": "Alginate de sodium",
+    "typeAdditif": "Épaississant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN402",
+    "nomAdditif": "Alginate de potassium",
+    "typeAdditif": "Épaississant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN403",
+    "nomAdditif": "Alginate d'ammonium",
+    "typeAdditif": "Épaississant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN404",
+    "nomAdditif": "Alginate de calcium",
+    "typeAdditif": "Épaississant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN405",
+    "nomAdditif": "Alginate de propylène glycol",
+    "typeAdditif": "Épaississant",
+    "seuil": "BPF",
+    "toxicite": "À éviter"
+  },
+  {
+    "codeAdditif": "SIN416",
+    "nomAdditif": "Gomme karaya",
+    "typeAdditif": "Épaississant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN417",
+    "nomAdditif": "Gomme tara",
+    "typeAdditif": "Épaississant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN418",
+    "nomAdditif": "Gomme gellane",
+    "typeAdditif": "Épaississant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  },
+  {
+    "codeAdditif": "SIN422",
+    "nomAdditif": "Glycérol",
+    "typeAdditif": "Humectant",
+    "seuil": "BPF",
+    "toxicite": "Acceptable"
+  }
+]
