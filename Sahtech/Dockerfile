@@ -9,7 +9,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 COPY --from=builder /app/target/*.jar app.jar
-
+# added
 EXPOSE 8080
 
 CMD ["java", "-jar", "app.jar"]
